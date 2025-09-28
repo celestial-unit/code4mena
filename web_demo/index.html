@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code4Mena Legal Assistant - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2E86AB 0%, #A23B72 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .chat-container {
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background: #2E86AB;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 5px;
+        }
+
+        .input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            border-color: #2E86AB;
+        }
+
+        .send-button {
+            padding: 15px 25px;
+            background: #2E86AB;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .send-button:hover {
+            background: #1e5f7a;
+        }
+
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .audio-button {
+            padding: 15px;
+            background: #27AE60;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            margin-right: 10px;
+        }
+
+        .audio-button:hover {
+            background: #219A52;
+            transform: scale(1.05);
+        }
+
+        .audio-button.recording {
+            background: #E74C3C;
+            animation: pulse 1s infinite;
+        }
+
+        .audio-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .audio-status {
+            padding: 10px;
+            background: #e8f5e8;
+            border-left: 4px solid #27AE60;
+            margin: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .audio-status.error {
+            background: #ffeaea;
+            border-color: #E74C3C;
+        }
+
+        .transcription-display {
+            background: #f0f8ff;
+            border: 1px solid #2E86AB;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 20px;
+            font-size: 14px;
+            font-style: italic;
+            display: none;
+        }
+
+        .audio-player {
+            background: #e8f5e8;
+            border: 1px solid #27AE60;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .audio-player audio {
+            flex: 1;
+            height: 40px;
+        }
+
+        .audio-player .play-button {
+            background: #27AE60;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .audio-player .play-button:hover {
+            background: #219A52;
+        }
+
+        .categories {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .categories h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .category-btn {
+            padding: 12px 16px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .category-btn:hover {
+            border-color: #2E86AB;
+            background: #f0f8ff;
+        }
+
+        .status {
+            padding: 10px 20px;
+            background: #e8f5e8;
+            border-left: 4px solid #28a745;
+            margin: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .status.error {
+            background: #ffeaea;
+            border-color: #dc3545;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .privacy-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px;
+            font-size: 13px;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Code4Mena Legal Assistant</h1>
+            <p>مساعدك القانوني الذكي للمواطنين التونسيين</p>
+            <p>Privacy-first legal guidance for Tunisian citizens</p>
+        </div>
+
+        <div class="privacy-notice">
+            🔒 <strong>Privacy Protected:</strong> Your personal information is automatically removed before processing.
+            We don't store any personal data.
+        </div>
+
+        <div class="audio-status" id="audioStatus">
+            🎤 Audio service ready
+        </div>
+
+        <div class="transcription-display" id="transcriptionDisplay">
+            <strong>Transcription:</strong> <span id="transcriptionText"></span>
+        </div>
+
+        <div class="status" id="status">
+            ✅ Connected to Code4Mena Legal Assistant API
+        </div>
+
+        <div class="categories">
+            <h3>📚 Legal Categories / المجالات القانونية</h3>
+            <div class="category-grid">
+                <div class="category-btn" onclick="selectCategory('business_law')">
+                    💼 Business Law<br>قانون الأعمال
+                </div>
+                <div class="category-btn" onclick="selectCategory('civil_law')">
+                    ⚖️ Civil Law<br>القانون المدني
+                </div>
+                <div class="category-btn" onclick="selectCategory('administrative_law')">
+                    🏛️ Administrative Law<br>القانون الإداري
+                </div>
+                <div class="category-btn" onclick="selectCategory('labor_law')">
+                    👷 Labor Law<br>قانون العمل
+                </div>
+                <div class="category-btn" onclick="selectCategory('tax_law')">
+                    💰 Tax Law<br>القانون الضريبي
+                </div>
+                <div class="category-btn" onclick="selectCategory('family_law')">
+                    👨‍👩‍👧‍👦 Family Law<br>قانون الأسرة
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="messages" id="messages">
+                <div class="message bot">
+                    <div class="message-content">
+                        مرحباً! أنا مساعدك القانوني الذكي. يمكنني مساعدتك في فهم القوانين التونسية بطريقة مبسطة
+                        وآمنة.<br><br>
+                        Hello! I'm your smart legal assistant. I can help you understand Tunisian laws in a simple and
+                        secure way.<br><br>
+                        <strong>How can I help you today?</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                🤖 Processing your request...
+            </div>
+
+            <div class="input-container">
+                <button class="audio-button" onclick="toggleRecording()" id="audioButton" title="Voice input / الإدخال الصوتي">
+                    🎤
+                </button>
+                <input type="text" class="input-field" id="messageInput"
+                    placeholder="Ask your legal question... / اطرح سؤالك القانوني..."
+                    onkeypress="handleKeyPress(event)">
+                <button class="send-button" onclick="sendMessage()" id="sendButton">
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8001';
+        let currentCategory = null;
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+
+        // Check API connection on load
+        window.onload = function () {
+            checkAPIConnection();
+        };
+
+        async function checkAPIConnection() {
+            try {
+                const response = await fetch(`${API_BASE}/`);
+                const data = await response.json();
+
+                if (data.service === 'Code4Mena Legal Assistant') {
+                    document.getElementById('status').innerHTML = '✅ Connected to Code4Mena Legal Assistant API';
+                    document.getElementById('status').className = 'status';
+                } else {
+                    throw new Error('Invalid response');
+                }
+            } catch (error) {
+                document.getElementById('status').innerHTML = '❌ Cannot connect to API. Make sure the backend is running on port 8001.';
+                document.getElementById('status').className = 'status error';
+            }
+        }
+
+        function selectCategory(category) {
+            currentCategory = category;
+            const categoryNames = {
+                'business_law': 'Business Law / قانون الأعمال',
+                'civil_law': 'Civil Law / القانون المدني',
+                'administrative_law': 'Administrative Law / القانون الإداري',
+                'labor_law': 'Labor Law / قانون العمل',
+                'tax_law': 'Tax Law / القانون الضريبي',
+                'family_law': 'Family Law / قانون الأسرة'
+            };
+
+            addMessage('user', `I want to ask about ${categoryNames[category]}`);
+            addMessage('bot', `Great! I'm ready to help you with ${categoryNames[category]}. What specific question do you have?`);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Add user message
+            addMessage('user', message);
+            input.value = '';
+
+            // Show loading
+            showLoading(true);
+
+            try {
+                // Try real API first, fallback to enhanced demo responses
+                await simulateAPICall(message);
+
+            } catch (error) {
+                addMessage('bot', `Sorry, I encountered an error: ${error.message}. The demo responses are still available!`);
+            }
+
+            showLoading(false);
+        }
+
+        async function simulateAPICall(message) {
+            // Call the real Code4Mena API
+            try {
+                const response = await fetch(`${API_BASE}/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer demo-token'
+                    },
+                    body: JSON.stringify({
+                        query: message,
+                        language: 'en',
+                        user_id: 'web-demo-user'
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Format the response nicely
+                    let formattedResponse = data.response;
+                    
+                    // Add sources if available
+                    if (data.sources && data.sources.length > 0) {
+                        formattedResponse += '\n\n**📚 Legal References:**\n';
+                        data.sources.forEach(source => {
+                            formattedResponse += `• ${source.article} - ${source.source_document}\n`;
+                            if (source.url) {
+                                formattedResponse += `  🔗 ${source.url}\n`;
+                            }
+                        });
+                    }
+                    
+                    // Add disclaimer
+                    if (data.disclaimer) {
+                        formattedResponse += '\n\n**⚖️ Legal Disclaimer:**\n' + data.disclaimer;
+                    }
+                    
+                    addMessage('bot', formattedResponse);
+                } else {
+                    throw new Error(`API returned ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('API call failed:', error);
+                addMessage('bot', `❌ **API Connection Error**
+                
+I couldn't connect to the Code4Mena Legal Assistant API. 
+
+**Possible issues:**
+• Backend server might not be running
+• API endpoint might be unavailable  
+• Network connectivity issues
+
+**To fix this:**
+1. Make sure the backend is running: \`./start.sh\`
+2. Check API health: http://localhost:8001/health
+3. Verify the API is accessible: http://localhost:8001/docs
+
+**Error details:** ${error.message}`);
+            }
+        }
+
+        function addMessage(sender, content) {
+            const messagesContainer = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = content.replace(/\n/g, '<br>');
+
+            messageDiv.appendChild(contentDiv);
+            messagesContainer.appendChild(messageDiv);
+
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showLoading(show) {
+            const loading = document.getElementById('loading');
+            const sendButton = document.getElementById('sendButton');
+
+            loading.style.display = show ? 'block' : 'none';
+            sendButton.disabled = show;
+        }
+
+        // Audio Recording Functions
+        async function initializeAudio() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        sampleRate: 16000,
+                        channelCount: 1,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+                
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    audioChunks = [];
+                    await processAudioQuery(audioBlob);
+                };
+                
+                showAudioStatus('🎤 Microphone ready - Click to start recording', false);
+                return true;
+                
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                showAudioStatus('❌ Microphone access denied. Please allow microphone access.', true);
+                return false;
+            }
+        }
+
+        async function toggleRecording() {
+            const audioButton = document.getElementById('audioButton');
+            
+            if (!mediaRecorder) {
+                const initialized = await initializeAudio();
+                if (!initialized) return;
+            }
+            
+            if (!isRecording) {
+                // Start recording
+                audioChunks = [];
+                mediaRecorder.start();
+                isRecording = true;
+                
+                audioButton.classList.add('recording');
+                audioButton.innerHTML = '⏹️';
+                audioButton.title = 'Stop recording / إيقاف التسجيل';
+                
+                showAudioStatus('🔴 Recording... Click to stop / جاري التسجيل... اضغط للإيقاف', false);
+                
+            } else {
+                // Stop recording
+                mediaRecorder.stop();
+                isRecording = false;
+                
+                audioButton.classList.remove('recording');
+                audioButton.innerHTML = '🎤';
+                audioButton.title = 'Voice input / الإدخال الصوتي';
+                
+                showAudioStatus('⏳ Processing audio... / معالجة الصوت...', false);
+            }
+        }
+
+        async function processAudioQuery(audioBlob) {
+            try {
+                showLoading(true);
+                
+                // Create form data
+                const formData = new FormData();
+                formData.append('audio_file', audioBlob, 'recording.webm');
+                formData.append('language', 'ar-TN');
+                
+                const response = await fetch(`${API_BASE}/audio/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer demo-token'
+                    },
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    
+                    // Show transcription if available
+                    if (result.transcription) {
+                        showTranscription(result.transcription);
+                    }
+                    
+                    // Create message content with audio if available
+                    let messageContent = result.response_text || 'تم معالجة الاستفسار الصوتي بنجاح';
+                    
+                    // Add the response as a bot message
+                    addMessage('bot', messageContent);
+                    
+                    // If audio response is available, try to get and play it
+                    if (result.has_audio || result.audio_response_available) {
+                        await fetchAndPlayAudioResponse(result.response_text);
+                    }
+                    
+                    showAudioStatus(`✅ Audio processed (${result.language_detected}) - Confidence: ${Math.round(result.confidence * 100)}%`, false);
+                    
+                } else {
+                    throw new Error(`API returned ${response.status}`);
+                }
+                
+            } catch (error) {
+                console.error('Error processing audio:', error);
+                addMessage('bot', `❌ **خطأ في معالجة الصوت**
+                
+عذراً، لم أتمكن من معالجة الاستفسار الصوتي.
+
+**الأسباب المحتملة:**
+• مشكلة في الاتصال بالخدمة
+• تنسيق الصوت غير مدعوم
+• مشكلة في جودة التسجيل
+
+**للحل:**
+• تأكد من وضوح الصوت
+• جرب كتابة السؤال بدلاً من ذلك
+• تحقق من اتصال الإنترنت
+
+**الخطأ:** ${error.message}`);
+                
+                showAudioStatus('❌ Error processing audio / خطأ في معالجة الصوت', true);
+            }
+            
+            showLoading(false);
+        }
+
+        function showAudioStatus(message, isError = false) {
+            const statusElement = document.getElementById('audioStatus');
+            statusElement.innerHTML = message;
+            statusElement.className = isError ? 'audio-status error' : 'audio-status';
+            statusElement.style.display = 'block';
+            
+            // Auto-hide after 5 seconds if not an error
+            if (!isError) {
+                setTimeout(() => {
+                    statusElement.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function showTranscription(text) {
+            const transcriptionElement = document.getElementById('transcriptionDisplay');
+            const transcriptionText = document.getElementById('transcriptionText');
+            
+            transcriptionText.textContent = text;
+            transcriptionElement.style.display = 'block';
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                transcriptionElement.style.display = 'none';
+            }, 10000);
+        }
+
+        async function fetchAndPlayAudioResponse(text) {
+            try {
+                const response = await fetch(`${API_BASE}/audio/tts`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer demo-token'
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        language: 'ar-TN'
+                    })
+                });
+                
+                if (response.ok) {
+                    const contentType = response.headers.get('content-type');
+                    
+                    if (contentType && contentType.includes('audio/')) {
+                        // Audio response received
+                        const audioBlob = await response.blob();
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        
+                        // Add audio player to the last message
+                        addAudioPlayerToLastMessage(audioUrl);
+                        
+                    } else {
+                        // JSON response (TTS not available)
+                        const result = await response.json();
+                        console.log('TTS not available:', result.message);
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error fetching audio response:', error);
+            }
+        }
+
+        function addAudioPlayerToLastMessage(audioUrl) {
+            const messages = document.querySelectorAll('.message.bot');
+            const lastMessage = messages[messages.length - 1];
+            
+            if (lastMessage) {
+                const audioPlayer = document.createElement('div');
+                audioPlayer.className = 'audio-player';
+                audioPlayer.innerHTML = `
+                    <button class="play-button" onclick="playAudio('${audioUrl}')" title="Play audio response">
+                        ▶️
+                    </button>
+                    <span>🔊 Audio response available - Click to play</span>
+                    <audio controls style="display: none;">
+                        <source src="${audioUrl}" type="audio/wav">
+                        Your browser does not support audio playback.
+                    </audio>
+                `;
+                
+                lastMessage.querySelector('.message-content').appendChild(audioPlayer);
+            }
+        }
+
+        function playAudio(audioUrl) {
+            const audio = new Audio(audioUrl);
+            audio.play().catch(error => {
+                console.error('Error playing audio:', error);
+                showAudioStatus('❌ Could not play audio response', true);
+            });
+        }
+
+        // Update the window.onload function
+        window.onload = function() {
+            checkAPIConnection();
+            
+            // Check if browser supports audio recording
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showAudioStatus('❌ Audio recording not supported in this browser', true);
+                document.getElementById('audioButton').disabled = true;
+            }
+        };
+    </script>
+</body>
+
+</html>

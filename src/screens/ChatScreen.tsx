@@ -8,6 +8,7 @@ import { chatService } from '../services/chatService';
 import apiService from '../services/api';
 import geminiApiService from '../services/geminiApiService';
 import { debugChatMessage } from '../utils/debugApi';
+import { useTheme } from '../contexts/ThemeContext';
 import {
   ChatMessage,
   QuickReply,
@@ -26,6 +27,7 @@ interface ChatScreenProps {
 }
 
 export const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
+  const { theme } = useTheme();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [quickReplies, setQuickReplies] = useState<QuickReply[]>([]);
@@ -355,7 +357,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => 
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <NetworkStatusIndicator onRetry={handleRetry} />
       <ChatInterface
         conversationId={conversationId}

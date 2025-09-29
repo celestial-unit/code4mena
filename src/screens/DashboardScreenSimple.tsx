@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme, createThemedStyles } from '../contexts/ThemeContext';
 
 // Services
 import { mockDataService } from '../services/mockDataService';
@@ -27,11 +28,15 @@ interface DashboardScreenProps {
 }
 
 export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigation }) => {
+  const { theme, isDark } = useTheme();
   const [user, setUser] = useState<User | null>(null);
   const [recentUpdates, setRecentUpdates] = useState<LegalUpdate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Create styles early so they can be used in early returns
+  const styles = getStyles(theme);
 
   // Mock user ID - in real app this would come from auth context
   const currentUserId = 'user-001';
@@ -108,7 +113,10 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar 
+        barStyle={isDark ? "light-content" : "dark-content"} 
+        backgroundColor={theme.colors.background} 
+      />
       
       <ScrollView
         style={styles.scrollView}
@@ -118,15 +126,15 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={handleRefresh}
-            colors={['#E31E24', '#D4AF37']}
-            tintColor="#E31E24"
+            colors={[theme.colors.primary, theme.colors.accent]}
+            tintColor={theme.colors.primary}
           />
         }
       >
         {/* Welcome Section */}
         <View style={styles.welcomeSection}>
           <LinearGradient
-            colors={['#E31E24', '#D4AF37']}
+            colors={[theme.colors.gradientStart, theme.colors.gradientEnd]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.welcomeGradient}
@@ -158,7 +166,7 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
                   onPress={() => navigation.navigate('ChatbotSelection')}
                 >
                   <LinearGradient
-                    colors={['#FFFFFF', '#F8F9FA']}
+                    colors={['#FFFFFF', theme.colors.background]}
                     style={styles.chatButtonGradient}
                   >
                     <Ionicons name="chatbubbles" size={24} color="#E31E24" />
@@ -345,6 +353,14 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
             <Ionicons name="chatbubbles" size={20} color="#FFFFFF" />
             <Text style={styles.authTestText}>اختبار Gemini Live</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.authTestButton, { backgroundColor: '#8B5CF6' }]}
+            onPress={() => navigation.navigate('MascotDemo')}
+          >
+            <Ionicons name="happy" size={20} color="#FFFFFF" />
+            <Text style={styles.authTestText}>عرض الشخصية التونسية 3D</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.bottomSpacing} />
@@ -353,10 +369,10 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = createThemedStyles((theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: theme.colors.background,
   },
   scrollView: {
     flex: 1,
@@ -371,7 +387,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 18,
-    color: '#666666',
+    color: theme.colors.textSecondary,
     fontWeight: 'bold',
   },
   errorContainer: {
@@ -382,12 +398,12 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: '#E31E24',
+    color: theme.colors.error,
     textAlign: 'center',
     marginBottom: 20,
   },
   retryButton: {
-    backgroundColor: '#E31E24',
+    backgroundColor: theme.colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
@@ -486,7 +502,7 @@ const styles = StyleSheet.create({
   },
   chatButtonText: {
     fontSize: 16,
-    color: '#E31E24',
+    color: theme.colors.primary,
     fontWeight: 'bold',
     marginLeft: 8,
   },
@@ -514,12 +530,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#1A1A1A',
+    color: theme.colors.text,
     marginBottom: 4,
   },
   sectionSubtitle: {
     fontSize: 14,
-    color: '#666666',
+    color: theme.colors.textSecondary,
     opacity: 0.8,
     marginBottom: 16,
   },
@@ -531,7 +547,7 @@ const styles = StyleSheet.create({
   },
   statCard: {
     width: (screenWidth - 48) / 2,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: theme.colors.surface,
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
@@ -551,14 +567,14 @@ const styles = StyleSheet.create({
   },
   statTitle: {
     fontSize: 14,
-    color: '#666666',
+    color: theme.colors.textSecondary,
     fontWeight: '500',
     marginBottom: 4,
   },
   statValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1A1A1A',
+    color: theme.colors.text,
   },
   streakCard: {
     borderRadius: 16,
@@ -604,7 +620,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   updateCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: theme.colors.surface,
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
@@ -633,23 +649,23 @@ const styles = StyleSheet.create({
   },
   updateSource: {
     fontSize: 12,
-    color: '#666666',
+    color: theme.colors.textSecondary,
     fontWeight: '500',
   },
   updateTime: {
     fontSize: 12,
-    color: '#999999',
+    color: theme.colors.textTertiary,
   },
   updateTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#1A1A1A',
+    color: theme.colors.text,
     lineHeight: 22,
     marginBottom: 8,
   },
   updateSummary: {
     fontSize: 14,
-    color: '#666666',
+    color: theme.colors.textSecondary,
     lineHeight: 20,
     marginBottom: 12,
   },
@@ -657,7 +673,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   tag: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: theme.colors.border,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
@@ -665,7 +681,7 @@ const styles = StyleSheet.create({
   },
   tagText: {
     fontSize: 10,
-    color: '#666666',
+    color: theme.colors.textSecondary,
     fontWeight: '500',
   },
   governmentSection: {
@@ -699,7 +715,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   ministryCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: theme.colors.surface,
     borderRadius: 16,
     padding: 16,
     elevation: 4,
@@ -726,17 +742,17 @@ const styles = StyleSheet.create({
   ministryName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#1A1A1A',
+    color: theme.colors.text,
     marginBottom: 4,
   },
   ministryPlatform: {
     fontSize: 12,
-    color: '#666666',
+    color: theme.colors.textSecondary,
     marginBottom: 12,
   },
   ministryText: {
     fontSize: 14,
-    color: '#333333',
+    color: theme.colors.text,
     lineHeight: 20,
     marginBottom: 12,
   },
@@ -768,4 +784,4 @@ const styles = StyleSheet.create({
   bottomSpacing: {
     height: 100,
   },
-});
+}));

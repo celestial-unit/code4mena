@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme, createThemedStyles } from '../contexts/ThemeContext';
 // Note: This app uses custom navigation, not React Navigation
 import { 
   SearchResult, 
@@ -35,6 +36,7 @@ interface SearchScreenProps {
 type SearchMode = 'suggestions' | 'results' | 'saved';
 
 export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
+  const { theme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchMode, setSearchMode] = useState<SearchMode>('suggestions');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -603,7 +605,9 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
 
   // Show loading screen until initialized
   if (!isInitialized) {
-    return (
+    const styles = getStyles(theme);
+
+  return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>جاري التحميل...</Text>
@@ -676,10 +680,10 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = createThemedStyles((theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: theme.colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -845,4 +849,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666666',
   },
-});
+}));

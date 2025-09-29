@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme, createThemedStyles } from '../contexts/ThemeContext';
 
 interface NotificationsScreenProps {
   navigation: any;
@@ -74,6 +75,7 @@ const mockNotifications: NotificationItem[] = [
 ];
 
 export const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ navigation }) => {
+  const { theme } = useTheme();
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'legal_update': return 'document-text';
@@ -96,6 +98,8 @@ export const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ naviga
   };
 
   const unreadCount = mockNotifications.filter(n => !n.isRead).length;
+
+  const styles = getStyles(theme);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -226,10 +230,10 @@ export const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ naviga
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = createThemedStyles((theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: theme.colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -428,4 +432,4 @@ const styles = StyleSheet.create({
     color: '#666666',
     textAlign: 'center',
   },
-});
+}));

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { RTLProvider } from './src/contexts/RTLContext';
 
 // Import the navigation system
 import { AppNavigator } from './src/navigation/AppNavigator';
@@ -44,24 +46,30 @@ export default function App() {
 
   if (!isInitialized) {
     return (
-      <SafeAreaProvider>
-        <View style={[styles.container, styles.centered]}>
-          <StatusBar style="dark" backgroundColor="#FFFFFF" />
-          <Text style={styles.loadingText}>
-            {initError || 'جاري تحميل التطبيق...'}
-          </Text>
-        </View>
-      </SafeAreaProvider>
+      <GestureHandlerRootView style={styles.container}>
+        <SafeAreaProvider>
+          <View style={[styles.container, styles.centered]}>
+            <StatusBar style="dark" backgroundColor="#FFFFFF" />
+            <Text style={styles.loadingText}>
+              {initError || 'جاري تحميل التطبيق...'}
+            </Text>
+          </View>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
     );
   }
 
   return (
-    <SafeAreaProvider>
-      <View style={styles.container}>
-        <StatusBar style="dark" backgroundColor="#FFFFFF" />
-        <AppNavigator />
-      </View>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={styles.container}>
+      <RTLProvider>
+        <SafeAreaProvider>
+          <View style={styles.container}>
+            <StatusBar style="dark" backgroundColor="#FFFFFF" />
+            <AppNavigator />
+          </View>
+        </SafeAreaProvider>
+      </RTLProvider>
+    </GestureHandlerRootView>
   );
 }
 

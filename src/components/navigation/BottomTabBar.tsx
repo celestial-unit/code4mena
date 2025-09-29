@@ -9,6 +9,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen } from '../../navigation/AppNavigator';
+import { useTheme, createThemedStyles } from '../../contexts/ThemeContext';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -73,11 +74,14 @@ export const BottomTabBar: React.FC<BottomTabBarProps> = ({
   currentScreen,
   onTabPress,
 }) => {
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
+  
   return (
     <View style={styles.container}>
       {/* Background with Tunisian gradient */}
       <LinearGradient
-        colors={['#FFFFFF', '#F8F9FA']}
+        colors={[theme.colors.surface, theme.colors.background]}
         style={styles.background}
       >
         {/* Tab items */}
@@ -115,7 +119,7 @@ export const BottomTabBar: React.FC<BottomTabBarProps> = ({
                     <Ionicons
                       name={isActive ? tab.activeIcon as any : tab.icon as any}
                       size={isActive ? 26 : 24}
-                      color={isActive ? tab.color : '#666666'}
+                      color={isActive ? tab.color : theme.colors.textSecondary}
                     />
                   </View>
                   
@@ -157,7 +161,7 @@ export const BottomTabBar: React.FC<BottomTabBarProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = createThemedStyles((theme) => StyleSheet.create({
   container: {
     position: 'absolute',
     bottom: 0,
@@ -213,7 +217,7 @@ const styles = StyleSheet.create({
   },
   tabLabel: {
     fontSize: 11,
-    color: '#666666',
+    color: theme.colors.textSecondary,
     textAlign: 'center',
     fontWeight: '500',
   },
@@ -228,7 +232,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: theme.colors.surface,
   },
   notificationText: {
     fontSize: 10,
@@ -243,7 +247,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 3,
     borderRadius: 1.5,
-    backgroundColor: '#E31E24',
+    backgroundColor: theme.colors.primary,
     opacity: 0.3,
   },
   shadowOverlay: {
@@ -259,4 +263,4 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
   },
-});
+}));

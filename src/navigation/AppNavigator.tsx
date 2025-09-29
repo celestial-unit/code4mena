@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { ThemeProvider, useTheme } from '../contexts/ThemeContext';
+import { MascotProvider } from '../contexts/MascotContext';
 
 import { DashboardScreenSimple } from '../screens/DashboardScreenSimple';
 import { ChatScreen } from '../screens/ChatScreen';
@@ -10,11 +12,15 @@ import { ChatbotSelectionScreen } from '../screens/ChatbotSelectionScreen';
 import { SearchScreen } from '../screens/SearchScreen';
 import { NotificationsScreen } from '../screens/NotificationsScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
+import { PersonalInfoScreen } from '../screens/PersonalInfoScreen';
+import { AchievementsScreen } from '../screens/AchievementsScreen';
+import { PreferencesScreen } from '../screens/PreferencesScreen';
 import { UpdatesScreen } from '../screens/UpdatesScreen';
 import { AuthTestScreen, ErrorTestScreen } from '../screens';
+import { MascotDemoScreen } from '../screens/MascotDemoScreen';
 import { BottomTabBar } from '../components/navigation/BottomTabBar';
 
-export type Screen = 'Dashboard' | 'Chat' | 'ChatbotSelection' | 'Search' | 'Profile' | 'Statistics' | 'Updates' | 'GovernmentPulse' | 'LegalUpdateDetail' | 'MinistryUpdates' | 'Notifications' | 'AuthTest' | 'ErrorTest';
+export type Screen = 'Dashboard' | 'Chat' | 'ChatbotSelection' | 'Search' | 'Profile' | 'PersonalInfo' | 'Achievements' | 'Preferences' | 'Bookmarks' | 'ActivityHistory' | 'Statistics' | 'Updates' | 'GovernmentPulse' | 'LegalUpdateDetail' | 'MinistryUpdates' | 'Notifications' | 'AuthTest' | 'ErrorTest' | 'MascotDemo';
 
 interface NavigationState {
   currentScreen: Screen;
@@ -22,11 +28,12 @@ interface NavigationState {
   history: { screen: Screen; params?: any }[];
 }
 
-export const AppNavigator: React.FC = () => {
+const AppNavigatorContent: React.FC = () => {
   const [navigationState, setNavigationState] = useState<NavigationState>({
     currentScreen: 'Dashboard',
     history: [],
   });
+  const { theme } = useTheme();
 
   const navigate = (screen: Screen, params?: any) => {
     console.log(`🚀 NAVIGATION: Going to ${screen}`, params);
@@ -72,12 +79,22 @@ export const AppNavigator: React.FC = () => {
         return <NotificationsScreen navigation={navigation} />;
       case 'Profile':
         return <ProfileScreen navigation={navigation} />;
+      case 'PersonalInfo':
+        return <PersonalInfoScreen navigation={navigation} />;
+      case 'Achievements':
+        return <AchievementsScreen navigation={navigation} />;
+      case 'Preferences':
+        return <PreferencesScreen navigation={navigation} />;
       case 'Updates':
         return <UpdatesScreen navigation={navigation} />;
       case 'AuthTest':
         return <AuthTestScreen />;
       case 'ErrorTest':
         return <ErrorTestScreen navigation={navigation} />;
+      case 'MascotDemo':
+        return <MascotDemoScreen navigation={navigation} />;
+      case 'Bookmarks':
+      case 'ActivityHistory':
       case 'Statistics':
       case 'GovernmentPulse':
       case 'LegalUpdateDetail':
@@ -90,7 +107,7 @@ export const AppNavigator: React.FC = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={[{ flex: 1 }, { backgroundColor: theme.colors.background }]}>
       {renderScreen()}
       <BottomTabBar 
         currentScreen={navigationState.currentScreen}
@@ -100,12 +117,24 @@ export const AppNavigator: React.FC = () => {
   );
 };
 
+export const AppNavigator: React.FC = () => {
+  return (
+    <ThemeProvider>
+      <MascotProvider>
+        <AppNavigatorContent />
+      </MascotProvider>
+    </ThemeProvider>
+  );
+};
+
 // Placeholder screen for unimplemented screens
 const PlaceholderScreen: React.FC<{ navigation: any; screenName: string }> = ({ navigation, screenName }) => {
 
   const getScreenTitle = () => {
     switch (screenName) {
       case 'Profile': return 'الملف الشخصي';
+      case 'Bookmarks': return 'المحفوظات';
+      case 'ActivityHistory': return 'سجل النشاط';
       case 'Statistics': return 'الإحصائيات';
       case 'Updates': return 'جميع التحديثات';
       case 'GovernmentPulse': return 'نبض الحكومة الكامل';

@@ -1,233 +1,123 @@
-# 🚀 Kanounji 2025 - Revolutionary Legal Intelligence Platform
-## World's First Real-Time Legal Intelligence System for Tunisia
+# Kanounji 2025 - Tunisian Legal Intelligence App
 
-**GAME-CHANGING TRANSFORMATION**: From traditional legal search to revolutionary multi-source legal intelligence that predicts legal changes before they're formally published!
+Revolutionary real-time legal intelligence platform for Tunisia built with React Native and Expo.
 
-### 🌟 Revolutionary Capabilities
-- **Real-Time Government Monitoring**: 20+ ministry social media accounts scraped every 15 minutes
-- **Parliamentary Intelligence**: Al Bawsala Marsad integration for live parliamentary tracking
-- **Predictive Legal Analytics**: Forecast law passage 30+ days in advance
-- **9anoun.tn Integration**: Comprehensive Tunisian legal database access
-- **Multi-Source Intelligence Fusion**: Combine traditional law + real-time signals + predictions
+## Features
 
-## 🏗️ Revolutionary Architecture
+- 🏛️ Real-time legal intelligence dashboard
+- 🎭 3D Tunisian mascots with cultural authenticity
+- 🗣️ Voice AI interface with Tunisian dialect support
+- 📱 Cross-platform mobile app (iOS, Android, Web)
+- 🔍 Multi-source legal search and discovery
+- 🎮 Gamification and achievement system
+- 👥 Community features and voting
+- 🌐 Multi-language support (Arabic, French, English)
 
-### 🔥 Kanounji 2025 Intelligence Flow
-1. **Privacy-First Input**: User query with PII protection (unchanged - still perfect!)
-2. **Multi-Source Intelligence Gathering**:
-   - Traditional legal documents (existing system)
-   - **NEW**: Real-time government social media (20+ ministries)
-   - **NEW**: Parliamentary data (Al Bawsala Marsad)
-   - **NEW**: 9anoun.tn comprehensive legal database
-3. **AI Signal Detection**: Legal significance analysis across all sources
-4. **Predictive Analytics**: Forecast legal changes before official publication
-5. **Intelligence Fusion**: Combine all sources for comprehensive response
-6. **Enhanced Response**: Multi-source answer with predictions and confidence scores
+## Getting Started
 
-### 🛠️ Revolutionary Tech Stack
-- **Frontend**: Flutter + Web Demo (Cross-platform)
-- **Backend**: Python FastAPI with revolutionary enhancements
-- **AI Engine**: Gemini 2.0 Flash + Mistral 7B + Legal Intelligence Engine
-- **Database**: PostgreSQL + pgvector + Multi-source data fusion
-- **Real-Time Scraping**: Government social media + Parliamentary monitoring
-- **Legal Database**: 9anoun.tn integration + Traditional legal documents
-- **Predictive Analytics**: Multi-factor law passage prediction
-- **Audio AI**: Tunisian dialect voice interaction
-- **Deployment**: Docker + Cloud + Background monitoring tasks
+### Prerequisites
 
-## 📱 Kanounji 2025 Project Structure
+- Node.js (v20.15.0 or higher)
+- npm or yarn
+- Expo CLI
+- For iOS development: Xcode (macOS only)
+- For Android development: Android Studio
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd tunisian-legal-app
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Copy environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Start the development server:
+   ```bash
+   npm start
+   ```
+
+### Development Scripts
+
+- `npm start` - Start Expo development server
+- `npm run android` - Run on Android device/emulator
+- `npm run ios` - Run on iOS device/simulator (macOS only)
+- `npm run web` - Run in web browser
+- `npm run lint` - Run ESLint
+- `npm run lint:fix` - Fix ESLint issues automatically
+- `npm run format` - Format code with Prettier
+- `npm run type-check` - Run TypeScript type checking
+- `npm run clean` - Clear Expo cache
+
+## Project Structure
 
 ```
-kanounji-2025-legal-intelligence/
-├── mobile_app/                    # Flutter mobile application
-├── web_demo/                      # Immediate web interface
-├── backend/
-│   ├── services/
-│   │   ├── legal_intelligence.py # 🚀 Revolutionary intelligence engine
-│   │   ├── audio_service.py      # Tunisian dialect voice AI
-│   │   └── ...existing services
-│   ├── scraping/
-│   │   ├── government_social.py  # 🔥 20+ ministry social monitoring
-│   │   ├── marsad_integration.py # 🏛️ Parliamentary intelligence
-│   │   └── qanoun_scraper.py     # 📚 9anoun.tn integration
-│   └── ...
-├── database/                      # Enhanced multi-source database
-├── monitoring/                    # Real-time monitoring configs
-└── docs/                         # Revolutionary capabilities docs
+src/
+├── components/     # Reusable UI components
+├── screens/        # Screen components
+├── navigation/     # Navigation configuration
+├── services/       # API services and data fetching
+├── hooks/          # Custom React hooks
+├── utils/          # Utility functions
+├── types/          # TypeScript type definitions
+├── store/          # State management
+└── config/         # Configuration files
 ```
 
-## 🚀 Quick Start
+## Environment Variables
 
-### Option 1: Easy Startup (Recommended)
-```bash
-# Make startup script executable and run
-chmod +x start.sh
-./start.sh
-```
+Configure the following environment variables in `.env`:
 
-### Option 2: Manual Docker Setup
-```bash
-# 1. Copy environment template
-cp .env.example .env
+- `API_BASE_URL` - Backend API base URL
+- `API_TIMEOUT` - API request timeout
+- `ENABLE_3D_MASCOTS` - Enable/disable 3D mascot features
+- `ENABLE_VOICE_AI` - Enable/disable voice AI features
+- `ENABLE_OFFLINE_MODE` - Enable/disable offline functionality
+- `DEBUG_MODE` - Enable/disable debug features
 
-# 2. Edit .env and add your API keys (at least one required):
-#    - GEMINI_API_KEY
-#    - OPENAI_API_KEY  
-#    - ANTHROPIC_API_KEY
+## Development Guidelines
 
-# 3. Start development environment
-docker-compose up -d
+### Code Style
 
-# 4. Check status
-docker-compose ps
-```
+- Use TypeScript for all new code
+- Follow ESLint and Prettier configurations
+- Use functional components with hooks
+- Implement proper error handling
+- Add JSDoc comments for complex functions
 
-### Option 3: Production Setup
-```bash
-./start.sh prod
-```
+### Commit Guidelines
 
-### Frontend Options
+- Use conventional commit messages
+- Run linting and type checking before commits
+- Test on multiple platforms when possible
 
-**Option A: Web Demo (Immediate - No Flutter Required)**
-```bash
-# Start web demo
-cd web_demo
-python3 serve.py
+## Architecture
 
-# Open http://localhost:3000 in browser
-```
+The app follows a modular architecture with:
 
-**Option B: Flutter Mobile App**
-```bash
-# Install Flutter first (see FLUTTER_SETUP.md)
-cd mobile_app
-flutter pub get
-flutter run -d web-server
-```
+- **Expo Router** for file-based navigation
+- **TypeScript** for type safety
+- **React Native Skia** for 3D mascot rendering
+- **React Query** for data fetching and caching
+- **AsyncStorage** for local data persistence
 
-## 🚀 Kanounji 2025 Access Points
+## Contributing
 
-### 🎯 Revolutionary Endpoints
-- **Enhanced Legal Intelligence**: `POST /api/v2/legal-intelligence`
-- **Real-Time Legal Alerts**: `GET /api/v2/legal-alerts`
-- **Predictive Analytics**: `GET /api/v2/predict-law-passage`
-- **Government Pulse Monitor**: `GET /api/v2/government-pulse`
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and linting
+5. Submit a pull request
 
-### 🌐 User Interfaces
-- **Web Demo**: http://localhost:3000 (Immediate access)
-- **API Documentation**: http://localhost:8001/docs
-- **Health Check**: http://localhost:8001/health (Now includes all revolutionary services)
+## License
 
-### 🎯 Revolutionary Demo
-
-**Experience the future of legal intelligence:**
-```bash
-# Terminal 1: Start Kanounji 2025 Platform
-./start.sh
-
-# Terminal 2: Start web interface
-cd web_demo && python3 serve.py
-
-# Open http://localhost:3000 and ask:
-# "What's the government's current position on business law?"
-# Get real-time intelligence from 20+ ministry social accounts!
-```
-
-## 🔒 Privacy Features
-
-- Local PII stripping before external API calls
-- No personal data stored in external systems
-- Encrypted data transmission
-- Audit logs for compliance
-- GDPR-compliant data handling
-#
-# 🔥 Revolutionary Features That Change Everything
-
-### 🚨 Real-Time Legal Intelligence
-- **Government Social Monitoring**: Track 20+ Tunisian ministry social accounts every 15 minutes
-- **Parliamentary Live Tracking**: Al Bawsala Marsad integration for real-time parliamentary sessions
-- **Legal Signal Detection**: AI-powered detection of legal significance in social media posts
-- **Breaking Legal News**: Catch government announcements BEFORE official JORT publication
-
-### 🔮 Predictive Legal Analytics
-- **Law Passage Prediction**: Forecast law passage probability 30+ days in advance
-- **Timeline Estimation**: Predict when legal changes will occur
-- **Risk Assessment**: Identify factors that could delay or accelerate legal processes
-- **Confidence Scoring**: Multi-factor confidence analysis for all predictions
-
-### 🌐 Multi-Source Intelligence Fusion
-- **Traditional Legal Documents**: Your existing legal RAG system (enhanced)
-- **9anoun.tn Integration**: Comprehensive Tunisian legal database access
-- **Government Position Analysis**: Real-time government stance on legal issues
-- **Parliamentary Context**: Current discussions and voting patterns
-- **Public Sentiment**: Social media legal discussion trends
-
-### 🎤 Advanced AI Capabilities
-- **Tunisian Dialect Voice AI**: Natural conversation in authentic Tunisian Arabic
-- **Audio-to-Audio Legal Consultation**: Speak your question, get spoken legal guidance
-- **Multi-Language Support**: Arabic, French, English with cultural context
-- **Privacy-First Processing**: All personal information stripped before external processing
-
-### 📊 Revolutionary User Experience
-**Before Kanounji 2025**: "What does the law say about X?"
-
-**After Kanounji 2025**: "Here's what the law says about X, the government's current position (posted yesterday on Facebook), parliament is discussing changes next week (Marsad data), lawyers are debating this issue, and we predict a 70% chance of legal changes in 30 days."
-
-## 🏆 Competitive Advantages
-
-### 🥇 World's First Real-Time Legal Intelligence Platform
-- **Unique Capability**: Only platform providing live legal change tracking for Tunisia
-- **Predictive Power**: Forecast legal changes 30+ days before official publication
-- **Multi-Source Verification**: Cross-check legal info across government, parliament, professionals
-- **Cultural Authenticity**: Tunisian dialect AI with local legal expertise
-
-### 🛡️ Privacy-First Innovation
-- **Zero Personal Data Storage**: Your existing PII stripping enhanced with multi-source intelligence
-- **Local Processing**: Sensitive operations performed locally before external API calls
-- **Audit Trails**: Complete transparency in data processing
-- **GDPR Compliance**: European-standard privacy protection
-
-### 🚀 Technical Excellence
-- **Scalable Architecture**: Docker + cloud deployment ready
-- **Real-Time Processing**: Background monitoring tasks for continuous intelligence
-- **Mobile-First Design**: Flutter app with revolutionary legal capabilities
-- **API-First**: RESTful APIs for integration with other systems
-
----
-
-## 🧠 Vector-Powered Semantic Search
-
-### Revolutionary AI Embeddings
-Kanounji 2025 now includes **vector embeddings** for all scraped legal intelligence data:
-
-- **Government Social Media Posts**: Every ministry post is embedded for semantic search
-- **Parliamentary Sessions**: All Marsad parliamentary data with vector search
-- **9anoun.tn Documents**: Legal documents with AI-powered similarity matching
-- **Legal Signals**: Intelligent content discovery across all sources
-
-### New Vector Endpoints
-```bash
-# Semantic search across ALL sources
-curl -X POST "http://localhost:8000/api/v2/semantic-search" \
-  -H "Content-Type: application/json" \
-  -d '{"query": "قوانين الشركات التجارية", "language": "ar"}'
-
-# Check vector storage health
-curl "http://localhost:8000/api/v2/vector-health"
-
-# Generate missing embeddings
-curl -X POST "http://localhost:8000/api/v2/generate-embeddings"
-```
-
-### Test Vector Storage
-```bash
-# Test the vector storage system
-python test_vector_storage.py
-```
-
-## 🎊 **KANOUNJI 2025 IS LIVE!**
-
-You now have the **world's first real-time legal intelligence platform** with **AI-powered semantic search** specifically designed for Tunisia. This revolutionary system transforms legal assistance from static document search to dynamic, predictive, multi-source intelligence with vector embeddings that helps Tunisian citizens discover relevant legal information using natural language.
-
-**🚀 The future of legal AI is here - and it speaks Tunisian!** 🇹🇳
+This project is licensed under the MIT License.

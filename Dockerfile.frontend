@@ -1,0 +1,23 @@
+# Frontend Dockerfile for React Native Web
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies for Expo and React Native
+RUN npm install -g @expo/cli
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Expose port for web development server
+EXPOSE 8081
+
+# Start the development server
+CMD ["npm", "run", "web"]

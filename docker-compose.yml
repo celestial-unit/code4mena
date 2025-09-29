@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database with pgvector
   postgres:
@@ -41,7 +39,7 @@ services:
       timeout: 10s
       retries: 3
 
-  # FastAPI Backend
+  # FastAPI Backend with Gemini Live API
   backend:
     build:
       context: ./backend
@@ -57,7 +55,7 @@ services:
       - ENVIRONMENT=development
       - DEBUG=true
     ports:
-      - "8001:8000"  # Use port 8001 to avoid potential conflicts
+      - "8001:8000"  # Backend API port
     volumes:
       - ./backend:/app
       - model_cache:/app/models
@@ -69,6 +67,33 @@ services:
     networks:
       - code4mena_network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # React Native Web Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: code4mena_frontend
+    environment:
+      - EXPO_PUBLIC_API_BASE_URL=http://localhost:8001
+      - NODE_ENV=development
+    ports:
+      - "8081:8081"  # Frontend web port
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - code4mena_network
+    restart: unless-stopped
+    command: npm run web
 
 volumes:
   postgres_data:

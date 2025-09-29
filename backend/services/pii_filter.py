@@ -28,37 +28,6 @@ class PIIFilterService:
             "id_numbers": r'\b\d{8,12}\b',
             "addresses": r'\b\d+\s+[A-Za-z\s]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd)\b'
         }
-    
-    def filter_pii(self, text: str) -> str:
-        """
-        Simple PII filtering using regex patterns
-        For production, this would use the full LLM model
-        """
-        try:
-            filtered_text = text
-            
-            # Apply regex-based PII filtering
-            for pii_type, pattern in self.pii_patterns.items():
-                filtered_text = re.sub(pattern, f"[{pii_type.upper()}]", filtered_text, flags=re.IGNORECASE)
-            
-            # Additional Arabic PII patterns (but exclude legal terms)
-            legal_terms = ['قانون', 'مرسوم', 'قرار', 'شركة', 'عمل', 'تجارية', 'مدني', 'جنائي', 'إداري', 'دستور', 'محكمة']
-            
-            # Only filter Arabic names if they're not legal terms
-            if not any(term in text.lower() for term in legal_terms):
-                arabic_patterns = {
-                    "arabic_phone": r'\b\d{8}\b',  # Tunisian phone numbers
-                    "arabic_id": r'\b\d{8}\b'      # Tunisian ID numbers
-                }
-                
-                for pii_type, pattern in arabic_patterns.items():
-                    filtered_text = re.sub(pattern, f"[{pii_type.upper()}]", filtered_text)
-            
-            return filtered_text
-            
-        except Exception as e:
-            logger.error(f"Error filtering PII: {e}")
-            return text  # Return original text if filtering fails
         
     async def initialize(self):
         """Initialize the local LLM for PII filtering"""

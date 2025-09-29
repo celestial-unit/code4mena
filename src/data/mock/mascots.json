@@ -1,0 +1,383 @@
+[
+  {
+    "id": "mascot-business-001",
+    "name": "Tijari",
+    "nameAr": "تجاري",
+    "nameFr": "Tijari",
+    "sector": "business",
+    "description": "A sophisticated business mascot wearing traditional Tunisian business attire with modern touches",
+    "descriptionAr": "تميمة أعمال أنيقة ترتدي الزي التجاري التونسي التقليدي مع لمسات عصرية",
+    "descriptionFr": "Une mascotte d'affaires sophistiquée portant une tenue d'affaires tunisienne traditionnelle avec des touches modernes",
+    "culturalElements": [
+      {
+        "id": "element-001",
+        "type": "clothing",
+        "name": "Traditional Jebba with Modern Cut",
+        "nameAr": "جبة تقليدية بقصة عصرية",
+        "nameFr": "Jebba traditionnelle avec coupe moderne",
+        "tunisianReference": "Jebba - Traditional Tunisian formal wear",
+        "tunisianReferenceAr": "الجبة - الزي الرسمي التونسي التقليدي",
+        "tunisianReferenceFr": "Jebba - Tenue formelle tunisienne traditionnelle",
+        "culturalSignificance": "Symbol of dignity and professionalism in Tunisian business culture",
+        "culturalSignificanceAr": "رمز الكرامة والمهنية في ثقافة الأعمال التونسية",
+        "culturalSignificanceFr": "Symbole de dignité et de professionnalisme dans la culture d'affaires tunisienne",
+        "visualRepresentation": "White jebba with gold embroidery and modern tailoring",
+        "region": "national",
+        "isTraditional": true,
+        "modernAdaptation": "Fitted cut suitable for contemporary business settings"
+      },
+      {
+        "id": "element-002",
+        "type": "accessories",
+        "name": "Chechia with Business Badge",
+        "nameAr": "شاشية مع شارة الأعمال",
+        "nameFr": "Chéchia avec badge d'affaires",
+        "tunisianReference": "Chechia - Traditional Tunisian red cap",
+        "tunisianReferenceAr": "الشاشية - القبعة الحمراء التونسية التقليدية",
+        "tunisianReferenceFr": "Chéchia - Bonnet rouge tunisien traditionnel",
+        "culturalSignificance": "National symbol of Tunisia, represents identity and pride",
+        "culturalSignificanceAr": "رمز وطني لتونس، يمثل الهوية والفخر",
+        "culturalSignificanceFr": "Symbole national de la Tunisie, représente l'identité et la fierté",
+        "visualRepresentation": "Red felt cap with small business-themed pin",
+        "region": "national",
+        "isTraditional": true,
+        "modernAdaptation": "Incorporates small modern business symbols"
+      }
+    ],
+    "animations": [
+      {
+        "id": "anim-001",
+        "name": "Professional Greeting",
+        "nameAr": "تحية مهنية",
+        "nameFr": "Salutation professionnelle",
+        "type": "greeting",
+        "sector": "business",
+        "duration": 2.5,
+        "description": "Formal handshake with traditional Tunisian greeting gestures",
+        "descriptionAr": "مصافحة رسمية مع إيماءات التحية التونسية التقليدية",
+        "descriptionFr": "Poignée de main formelle avec gestes de salutation tunisiens traditionnels",
+        "triggers": ["user_message", "screen_enter"],
+        "culturalContext": ["business_etiquette", "traditional_greeting"],
+        "culturalContextAr": ["آداب الأعمال", "التحية التقليدية"],
+        "culturalContextFr": ["étiquette d'affaires", "salutation traditionnelle"],
+        "voiceSync": true,
+        "emotionalTone": "professional",
+        "complexity": "medium"
+      },
+      {
+        "id": "anim-002",
+        "name": "Explaining with Documents",
+        "nameAr": "الشرح بالوثائق",
+        "nameFr": "Explication avec documents",
+        "type": "explaining",
+        "sector": "business",
+        "duration": 3.8,
+        "description": "Gesturing towards virtual documents while explaining legal concepts",
+        "descriptionAr": "الإشارة إلى الوثائق الافتراضية أثناء شرح المفاهيم القانونية",
+        "descriptionFr": "Gesticuler vers des documents virtuels tout en expliquant des concepts juridiques",
+        "triggers": ["ai_response", "explaining"],
+        "culturalContext": ["legal_documentation", "professional_presentation"],
+        "culturalContextAr": ["التوثيق القانوني", "العرض المهني"],
+        "culturalContextFr": ["documentation légale", "présentation professionnelle"],
+        "voiceSync": true,
+        "emotionalTone": "focused",
+        "complexity": "complex"
+      }
+    ],
+    "customizations": [
+      {
+        "id": "custom-001",
+        "type": "clothing",
+        "name": "Golden Jebba",
+        "nameAr": "جبة ذهبية",
+        "nameFr": "Jebba dorée",
+        "description": "Luxurious golden version of the traditional jebba",
+        "descriptionAr": "نسخة ذهبية فاخرة من الجبة التقليدية",
+        "descriptionFr": "Version dorée luxueuse de la jebba traditionnelle",
+        "sector": "business",
+        "culturalSignificance": "Represents success and prosperity in business",
+        "culturalSignificanceAr": "يمثل النجاح والازدهار في الأعمال",
+        "culturalSignificanceFr": "Représente le succès et la prospérité en affaires",
+        "unlockRequirement": {
+          "type": "achievement",
+          "value": "business_expert",
+          "description": "Unlock by becoming a business law expert",
+          "descriptionAr": "فتح بأن تصبح خبيراً في قانون الأعمال",
+          "descriptionFr": "Débloquer en devenant expert en droit des affaires",
+          "isCompleted": false
+        },
+        "isUnlocked": false,
+        "rarity": "epic",
+        "cost": 1000
+      }
+    ],
+    "voiceSyncCapability": true,
+    "tunisianSymbols": [
+      {
+        "id": "symbol-001",
+        "name": "Carthage Coin Pattern",
+        "nameAr": "نقش عملة قرطاج",
+        "nameFr": "Motif de pièce de Carthage",
+        "type": "geometric",
+        "description": "Ancient Carthaginian coin patterns representing commerce and trade",
+        "descriptionAr": "أنماط العملات القرطاجية القديمة التي تمثل التجارة والتبادل",
+        "descriptionFr": "Motifs de pièces carthaginoises anciennes représentant le commerce et l'échange",
+        "significance": "Historical connection to Tunisia's trading heritage",
+        "significanceAr": "الاتصال التاريخي بتراث تونس التجاري",
+        "significanceFr": "Connexion historique au patrimoine commercial de la Tunisie",
+        "usage": "decoration",
+        "region": "tunis",
+        "historicalPeriod": "Ancient Carthage",
+        "modernUsage": true,
+        "visualElements": [
+          {
+            "id": "visual-001",
+            "type": "pattern",
+            "value": "circular_geometric",
+            "description": "Circular geometric patterns from ancient coins",
+            "descriptionAr": "أنماط هندسية دائرية من العملات القديمة",
+            "descriptionFr": "Motifs géométriques circulaires des pièces anciennes",
+            "culturalMeaning": "Prosperity and trade connections",
+            "culturalMeaningAr": "الازدهار والروابط التجارية",
+            "culturalMeaningFr": "Prospérité et connexions commerciales"
+          }
+        ]
+      }
+    ],
+    "isUnlocked": true,
+    "rarity": "common",
+    "popularity": 85
+  },
+  {
+    "id": "mascot-agriculture-001",
+    "name": "Zara'i",
+    "nameAr": "زراعي",
+    "nameFr": "Zara'i",
+    "sector": "agriculture",
+    "description": "A friendly agricultural mascot representing Tunisia's rich farming heritage with olive branches and traditional farming tools",
+    "descriptionAr": "تميمة زراعية ودودة تمثل التراث الزراعي الغني لتونس مع أغصان الزيتون وأدوات الزراعة التقليدية",
+    "descriptionFr": "Une mascotte agricole amicale représentant le riche patrimoine agricole de la Tunisie avec des branches d'olivier et des outils agricoles traditionnels",
+    "culturalElements": [
+      {
+        "id": "element-003",
+        "type": "props",
+        "name": "Olive Branch Crown",
+        "nameAr": "تاج أغصان الزيتون",
+        "nameFr": "Couronne de branches d'olivier",
+        "tunisianReference": "Olive trees - Symbol of peace and prosperity in Tunisia",
+        "tunisianReferenceAr": "أشجار الزيتون - رمز السلام والازدهار في تونس",
+        "tunisianReferenceFr": "Oliviers - Symbole de paix et de prospérité en Tunisie",
+        "culturalSignificance": "Olives are central to Tunisian agriculture and Mediterranean identity",
+        "culturalSignificanceAr": "الزيتون محوري في الزراعة التونسية والهوية المتوسطية",
+        "culturalSignificanceFr": "Les olives sont centrales à l'agriculture tunisienne et à l'identité méditerranéenne",
+        "visualRepresentation": "Fresh olive branches forming a natural crown",
+        "region": "national",
+        "isTraditional": true,
+        "modernAdaptation": "Stylized for modern agricultural branding"
+      },
+      {
+        "id": "element-004",
+        "type": "clothing",
+        "name": "Traditional Farmer's Vest",
+        "nameAr": "صدرية الفلاح التقليدية",
+        "nameFr": "Gilet traditionnel de fermier",
+        "tunisianReference": "Traditional work vest worn by Tunisian farmers",
+        "tunisianReferenceAr": "الصدرية التقليدية التي يرتديها الفلاحون التونسيون",
+        "tunisianReferenceFr": "Gilet de travail traditionnel porté par les fermiers tunisiens",
+        "culturalSignificance": "Represents the hardworking spirit of Tunisian farmers",
+        "culturalSignificanceAr": "يمثل روح العمل الجاد للفلاحين التونسيين",
+        "culturalSignificanceFr": "Représente l'esprit travailleur des fermiers tunisiens",
+        "visualRepresentation": "Earth-toned vest with traditional embroidery",
+        "region": "national",
+        "isTraditional": true,
+        "modernAdaptation": "Updated with modern sustainable farming symbols"
+      }
+    ],
+    "animations": [
+      {
+        "id": "anim-003",
+        "name": "Planting Seeds",
+        "nameAr": "زراعة البذور",
+        "nameFr": "Plantation de graines",
+        "type": "working",
+        "sector": "agriculture",
+        "duration": 4.2,
+        "description": "Gentle planting motion with traditional farming gestures",
+        "descriptionAr": "حركة زراعة لطيفة مع إيماءات الزراعة التقليدية",
+        "descriptionFr": "Mouvement de plantation doux avec gestes agricoles traditionnels",
+        "triggers": ["explaining", "achievement_unlock"],
+        "culturalContext": ["traditional_farming", "seasonal_cycles"],
+        "culturalContextAr": ["الزراعة التقليدية", "الدورات الموسمية"],
+        "culturalContextFr": ["agriculture traditionnelle", "cycles saisonniers"],
+        "voiceSync": false,
+        "emotionalTone": "calm",
+        "complexity": "medium"
+      },
+      {
+        "id": "anim-004",
+        "name": "Harvest Celebration",
+        "nameAr": "احتفال الحصاد",
+        "nameFr": "Célébration de la récolte",
+        "type": "celebrating",
+        "sector": "agriculture",
+        "duration": 3.5,
+        "description": "Joyful celebration with traditional harvest dance movements",
+        "descriptionAr": "احتفال مبهج مع حركات رقص الحصاد التقليدية",
+        "descriptionFr": "Célébration joyeuse avec mouvements de danse de récolte traditionnels",
+        "triggers": ["achievement_unlock", "success_action"],
+        "culturalContext": ["harvest_festivals", "community_celebration"],
+        "culturalContextAr": ["مهرجانات الحصاد", "احتفال المجتمع"],
+        "culturalContextFr": ["festivals de récolte", "célébration communautaire"],
+        "voiceSync": false,
+        "emotionalTone": "happy",
+        "complexity": "complex"
+      }
+    ],
+    "customizations": [
+      {
+        "id": "custom-002",
+        "type": "props",
+        "name": "Ancient Plow",
+        "nameAr": "المحراث القديم",
+        "nameFr": "Charrue ancienne",
+        "description": "Traditional wooden plow used in Tunisian agriculture",
+        "descriptionAr": "المحراث الخشبي التقليدي المستخدم في الزراعة التونسية",
+        "descriptionFr": "Charrue en bois traditionnelle utilisée dans l'agriculture tunisienne",
+        "sector": "agriculture",
+        "culturalSignificance": "Connects to ancestral farming methods",
+        "culturalSignificanceAr": "يربط بطرق الزراعة الأجدادية",
+        "culturalSignificanceFr": "Se connecte aux méthodes agricoles ancestrales",
+        "unlockRequirement": {
+          "type": "activity",
+          "value": 30,
+          "description": "Complete 30 agricultural law consultations",
+          "descriptionAr": "أكمل 30 استشارة في القانون الزراعي",
+          "descriptionFr": "Compléter 30 consultations en droit agricole",
+          "isCompleted": false
+        },
+        "isUnlocked": false,
+        "rarity": "rare",
+        "cost": 750
+      }
+    ],
+    "voiceSyncCapability": false,
+    "tunisianSymbols": [
+      {
+        "id": "symbol-002",
+        "name": "Berber Agricultural Symbols",
+        "nameAr": "رموز زراعية أمازيغية",
+        "nameFr": "Symboles agricoles berbères",
+        "type": "cultural",
+        "description": "Traditional Berber symbols representing fertility and harvest",
+        "descriptionAr": "رموز أمازيغية تقليدية تمثل الخصوبة والحصاد",
+        "descriptionFr": "Symboles berbères traditionnels représentant la fertilité et la récolte",
+        "significance": "Connection to Tunisia's indigenous agricultural heritage",
+        "significanceAr": "الاتصال بالتراث الزراعي الأصلي لتونس",
+        "significanceFr": "Connexion au patrimoine agricole indigène de la Tunisie",
+        "usage": "ceremonial",
+        "region": "national",
+        "historicalPeriod": "Pre-Islamic Tunisia",
+        "modernUsage": true,
+        "visualElements": [
+          {
+            "id": "visual-002",
+            "type": "motif",
+            "value": "fertility_spiral",
+            "description": "Spiral patterns representing growth and renewal",
+            "descriptionAr": "أنماط حلزونية تمثل النمو والتجديد",
+            "descriptionFr": "Motifs en spirale représentant la croissance et le renouveau",
+            "culturalMeaning": "Continuous cycle of planting and harvest",
+            "culturalMeaningAr": "الدورة المستمرة للزراعة والحصاد",
+            "culturalMeaningFr": "Cycle continu de plantation et de récolte"
+          }
+        ]
+      }
+    ],
+    "isUnlocked": true,
+    "rarity": "common",
+    "popularity": 78
+  },
+  {
+    "id": "mascot-money-001",
+    "name": "Maliyi",
+    "nameAr": "مالي",
+    "nameFr": "Maliyi",
+    "sector": "money",
+    "description": "A wise financial mascot combining traditional Tunisian merchant attire with modern financial symbols",
+    "descriptionAr": "تميمة مالية حكيمة تجمع بين زي التاجر التونسي التقليدي والرموز المالية الحديثة",
+    "descriptionFr": "Une mascotte financière sage combinant la tenue traditionnelle de marchand tunisien avec des symboles financiers modernes",
+    "culturalElements": [
+      {
+        "id": "element-005",
+        "type": "accessories",
+        "name": "Traditional Money Pouch",
+        "nameAr": "كيس النقود التقليدي",
+        "nameFr": "Bourse traditionnelle",
+        "tunisianReference": "Traditional leather pouch used by Tunisian merchants",
+        "tunisianReferenceAr": "الكيس الجلدي التقليدي المستخدم من قبل التجار التونسيين",
+        "tunisianReferenceFr": "Bourse en cuir traditionnelle utilisée par les marchands tunisiens",
+        "culturalSignificance": "Symbol of trust and financial responsibility in traditional commerce",
+        "culturalSignificanceAr": "رمز الثقة والمسؤولية المالية في التجارة التقليدية",
+        "culturalSignificanceFr": "Symbole de confiance et de responsabilité financière dans le commerce traditionnel",
+        "visualRepresentation": "Ornate leather pouch with traditional patterns",
+        "region": "national",
+        "isTraditional": true,
+        "modernAdaptation": "Incorporates modern payment symbols"
+      }
+    ],
+    "animations": [
+      {
+        "id": "anim-005",
+        "name": "Calculating Taxes",
+        "nameAr": "حساب الضرائب",
+        "nameFr": "Calcul des taxes",
+        "type": "working",
+        "sector": "money",
+        "duration": 3.2,
+        "description": "Traditional abacus movements combined with modern calculator gestures",
+        "descriptionAr": "حركات المعداد التقليدية مع إيماءات الآلة الحاسبة الحديثة",
+        "descriptionFr": "Mouvements d'abaque traditionnels combinés avec gestes de calculatrice moderne",
+        "triggers": ["explaining", "ai_response"],
+        "culturalContext": ["traditional_commerce", "modern_finance"],
+        "culturalContextAr": ["التجارة التقليدية", "المالية الحديثة"],
+        "culturalContextFr": ["commerce traditionnel", "finance moderne"],
+        "voiceSync": true,
+        "emotionalTone": "focused",
+        "complexity": "medium"
+      }
+    ],
+    "customizations": [],
+    "voiceSyncCapability": true,
+    "tunisianSymbols": [
+      {
+        "id": "symbol-003",
+        "name": "Dinar Coin Patterns",
+        "nameAr": "أنماط عملة الدينار",
+        "nameFr": "Motifs de pièce de dinar",
+        "type": "geometric",
+        "description": "Traditional patterns from Tunisian dinar coins",
+        "descriptionAr": "الأنماط التقليدية من عملات الدينار التونسي",
+        "descriptionFr": "Motifs traditionnels des pièces de dinar tunisien",
+        "significance": "National currency representing economic sovereignty",
+        "significanceAr": "العملة الوطنية التي تمثل السيادة الاقتصادية",
+        "significanceFr": "Monnaie nationale représentant la souveraineté économique",
+        "usage": "decoration",
+        "region": "national",
+        "historicalPeriod": "Modern Tunisia",
+        "modernUsage": true,
+        "visualElements": []
+      }
+    ],
+    "isUnlocked": false,
+    "unlockRequirement": {
+      "type": "achievement",
+      "value": "tax_expert",
+      "description": "Unlock by mastering tax law topics",
+      "descriptionAr": "فتح بإتقان مواضيع قانون الضرائب",
+      "descriptionFr": "Débloquer en maîtrisant les sujets de droit fiscal",
+      "isCompleted": false
+    },
+    "rarity": "uncommon",
+    "popularity": 65
+  }
+]

@@ -1,0 +1,77 @@
+[
+  {
+    "id": "stats-001",
+    "userId": "user-001",
+    "period": "current_month",
+    "stats": {
+      "totalLegalUpdatesRead": 25,
+      "totalChatConversations": 8,
+      "totalSearchQueries": 15,
+      "totalAchievements": 3,
+      "currentStreak": 5,
+      "longestStreak": 7,
+      "totalPoints": 450,
+      "averageSessionDuration": 18.5,
+      "favoriteCategory": "business_law",
+      "mostActiveSector": "business",
+      "weeklyGrowth": {
+        "updatesRead": 12,
+        "chatConversations": 3,
+        "searchQueries": 7,
+        "timeSpent": 125
+      },
+      "categoryBreakdown": {
+        "business_law": 40,
+        "tax_law": 25,
+        "administrative_law": 20,
+        "labor_law": 10,
+        "family_law": 5
+      },
+      "sectorEngagement": {
+        "business": 45,
+        "technology": 25,
+        "agriculture": 15,
+        "tourism": 10,
+        "education": 5
+      }
+    },
+    "lastUpdated": "2024-01-15T16:45:00Z"
+  },
+  {
+    "id": "stats-002",
+    "userId": "user-002",
+    "period": "current_month",
+    "stats": {
+      "totalLegalUpdatesRead": 18,
+      "totalChatConversations": 12,
+      "totalSearchQueries": 8,
+      "totalAchievements": 2,
+      "currentStreak": 3,
+      "longestStreak": 8,
+      "totalPoints": 350,
+      "averageSessionDuration": 22.3,
+      "favoriteCategory": "administrative_law",
+      "mostActiveSector": "agriculture",
+      "weeklyGrowth": {
+        "updatesRead": 8,
+        "chatConversations": 5,
+        "searchQueries": 3,
+        "timeSpent": 156
+      },
+      "categoryBreakdown": {
+        "administrative_law": 35,
+        "environmental_law": 30,
+        "family_law": 20,
+        "civil_law": 10,
+        "labor_law": 5
+      },
+      "sectorEngagement": {
+        "agriculture": 50,
+        "food": 25,
+        "education": 15,
+        "business": 10
+      }
+    },
+    "lastUpdated": "2024-01-15T13:22:00Z"
+  }
+]

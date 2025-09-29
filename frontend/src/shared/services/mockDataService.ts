@@ -1,8 +1,8 @@
-import {
-  LegalUpdate,
-  User,
-  ChatConversation,
-  TunisianMascot,
+import { 
+  LegalUpdate, 
+  User, 
+  ChatConversation, 
+  TunisianMascot, 
   SearchResult,
   SearchQuery,
   LegalIntelligenceResponse,
@@ -10,7 +10,7 @@ import {
   PaginatedResponse
 } from '../types';
 
-import {
+import { 
   transformLegalUpdates,
   transformUsers,
   transformChatConversations,
@@ -18,13 +18,14 @@ import {
 } from '../utils/dataTransformers';
 
 // Import mock data
+import legalUpdatesDataRaw from '../data/mock/legal-updates.json';
 import usersDataRaw from '../data/mock/users.json';
 import chatConversationsDataRaw from '../data/mock/chat-conversations.json';
 import mascotsData from '../data/mock/mascots.json';
 import searchResultsDataRaw from '../data/mock/search-results.json';
 
 // Transform raw JSON data to proper types
-// Legal updates are now handled by the API
+const legalUpdatesData = transformLegalUpdates(legalUpdatesDataRaw);
 const usersData = transformUsers(usersDataRaw);
 const chatConversationsData = transformChatConversations(chatConversationsDataRaw);
 const searchResultsData = transformSearchResults(searchResultsDataRaw);
@@ -38,7 +39,7 @@ export class MockDataService {
   private readonly baseDelay = 500; // Base delay in milliseconds
   private readonly maxDelay = 2000; // Maximum delay for complex operations
 
-  private constructor() { }
+  private constructor() {}
 
   public static getInstance(): MockDataService {
     if (!MockDataService.instance) {
@@ -56,7 +57,7 @@ export class MockDataService {
       medium: this.baseDelay * 1.5,
       complex: this.baseDelay * 2.5
     };
-
+    
     const delay = delays[complexity] + Math.random() * 500;
     await new Promise(resolve => setTimeout(resolve, delay));
   }
@@ -83,14 +84,14 @@ export class MockDataService {
    * Create paginated response
    */
   private createPaginatedResponse<T>(
-    items: T[],
-    page: number = 1,
+    items: T[], 
+    page: number = 1, 
     pageSize: number = 10
   ): PaginatedResponse<T> {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     const paginatedItems = items.slice(startIndex, endIndex);
-
+    
     return {
       items: paginatedItems,
       totalItems: items.length,
@@ -104,15 +105,15 @@ export class MockDataService {
 
   // Legal Updates Services
   async getLegalUpdates(
-    page: number = 1,
+    page: number = 1, 
     pageSize: number = 10,
     category?: string,
     priority?: string
   ): Promise<ApiResponse<PaginatedResponse<LegalUpdate>>> {
     await this.simulateDelay('medium');
-
+    
     let filteredUpdates = legalUpdatesData;
-
+    
     // Apply filters
     if (category) {
       filteredUpdates = filteredUpdates.filter(update => update.category === category);
@@ -127,14 +128,14 @@ export class MockDataService {
 
   async getLegalUpdateById(id: string): Promise<ApiResponse<LegalUpdate | null>> {
     await this.simulateDelay('simple');
-
+    
     const update = legalUpdatesData.find(update => update.id === id);
     return this.createApiResponse(update || null);
   }
 
   async bookmarkLegalUpdate(updateId: string, userId: string): Promise<ApiResponse<boolean>> {
     await this.simulateDelay('simple');
-
+    
     // Simulate bookmark operation
     const update = legalUpdatesData.find(u => u.id === updateId);
     if (update) {
@@ -147,27 +148,27 @@ export class MockDataService {
   // User Services
   async getUserById(id: string): Promise<ApiResponse<User | null>> {
     await this.simulateDelay('simple');
-
+    
     const user = usersData.find(user => user.id === id);
     return this.createApiResponse(user || null);
   }
 
   async updateUserProfile(userId: string, profileData: Partial<User>): Promise<ApiResponse<User>> {
     await this.simulateDelay('medium');
-
+    
     const userIndex = usersData.findIndex(user => user.id === userId);
     if (userIndex !== -1) {
       const updatedUser = { ...usersData[userIndex], ...profileData };
       usersData[userIndex] = updatedUser;
       return this.createApiResponse(updatedUser);
     }
-
+    
     return this.createApiResponse(null as any, false);
   }
 
   async getUserStatistics(userId: string): Promise<ApiResponse<User['statistics'] | null>> {
     await this.simulateDelay('simple');
-
+    
     const user = usersData.find(user => user.id === userId);
     return this.createApiResponse(user?.statistics || null);
   }
@@ -175,31 +176,31 @@ export class MockDataService {
   // Chat Services
   async getChatConversations(userId: string): Promise<ApiResponse<ChatConversation[]>> {
     await this.simulateDelay('medium');
-
+    
     const userConversations = chatConversationsData.filter(
       conv => conv.userId === userId
     );
-
+    
     return this.createApiResponse(userConversations);
   }
 
   async getChatConversationById(id: string): Promise<ApiResponse<ChatConversation | null>> {
     await this.simulateDelay('simple');
-
+    
     const conversation = chatConversationsData.find(
       conv => conv.id === id
     );
-
+    
     return this.createApiResponse(conversation || null);
   }
 
   async sendChatMessage(
-    conversationId: string,
-    message: string,
+    conversationId: string, 
+    message: string, 
     userId: string
   ): Promise<ApiResponse<ChatConversation>> {
     await this.simulateDelay('complex');
-
+    
     const conversation = chatConversationsData.find(conv => conv.id === conversationId);
     if (!conversation) {
       return this.createApiResponse(null as any, false);
@@ -207,7 +208,7 @@ export class MockDataService {
 
     // Simulate AI response generation
     const aiResponse = await this.generateMockAIResponse(message, conversation.category);
-
+    
     // Add user message and AI response to conversation
     const userMessage = {
       id: `msg-${Date.now()}-user`,
@@ -303,14 +304,14 @@ export class MockDataService {
     pageSize: number = 10
   ): Promise<ApiResponse<PaginatedResponse<SearchResult>>> {
     await this.simulateDelay('complex');
-
+    
     // Simulate search algorithm
     let results = searchResultsData;
-
+    
     // Simple keyword matching simulation
     if (query) {
       const queryLower = query.toLowerCase();
-      results = results.filter(result =>
+      results = results.filter(result => 
         result.title.toLowerCase().includes(queryLower) ||
         result.content.toLowerCase().includes(queryLower) ||
         result.tags.some(tag => tag.toLowerCase().includes(queryLower))
@@ -319,13 +320,13 @@ export class MockDataService {
 
     // Apply filters
     if (filters?.categories?.length) {
-      results = results.filter(result =>
+      results = results.filter(result => 
         filters.categories.includes(result.category)
       );
     }
 
     if (filters?.sectors?.length) {
-      results = results.filter(result =>
+      results = results.filter(result => 
         result.sectors.some((sector: string) => filters.sectors.includes(sector))
       );
     }
@@ -339,7 +340,7 @@ export class MockDataService {
 
   async getSearchSuggestions(query: string): Promise<ApiResponse<string[]>> {
     await this.simulateDelay('simple');
-
+    
     const suggestions = [
       'business registration requirements',
       'digital tax implementation',
@@ -362,24 +363,24 @@ export class MockDataService {
   // Mascot Services
   async getMascots(): Promise<ApiResponse<TunisianMascot[]>> {
     await this.simulateDelay('medium');
-
+    
     return this.createApiResponse(mascotsData as TunisianMascot[]);
   }
 
   async getMascotBySector(sector: string): Promise<ApiResponse<TunisianMascot | null>> {
     await this.simulateDelay('simple');
-
+    
     const mascot = mascotsData.find(m => m.sector === sector) as TunisianMascot | undefined;
     return this.createApiResponse(mascot || null);
   }
 
   async unlockMascotCustomization(
-    mascotId: string,
-    customizationId: string,
+    mascotId: string, 
+    customizationId: string, 
     userId: string
   ): Promise<ApiResponse<boolean>> {
     await this.simulateDelay('medium');
-
+    
     // Simulate unlock logic
     const mascot = mascotsData.find(m => m.id === mascotId);
     if (mascot) {
@@ -389,17 +390,17 @@ export class MockDataService {
         return this.createApiResponse(true);
       }
     }
-
+    
     return this.createApiResponse(false, false);
   }
 
   // Legal Intelligence Services
   async getLegalIntelligence(
-    query: string,
+    query: string, 
     language: string = 'ar'
   ): Promise<ApiResponse<LegalIntelligenceResponse>> {
     await this.simulateDelay('complex');
-
+    
     // Generate mock legal intelligence response
     const mockResponse: LegalIntelligenceResponse = {
       id: `intelligence-${Date.now()}`,
@@ -435,7 +436,7 @@ export class MockDataService {
   // Analytics and Reporting
   async getUserEngagementMetrics(userId: string): Promise<ApiResponse<any>> {
     await this.simulateDelay('medium');
-
+    
     const user = usersData.find(u => u.id === userId);
     if (!user) {
       return this.createApiResponse(null, false);

@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Kanounji 2025 - Tunisian Legal App",
+    "slug": "tunisian-legal-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "apiBaseUrl": "http://localhost:8001",
+      "apiTimeout": 10000,
+      "nodeEnv": "development",
+      "enable3DMascots": true,
+      "enableVoiceAI": true,
+      "enableOfflineMode": true,
+      "analyticsEnabled": false,
+      "analyticsApiKey": "",
+      "debugMode": true,
+      "logLevel": "info"
+    },
+    "plugins": [
+      "expo-font"
+    ]
+  }
+}

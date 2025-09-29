@@ -3,7 +3,7 @@
  * This file demonstrates how to use the storage service in the app
  */
 
-import { storageService } from '../services';
+import storageService from '../services/storage';
 
 // Example user data type
 interface UserData {
@@ -28,10 +28,10 @@ export async function handleLogin(token: string, refreshToken: string, userData:
     // Store authentication tokens
     await storageService.setAuthToken(token);
     await storageService.setRefreshToken(refreshToken);
-    
+
     // Store user data
     await storageService.setUserData(userData);
-    
+
     console.log('Login data stored successfully');
   } catch (error) {
     console.error('Failed to store login data:', error);
@@ -82,7 +82,7 @@ export async function updateUserPreferences(preferences: UserPreferences): Promi
 export async function getUserPreferences(): Promise<UserPreferences> {
   try {
     const preferences = await storageService.getUserPreferences<UserPreferences>();
-    
+
     // Return defaults if no preferences are stored
     if (!preferences) {
       const defaultPreferences: UserPreferences = {
@@ -90,16 +90,16 @@ export async function getUserPreferences(): Promise<UserPreferences> {
         language: 'ar',
         notifications: true,
       };
-      
+
       // Store the defaults for next time
       await storageService.setUserPreferences(defaultPreferences);
       return defaultPreferences;
     }
-    
+
     return preferences;
   } catch (error) {
     console.error('Failed to get user preferences:', error);
-    
+
     // Return safe defaults on error
     return {
       theme: 'light',

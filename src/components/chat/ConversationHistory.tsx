@@ -125,7 +125,7 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
           }
         }
       ];
-      
+
       setConversations(sampleConversations);
     } catch (error) {
       console.error('Failed to load conversations:', error);
@@ -134,14 +134,14 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
 
   const performSearch = async () => {
     if (!selectedConversation) return;
-    
+
     setIsSearching(true);
     try {
       const response = await chatService.searchConversationHistory(
         selectedConversation,
         searchQuery
       );
-      
+
       if (response.success && response.data) {
         setSearchResults(response.data);
       }
@@ -199,13 +199,13 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
           colors={getCategoryColor(conversation.category)}
           style={styles.categoryIcon}
         >
-          <Ionicons 
-            name={getCategoryIcon(conversation.category) as any} 
-            size={20} 
-            color="#FFFFFF" 
+          <Ionicons
+            name={getCategoryIcon(conversation.category) as any}
+            size={20}
+            color="#FFFFFF"
           />
         </LinearGradient>
-        
+
         <View style={styles.conversationInfo}>
           <Text style={styles.conversationTitle} numberOfLines={1}>
             {conversation.titleAr}
@@ -214,7 +214,7 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
             {formatDate(conversation.updatedAt)}
           </Text>
         </View>
-        
+
         <View style={styles.conversationMeta}>
           {conversation.isBookmarked && (
             <Ionicons name="bookmark" size={16} color="#E31E24" />
@@ -224,7 +224,7 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
           </Text>
         </View>
       </View>
-      
+
       <View style={styles.conversationStats}>
         <View style={styles.statItem}>
           <Ionicons name="time-outline" size={12} color="#666666" />
@@ -232,13 +232,13 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
             {conversation.metadata.averageResponseTime}ث متوسط الرد
           </Text>
         </View>
-        
+
         <View style={styles.statItem}>
           <Ionicons name="trending-up-outline" size={12} color="#666666" />
           <Text style={styles.statText}>
             {conversation.metadata.complexityLevel === 'basic' ? 'بسيط' :
-             conversation.metadata.complexityLevel === 'intermediate' ? 'متوسط' :
-             conversation.metadata.complexityLevel === 'advanced' ? 'متقدم' : 'خبير'}
+              conversation.metadata.complexityLevel === 'intermediate' ? 'متوسط' :
+                conversation.metadata.complexityLevel === 'advanced' ? 'متقدم' : 'خبير'}
           </Text>
         </View>
       </View>
@@ -250,15 +250,15 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
       <Text style={styles.searchResultsTitle}>
         نتائج البحث ({searchResults.length})
       </Text>
-      
+
       <ScrollView style={styles.searchResultsList}>
         {searchResults.map((message) => (
           <View key={message.id} style={styles.searchResultItem}>
             <View style={styles.searchResultHeader}>
-              <Ionicons 
-                name={message.type === 'user' ? 'person-outline' : 'chatbubble-outline'} 
-                size={16} 
-                color="#666666" 
+              <Ionicons
+                name={message.type === 'user' ? 'person-outline' : 'chatbubble-outline'}
+                size={16}
+                color="#666666"
               />
               <Text style={styles.searchResultType}>
                 {message.type === 'user' ? 'أنت' : 'المساعد القانوني'}
@@ -267,7 +267,7 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
                 {new Date(message.timestamp).toLocaleTimeString('ar-TN')}
               </Text>
             </View>
-            
+
             <Text style={styles.searchResultContent} numberOfLines={3}>
               {message.content}
             </Text>
@@ -293,9 +293,9 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Ionicons name="close" size={24} color="#FFFFFF" />
           </TouchableOpacity>
-          
+
           <Text style={styles.headerTitle}>سجل المحادثات</Text>
-          
+
           <TouchableOpacity style={styles.searchToggle}>
             <Ionicons name="search-outline" size={24} color="#FFFFFF" />
           </TouchableOpacity>
@@ -332,9 +332,9 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
           ) : (
             <ScrollView style={styles.conversationsList} showsVerticalScrollIndicator={false}>
               <Text style={styles.sectionTitle}>المحادثات الأخيرة</Text>
-              
+
               {conversations.map(renderConversationItem)}
-              
+
               {conversations.length === 0 && (
                 <View style={styles.emptyState}>
                   <Ionicons name="chatbubbles-outline" size={64} color="#CCCCCC" />

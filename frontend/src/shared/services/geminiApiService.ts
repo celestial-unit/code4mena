@@ -9,10 +9,7 @@ interface GeminiApiConfig {
   apiKey?: string;
 }
 
-interface GeminiMessage {
-  role: 'user' | 'assistant';
-  content: string;
-}
+
 
 interface GeminiRequest {
   query: string;
@@ -45,7 +42,6 @@ export class GeminiApiService {
    */
   async sendMessage(
     message: string,
-    conversationHistory: GeminiMessage[] = [],
     language: string = 'ar',
     userId?: string
   ): Promise<GeminiResponse> {
@@ -111,7 +107,7 @@ export class GeminiApiService {
   /**
    * Health check for Backend API - focuses on core functionality
    */
-  async healthCheck(): Promise<{ status: string; timestamp: string }> {
+  async healthCheck(): Promise<{ status: string; timestamp: string; details?: any }> {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);

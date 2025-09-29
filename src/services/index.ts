@@ -1,14 +1,14 @@
 // API Service
 export { default as apiService, ApiService } from './api';
-export type { 
-  ApiError, 
-  ApiResponse, 
-  LegalQuery, 
-  LegalResponse, 
-  LegalSource, 
-  HealthStatus, 
-  PopularQuery, 
-  LegalCategory 
+export type {
+  ApiError,
+  ApiResponse,
+  LegalQuery,
+  LegalResponse,
+  LegalSource,
+  HealthStatus,
+  PopularQuery,
+  LegalCategory
 } from './api';
 
 // Mock Data Services
@@ -22,11 +22,21 @@ export { STORAGE_KEYS } from './storage';
 
 // Authentication Service
 export { default as authService, AuthService } from './authService';
-export type { 
-  LoginCredentials, 
-  LoginResponse, 
-  User, 
-  AuthError 
+export type {
+  LoginCredentials,
+  LoginResponse,
+  User,
+  AuthError
 } from './authService';
 
-// Service exports will be added here as the app grows
+// Search Service
+export { searchService, SearchService } from './searchService';
+
+// Chat Service  
+export { chatService, ChatService } from './chatService';
+
+// Legal Service
+export { legalService, LegalService } from './legalService';
+
+// Gemini API Service
+export { default as geminiApiService } from './geminiApiService';

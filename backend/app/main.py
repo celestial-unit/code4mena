@@ -19,7 +19,9 @@ from services.legal_rag import LegalRAGService
 from services.external_llm import ExternalLLMService
 from services.database import DatabaseService
 from services.audio_service import AudioService
-from models.legal_models import LegalQuery, LegalResponse, QueryLog
+from models.legal_models import LegalQuery, LegalResponse, QueryLog, TextQueryRequest, TextQueryResponse
+from app.services.legal_service import LegalService
+from app.api.v1.router import api_router
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -84,6 +86,31 @@ legal_rag = LegalRAGService()
 external_llm = ExternalLLMService()
 db_service = DatabaseService()
 audio_service = AudioService()
+legal_service = LegalService()
+
+# Include API router
+app.include_router(api_router, prefix="/api/v1")
+
+# Add root-level query endpoint for v1 API compatibility
+@app.post("/api/v1/query", response_model=TextQueryResponse)
+async def process_text_query_v1(
+    request: TextQueryRequest,
+    credentials: HTTPAuthorizationCredentials = Depends(security)
+):
+    """
+    V1 API endpoint for text queries - delegates to legal service
+    """
+    try:
+        logger.info(f"Processing v1 text query: {request.query[:50]}...")
+        response = await legal_service.process_text_query(request)
+        logger.info(f"V1 text query {response.query_id} processed successfully")
+        return response
+    except Exception as e:
+        logger.error(f"Error processing v1 text query: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error processing text query: {str(e)}"
+        )
 
 class QueryRequest(BaseModel):
     query: str = Field(..., description="User's legal question")
@@ -132,180 +159,34 @@ async def health_check():
     
     return health_status
 
-@app.post("/query", response_model=QueryResponse)
+@app.post("/query", response_model=TextQueryResponse)
 async def process_legal_query(
-    request: QueryRequest,
+    request: TextQueryRequest,
     credentials: HTTPAuthorizationCredentials = Depends(security)
 ):
     """
-    Main endpoint for processing legal queries with privacy protection
+    Main endpoint for processing text queries with Tunisia-specific legal context
     
-    Privacy Flow:
-    1. Strip PII from user query (simplified for demo)
-    2. Search legal database with anonymized query
-    3. Simplify legal text using external LLM
-    4. Return response with citations and disclaimer
+    This endpoint integrates with ExternalLLMService and provides:
+    1. Tunisia-specific legal context in responses
+    2. Proper error handling and fallback responses
+    3. Integration with legal RAG database
+    4. Multi-language support (Arabic, French, English)
     """
-    query_id = str(uuid.uuid4())
-    
     try:
-        logger.info(f"Processing query {query_id}: {request.query[:50]}...")
+        logger.info(f"Processing text query: {request.query[:50]}...")
         
-        # Step 1: Simple PII filtering (basic implementation)
-        logger.info("Step 1: Basic PII filtering")
-        abstract_query = request.query  # For now, use query as-is
-        pii_detected = {}  # Simple implementation
+        # Use the enhanced legal service for text query processing
+        response = await legal_service.process_text_query(request)
         
-        # Log query (without PII)
-        await db_service.log_query(
-            query_id=query_id,
-            original_query_hash=hash(request.query),
-            abstract_query=abstract_query,
-            user_id=request.user_id,
-            pii_detected=pii_detected,
-            language=request.language
-        )
-        
-        # Step 2: Search legal database with query
-        logger.info("Step 2: Searching legal database")
-        try:
-            legal_results = await legal_rag.search_legal_documents(
-                query=abstract_query,
-                language=request.language,
-                top_k=3
-            )
-        except Exception as e:
-            logger.warning(f"Legal RAG search failed: {e}, using fallback")
-            # Fallback to sample legal documents
-            legal_results = [
-                {
-                    "id": 1,
-                    "article_number": "المادة 1",
-                    "title": "تأسيس الشركات التجارية",
-                    "content": "يجب على كل من يرغب في تأسيس شركة تجارية أن يقدم طلباً إلى السجل التجاري مرفقاً بالوثائق المطلوبة",
-                    "source_document": "مجلة الشركات التجارية",
-                    "official_url": "https://legislation.tn/business-law/article-1",
-                    "score": 0.85
-                }
-            ]
-        
-        if not legal_results:
-            # Provide a helpful fallback response
-            legal_results = [
-                {
-                    "id": 1,
-                    "article_number": "General",
-                    "title": "Legal Guidance",
-                    "content": f"Based on your question about '{abstract_query}', here is general legal guidance for Tunisian law.",
-                    "source_document": "Tunisian Legal Code",
-                    "official_url": "",
-                    "score": 0.5
-                }
-            ]
-        
-        # Step 3: Use Gemini Live API directly (same as audio service)
-        logger.info("Step 3: Using Gemini Live API for dynamic response")
-        try:
-            if audio_service.gemini_client:
-                # Create a conversational prompt using your system instruction
-                chat_prompt = f"""أنت مساعد قانوني ذكي متخصص في القانون التونسي. تتحدث باللهجة التونسية بطريقة ودودة ومفهومة.
-
-مهامك:
-- ساعد المواطنين التونسيين في فهم القوانين والإجراءات القانونية
-- اشرح المفاهيم القانونية المعقدة بطريقة بسيطة
-- قدم إرشادات عملية للإجراءات الحكومية
-- استخدم اللهجة التونسية المحلية عند الحديث
-- كن صبوراً ومفيداً في شرح التفاصيل
-
-قواعد مهمة:
-- اذكر دائماً أن هذه معلومات إرشادية وليست استشارة قانونية
-- انصح بالتشاور مع محامي مختص للحالات المعقدة
-- استخدم أمثلة من الواقع التونسي
-- تحدث بطريقة طبيعية وودودة
-
-السؤال: {abstract_query}
-
-المراجع القانونية المتاحة:
-{chr(10).join([f"• {doc['title']} - {doc['content'][:100]}..." for doc in legal_results[:2]])}
-
-أجب بطريقة مفصلة ومفيدة باللهجة التونسية:"""
-
-                # Use Gemini directly (same as audio service)
-                response = await asyncio.to_thread(
-                    audio_service.gemini_client.generate_content,
-                    chat_prompt,
-                    generation_config={
-                        "temperature": 0.7,
-                        "max_output_tokens": 600,
-                        "top_p": 0.8,
-                    }
-                )
-                
-                if response and response.text:
-                    simplified_response = response.text.strip()
-                    logger.info("✅ Gemini Live API response generated successfully")
-                else:
-                    raise Exception("No response from Gemini")
-            else:
-                raise Exception("Gemini client not available")
-                
-        except Exception as e:
-            logger.warning(f"Gemini Live API failed: {e}, using enhanced fallback")
-            simplified_response = f"""مرحباً! بخصوص سؤالك عن '{abstract_query}':
-
-• هذا موضوع مهم في القانون التونسي
-• أنصحك بمراجعة النصوص القانونية المرفقة للتفاصيل الكاملة
-• من الأفضل استشارة محامي مختص للحصول على مشورة قانونية دقيقة
-• تأكد من الوثائق المطلوبة قبل بدء أي إجراء قانوني
-
-💡 نصيحة: اتبع الخطوات المحددة في القانون لضمان صحة الإجراءات"""
-        
-        # Step 4: Prepare response with citations and disclaimer
-        sources = [
-            {
-                "article": result["article_number"],
-                "title": result["title"],
-                "source": result["source_document"],
-                "url": result.get("official_url", ""),
-                "relevance_score": result["score"]
-            }
-            for result in legal_results
-        ]
-        
-        disclaimer = get_legal_disclaimer(request.language)
-        
-        # Update query log with results
-        await db_service.update_query_result(
-            query_id=query_id,
-            response_generated=True,
-            sources_count=len(sources)
-        )
-        
-        logger.info(f"Query {query_id} processed successfully")
-        
-        return QueryResponse(
-            response=simplified_response,
-            sources=sources,
-            disclaimer=disclaimer,
-            query_id=query_id
-        )
+        logger.info(f"Text query {response.query_id} processed successfully")
+        return response
         
     except Exception as e:
-        logger.error(f"Error processing query {query_id}: {str(e)}")
-        
-        # Log error
-        try:
-            await db_service.update_query_result(
-                query_id=query_id,
-                response_generated=False,
-                error_message=str(e)
-            )
-        except:
-            pass  # Don't fail if logging fails
-        
+        logger.error(f"Error processing text query: {str(e)}")
         raise HTTPException(
             status_code=500,
-            detail=f"Error processing legal query: {str(e)}"
+            detail=f"Error processing text query: {str(e)}"
         )
 
 @app.post("/chat", response_model=QueryResponse)

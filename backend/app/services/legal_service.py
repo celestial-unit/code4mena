@@ -6,8 +6,11 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 import hashlib
 import uuid
+import logging
 
 from ..repositories.legal_repository import LegalRepository
+from .external_llm import ExternalLLMService
+from .legal_rag import LegalRAGService
 from ..models.legal_models import (
     LegalQuery,
     LegalResponse,
@@ -15,14 +18,29 @@ from ..models.legal_models import (
     LegalSearchResult,
     LegalSource,
     LegalCategory,
-    LanguageCode
+    LanguageCode,
+    TextQueryRequest,
+    TextQueryResponse
 )
+
+logger = logging.getLogger(__name__)
 
 class LegalService:
     """Service class for legal data operations"""
     
     def __init__(self):
         self.repository = LegalRepository()
+        try:
+            self.external_llm = ExternalLLMService()
+        except Exception as e:
+            logger.warning(f"Failed to initialize ExternalLLMService: {e}")
+            self.external_llm = None
+        
+        try:
+            self.legal_rag = LegalRAGService()
+        except Exception as e:
+            logger.warning(f"Failed to initialize LegalRAGService: {e}")
+            self.legal_rag = None
     
     async def get_legal_updates(
         self,
@@ -254,3 +272,214 @@ class LegalService:
             all_tags = [tag for tag in all_tags if tag["category"] == category]
         
         return all_tags
+    
+    async def get_search_results(
+        self,
+        query: str,
+        category: Optional[str] = None,
+        sector: Optional[str] = None,
+        language: str = "ar",
+        limit: int = 10,
+        offset: int = 0
+    ) -> List[Dict[str, Any]]:
+        """
+        Get search results with filtering and pagination
+        """
+        return await self.repository.get_search_results(
+            query=query,
+            category=category,
+            sector=sector,
+            language=language,
+            limit=limit,
+            offset=offset
+        )
+    
+    async def get_search_suggestions(
+        self,
+        query: str,
+        language: str = "ar",
+        limit: int = 5
+    ) -> List[str]:
+        """
+        Get search suggestions based on partial query
+        """
+        return await self.repository.get_search_suggestions(
+            query=query,
+            language=language,
+            limit=limit
+        )
+    
+    async def process_text_query(self, request: TextQueryRequest) -> TextQueryResponse:
+        """
+        Process a text query with Tunisia-specific legal context
+        """
+        start_time = datetime.utcnow()
+        query_id = str(uuid.uuid4())
+        
+        try:
+            # Detect language if not specified
+            language = request.language or "ar"
+            
+            # Search for relevant legal documents using RAG
+            legal_documents = []
+            if self.legal_rag:
+                try:
+                    legal_documents = await self.legal_rag.search_legal_documents(
+                        query=request.query,
+                        language=language,
+                        limit=5
+                    )
+                except Exception as e:
+                    logger.warning(f"Legal RAG search failed: {e}")
+            
+            # Generate Tunisia-specific response using external LLM
+            if legal_documents and self.external_llm:
+                try:
+                    simplified_response = await self.external_llm.simplify_legal_text(
+                        legal_texts=legal_documents,
+                        language=language,
+                        query_context=request.query
+                    )
+                    
+                    # Extract sources from legal documents
+                    sources = []
+                    for doc in legal_documents[:3]:  # Limit to top 3 sources
+                        source = LegalSource(
+                            article_number=doc.get('article_number', 'N/A'),
+                            title=doc.get('title', 'Legal Document'),
+                            source_document=doc.get('source_document', 'Tunisia Legal Database'),
+                            official_url=doc.get('official_url'),
+                            relevance_score=doc.get('similarity_score', 0.0)
+                        )
+                        sources.append(source)
+                    
+                    legal_context = True
+                    confidence_score = 0.85
+                    
+                except Exception as e:
+                    logger.warning(f"External LLM failed: {e}")
+                    # Fallback to simple response
+                    simplified_response = self._create_tunisia_fallback_response(
+                        request.query, language
+                    )
+                    sources = []
+                    legal_context = False
+                    confidence_score = 0.3
+                
+            else:
+                # Fallback response when no legal documents found or services unavailable
+                simplified_response = self._create_tunisia_fallback_response(
+                    request.query, language
+                )
+                sources = []
+                legal_context = False
+                confidence_score = 0.3
+            
+            # Add Tunisia-specific disclaimer
+            disclaimer = self._get_tunisia_disclaimer(language)
+            
+            # Calculate processing time
+            processing_time = int((datetime.utcnow() - start_time).total_seconds() * 1000)
+            
+            return TextQueryResponse(
+                response=simplified_response,
+                sources=sources,
+                disclaimer=disclaimer,
+                query_id=query_id,
+                language_detected=language,
+                legal_context=legal_context,
+                processing_time_ms=processing_time,
+                confidence_score=confidence_score
+            )
+            
+        except Exception as e:
+            logger.error(f"Error processing text query {query_id}: {e}")
+            
+            # Return error fallback response
+            processing_time = int((datetime.utcnow() - start_time).total_seconds() * 1000)
+            
+            return TextQueryResponse(
+                response=self._create_error_fallback_response(language),
+                sources=[],
+                disclaimer=self._get_tunisia_disclaimer(language),
+                query_id=query_id,
+                language_detected=language or "ar",
+                legal_context=False,
+                processing_time_ms=processing_time,
+                confidence_score=0.1
+            )
+    
+    def _create_tunisia_fallback_response(self, query: str, language: str) -> str:
+        """Create Tunisia-specific fallback response when no legal documents found"""
+        
+        fallback_responses = {
+            "ar": f"""بناءً على استفسارك حول "{query}"، لم أتمكن من العثور على نصوص قانونية محددة في قاعدة البيانات التونسية.
+
+• يُنصح بمراجعة الجريدة الرسمية للجمهورية التونسية للحصول على أحدث النصوص القانونية
+• يمكنك التواصل مع المحاكم التونسية المختصة للحصول على إرشادات قانونية دقيقة
+• راجع موقع وزارة العدل التونسية (www.justice.gov.tn) للحصول على معلومات محدثة
+• استشر محامياً مرخصاً في تونس للحصول على مشورة قانونية شخصية
+
+للمساعدة الفورية، يمكنك الاتصال بخط المساعدة القانونية التونسي أو زيارة أقرب محكمة.""",
+            
+            "fr": f"""Concernant votre question sur "{query}", je n'ai pas pu trouver de textes juridiques spécifiques dans la base de données tunisienne.
+
+• Il est conseillé de consulter le Journal Officiel de la République Tunisienne pour les derniers textes juridiques
+• Vous pouvez contacter les tribunaux tunisiens compétents pour des orientations juridiques précises
+• Consultez le site du Ministère de la Justice tunisien (www.justice.gov.tn) pour des informations à jour
+• Consultez un avocat agréé en Tunisie pour des conseils juridiques personnalisés
+
+Pour une aide immédiate, vous pouvez appeler la ligne d'assistance juridique tunisienne ou visiter le tribunal le plus proche.""",
+            
+            "en": f"""Regarding your question about "{query}", I could not find specific legal texts in the Tunisian database.
+
+• It is recommended to consult the Official Gazette of the Republic of Tunisia for the latest legal texts
+• You can contact the competent Tunisian courts for precise legal guidance
+• Check the Tunisian Ministry of Justice website (www.justice.gov.tn) for updated information
+• Consult a licensed lawyer in Tunisia for personalized legal advice
+
+For immediate assistance, you can call the Tunisian legal helpline or visit the nearest court."""
+        }
+        
+        return fallback_responses.get(language, fallback_responses["ar"])
+    
+    def _create_error_fallback_response(self, language: str) -> str:
+        """Create error fallback response"""
+        
+        error_responses = {
+            "ar": """عذراً، حدث خطأ تقني أثناء معالجة استفسارك.
+
+• يرجى المحاولة مرة أخرى بعد قليل
+• تأكد من صياغة السؤال بوضوح
+• للمساعدة الفورية، اتصل بخط المساعدة القانونية التونسي
+• أو راجع موقع وزارة العدل التونسية للحصول على معلومات قانونية""",
+            
+            "fr": """Désolé, une erreur technique s'est produite lors du traitement de votre demande.
+
+• Veuillez réessayer dans quelques instants
+• Assurez-vous de formuler clairement votre question
+• Pour une aide immédiate, appelez la ligne d'assistance juridique tunisienne
+• Ou consultez le site du Ministère de la Justice tunisien pour des informations juridiques""",
+            
+            "en": """Sorry, a technical error occurred while processing your request.
+
+• Please try again in a few moments
+• Make sure to formulate your question clearly
+• For immediate assistance, call the Tunisian legal helpline
+• Or visit the Tunisian Ministry of Justice website for legal information"""
+        }
+        
+        return error_responses.get(language, error_responses["ar"])
+    
+    def _get_tunisia_disclaimer(self, language: str) -> str:
+        """Get Tunisia-specific legal disclaimer"""
+        
+        disclaimers = {
+            "ar": """تنويه قانوني: هذه المعلومات مقدمة لأغراض إعلامية فقط ولا تشكل مشورة قانونية رسمية. للحصول على مشورة قانونية دقيقة ومحددة لحالتك، يُنصح بشدة باستشارة محامٍ مرخص في تونس. القوانين التونسية قابلة للتغيير، لذا تأكد من الحصول على أحدث النصوص القانونية من المصادر الرسمية.""",
+            
+            "fr": """Avertissement juridique : Ces informations sont fournies à des fins informatives uniquement et ne constituent pas des conseils juridiques officiels. Pour obtenir des conseils juridiques précis et spécifiques à votre situation, il est fortement recommandé de consulter un avocat agréé en Tunisie. Les lois tunisiennes sont sujettes à modification, alors assurez-vous d'obtenir les derniers textes juridiques auprès des sources officielles.""",
+            
+            "en": """Legal Disclaimer: This information is provided for informational purposes only and does not constitute official legal advice. For precise legal advice specific to your situation, it is strongly recommended to consult a licensed lawyer in Tunisia. Tunisian laws are subject to change, so make sure to obtain the latest legal texts from official sources."""
+        }
+        
+        return disclaimers.get(language, disclaimers["ar"])

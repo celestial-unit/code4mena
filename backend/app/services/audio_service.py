@@ -56,7 +56,9 @@ class AudioService:
         try:
             api_key = os.getenv("GEMINI_API_KEY")
             if not api_key:
-                raise ValueError("GEMINI_API_KEY not found in environment variables")
+                logger.warning("GEMINI_API_KEY not found in environment variables - audio features will be disabled")
+                self.gemini_client = None
+                return False
             
             genai.configure(api_key=api_key)
             
@@ -68,6 +70,7 @@ class AudioService:
             
         except Exception as e:
             logger.error(f"Failed to initialize audio service: {e}")
+            self.gemini_client = None
             return False
     
     async def process_audio_input(self, audio_data: bytes, format: str = "webm") -> Dict[str, Any]:
@@ -250,6 +253,21 @@ class AudioService:
             Complete response with legal guidance and audio
         """
         try:
+            # Check if Gemini API is available
+            if not self.gemini_client:
+                logger.warning("Gemini API not available, returning fallback response")
+                return {
+                    "transcription": "لم أتمكن من معالجة الصوت",
+                    "response_text": "عذراً، خدمة الصوت غير متاحة حالياً. يرجى كتابة سؤالك في المحادثة النصية.",
+                    "audio_response": None,
+                    "language_detected": "ar-TN",
+                    "confidence": 0.0,
+                    "has_audio": False,
+                    "legal_context": True,
+                    "disclaimer": "هذه معلومات إرشادية عامة وليست استشارة قانونية. يُنصح بالتشاور مع محامٍ مختص.",
+                    "error": "Audio service not available - Gemini API key not configured"
+                }
+            
             # Process the audio input with enhanced legal context
             audio_result = await self.process_audio_input(audio_data, format="webm")
             

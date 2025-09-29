@@ -8,8 +8,8 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { authService } from '../../services';
-import type { LoginCredentials, AuthError } from '../../services';
+import authService from '../../services/authService';
+import type { LoginCredentials, AuthError } from '../../services/authService';
 
 interface LoginFormProps {
   onLoginSuccess?: () => void;
@@ -25,10 +25,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
     password: '',
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<{email?: string; password?: string}>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
   const validateForm = (): boolean => {
-    const newErrors: {email?: string; password?: string} = {};
+    const newErrors: { email?: string; password?: string } = {};
 
     // Email validation
     if (!credentials.email.trim()) {
@@ -59,9 +59,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
     try {
       console.log('[LoginForm] Attempting login...');
       const response = await authService.login(credentials);
-      
+
       console.log('[LoginForm] Login successful:', response.user.email);
-      
+
       // Show success message
       Alert.alert(
         'تم تسجيل الدخول بنجاح',
@@ -71,12 +71,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
     } catch (error) {
       console.error('[LoginForm] Login failed:', error);
-      
+
       const authError = error as AuthError;
       const errorMessage = authError.message || 'فشل في تسجيل الدخول';
-      
+
       Alert.alert('خطأ في تسجيل الدخول', errorMessage);
-      
+
       if (onLoginError) {
         onLoginError(authError);
       }
@@ -90,7 +90,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       ...prev,
       [field]: value,
     }));
-    
+
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({
@@ -103,7 +103,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   return (
     <View style={styles.container}>
       <Text style={styles.title}>تسجيل الدخول</Text>
-      
+
       <View style={styles.inputContainer}>
         <Text style={styles.label}>البريد الإلكتروني</Text>
         <TextInput

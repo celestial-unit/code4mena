@@ -8,11 +8,7 @@ import {
     LegalReference,
     SuggestedAction
 } from '../types';
-import { mockDataService } from './mockDataService';
-
-// Import mock data
-import quickRepliesData from '../data/mock/quick-replies.json';
-import chatConversationsData from '../data/mock/chat-conversations.json';
+import apiService from './api';
 
 /**
  * Chat Service
@@ -53,19 +49,36 @@ export class ChatService {
      * Get quick replies for a specific category
      */
     async getQuickReplies(category: LegalCategory): Promise<ApiResponse<QuickReply[]>> {
-        await new Promise(resolve => setTimeout(resolve, 300));
+        try {
+            const params = new URLSearchParams({
+                category: category,
+                language: 'ar',
+                popular_only: 'true',
+                limit: '8'
+            });
 
-        const categoryReplies = (quickRepliesData as QuickReply[])
-            .filter(reply => reply.category === category)
-            .sort((a, b) => b.usageCount - a.usageCount)
-            .slice(0, 8);
+            const quickReplies = await apiService.get<QuickReply[]>(`/api/v1/chat/quick-replies?${params.toString()}`);
 
-        return {
-            success: true,
-            data: categoryReplies,
-            timestamp: new Date(),
-            requestId: `quick-replies-${Date.now()}`
-        };
+            return {
+                success: true,
+                data: quickReplies,
+                timestamp: new Date(),
+                requestId: `quick-replies-${Date.now()}`
+            };
+        } catch (error) {
+            console.error('[Chat] Failed to fetch quick replies:', error);
+            return {
+                success: false,
+                error: {
+                    code: 'QUICK_REPLIES_ERROR',
+                    message: 'Failed to fetch quick replies',
+                    messageAr: 'فشل في جلب الردود السريعة',
+                    messageFr: 'Échec de la récupération des réponses rapides'
+                },
+                timestamp: new Date(),
+                requestId: `quick-replies-error-${Date.now()}`
+            };
+        }
     }
 
     /**
@@ -506,7 +519,7 @@ export class ChatService {
     }
 
     /**
-     * Send message and get AI response
+     * Send message and get AI response using backend API
      */
     async sendMessage(
         conversationId: string,
@@ -515,13 +528,23 @@ export class ChatService {
         category: LegalCategory
     ): Promise<ApiResponse<{ userMessage: ChatMessage; aiMessage: ChatMessage }>> {
         try {
-            // Create user message
+            // Send message to backend
+            const response = await apiService.post<{
+                conversation: any;
+                userMessage: any;
+                aiMessage: any;
+            }>(`/api/v1/chat/conversations/${conversationId}/messages`, {
+                content: message,
+                language: 'ar'
+            });
+
+            // Transform backend response to frontend format
             const userMessage: ChatMessage = {
-                id: `msg-${Date.now()}-user`,
+                id: response.userMessage?.id || `msg-${Date.now()}-user`,
                 conversationId,
                 type: 'user',
                 content: message,
-                timestamp: new Date(),
+                timestamp: new Date(response.userMessage?.timestamp || Date.now()),
                 isEdited: false,
                 metadata: {
                     relatedTopics: [],
@@ -533,8 +556,30 @@ export class ChatService {
                 }
             };
 
-            // Generate AI response
-            const aiMessage = await this.generateAIResponse(message, conversationId, category);
+            const aiMessage: ChatMessage = {
+                id: response.aiMessage?.id || `msg-${Date.now()}-ai`,
+                conversationId,
+                type: 'ai',
+                content: response.aiMessage?.content || '',
+                contentAr: response.aiMessage?.contentAr || response.aiMessage?.content || '',
+                contentFr: response.aiMessage?.contentFr || '',
+                timestamp: new Date(response.aiMessage?.timestamp || Date.now()),
+                isEdited: false,
+                metadata: {
+                    confidence: response.aiMessage?.confidence || 0.8,
+                    sources: response.aiMessage?.sources || [],
+                    processingTime: response.aiMessage?.processingTime || 1.5,
+                    legalReferences: response.aiMessage?.legalReferences || [],
+                    suggestedActions: response.aiMessage?.suggestedActions || [],
+                    relatedTopics: response.aiMessage?.relatedTopics || [],
+                    culturalContext: response.aiMessage?.culturalContext || {
+                        culturalReferences: [],
+                        dialectTerms: [],
+                        regionalRelevance: []
+                    }
+                },
+                mascotAnimation: response.aiMessage?.mascotAnimation
+            };
 
             return {
                 success: true,
@@ -543,6 +588,7 @@ export class ChatService {
                 requestId: `send-message-${Date.now()}`
             };
         } catch (error) {
+            console.error('[Chat] Failed to send message:', error);
             return {
                 success: false,
                 error: {
@@ -607,29 +653,148 @@ export class ChatService {
     }
 
     /**
+     * Get user's chat conversations
+     */
+    async getUserConversations(
+        userId: string,
+        limit: number = 10,
+        offset: number = 0
+    ): Promise<ApiResponse<ChatConversation[]>> {
+        try {
+            const params = new URLSearchParams({
+                limit: limit.toString(),
+                offset: offset.toString()
+            });
+
+            const conversations = await apiService.get<ChatConversation[]>(`/api/v1/chat/conversations?${params.toString()}`);
+
+            return {
+                success: true,
+                data: conversations,
+                timestamp: new Date(),
+                requestId: `conversations-${Date.now()}`
+            };
+        } catch (error) {
+            console.error('[Chat] Failed to fetch conversations:', error);
+            return {
+                success: false,
+                error: {
+                    code: 'CONVERSATIONS_ERROR',
+                    message: 'Failed to fetch conversations',
+                    messageAr: 'فشل في جلب المحادثات',
+                    messageFr: 'Échec de la récupération des conversations'
+                },
+                timestamp: new Date(),
+                requestId: `conversations-error-${Date.now()}`
+            };
+        }
+    }
+
+    /**
+     * Create a new chat conversation
+     */
+    async createConversation(
+        userId: string,
+        title: string = 'New Conversation',
+        category: LegalCategory = 'general'
+    ): Promise<ApiResponse<ChatConversation>> {
+        try {
+            const conversation = await apiService.post<ChatConversation>('/api/v1/chat/conversations', {
+                title,
+                category
+            });
+
+            return {
+                success: true,
+                data: conversation,
+                timestamp: new Date(),
+                requestId: `create-conversation-${Date.now()}`
+            };
+        } catch (error) {
+            console.error('[Chat] Failed to create conversation:', error);
+            return {
+                success: false,
+                error: {
+                    code: 'CREATE_CONVERSATION_ERROR',
+                    message: 'Failed to create conversation',
+                    messageAr: 'فشل في إنشاء المحادثة',
+                    messageFr: 'Échec de la création de la conversation'
+                },
+                timestamp: new Date(),
+                requestId: `create-conversation-error-${Date.now()}`
+            };
+        }
+    }
+
+    /**
+     * Get a specific conversation by ID
+     */
+    async getConversationById(
+        conversationId: string,
+        userId: string
+    ): Promise<ApiResponse<ChatConversation>> {
+        try {
+            const conversation = await apiService.get<ChatConversation>(`/api/v1/chat/conversations/${conversationId}`);
+
+            return {
+                success: true,
+                data: conversation,
+                timestamp: new Date(),
+                requestId: `conversation-${conversationId}-${Date.now()}`
+            };
+        } catch (error) {
+            console.error('[Chat] Failed to fetch conversation:', error);
+            return {
+                success: false,
+                error: {
+                    code: 'CONVERSATION_ERROR',
+                    message: 'Failed to fetch conversation',
+                    messageAr: 'فشل في جلب المحادثة',
+                    messageFr: 'Échec de la récupération de la conversation'
+                },
+                timestamp: new Date(),
+                requestId: `conversation-error-${Date.now()}`
+            };
+        }
+    }
+
+    /**
      * Get conversation statistics
      */
     async getConversationStats(conversationId: string): Promise<ApiResponse<any>> {
-        await new Promise(resolve => setTimeout(resolve, 400));
+        try {
+            // For now, return mock stats since the backend doesn't have this endpoint yet
+            const stats = {
+                totalMessages: 8,
+                userMessages: 4,
+                aiMessages: 4,
+                averageResponseTime: 1.5,
+                topicsDiscussed: ['business registration', 'legal requirements'],
+                legalCategoriesCovered: ['business_law'],
+                conversationDuration: 1800000, // 30 minutes
+                lastActivity: new Date()
+            };
 
-        // For now, return mock stats
-        const stats = {
-            totalMessages: 8,
-            userMessages: 4,
-            aiMessages: 4,
-            averageResponseTime: 1.5,
-            topicsDiscussed: ['business registration', 'legal requirements'],
-            legalCategoriesCovered: ['business_law'],
-            conversationDuration: 1800000, // 30 minutes
-            lastActivity: new Date()
-        };
-
-        return {
-            success: true,
-            data: stats,
-            timestamp: new Date(),
-            requestId: `stats-${Date.now()}`
-        };
+            return {
+                success: true,
+                data: stats,
+                timestamp: new Date(),
+                requestId: `stats-${Date.now()}`
+            };
+        } catch (error) {
+            console.error('[Chat] Failed to get conversation stats:', error);
+            return {
+                success: false,
+                error: {
+                    code: 'STATS_ERROR',
+                    message: 'Failed to get conversation statistics',
+                    messageAr: 'فشل في جلب إحصائيات المحادثة',
+                    messageFr: 'Échec de la récupération des statistiques de conversation'
+                },
+                timestamp: new Date(),
+                requestId: `stats-error-${Date.now()}`
+            };
+        }
     }
 }
 

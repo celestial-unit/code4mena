@@ -109,7 +109,7 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -137,7 +137,7 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
                   <Text style={styles.greeting}>{getGreeting()}</Text>
                   <Text style={styles.userName}>{user?.nameAr || 'أحمد بن سالم'}</Text>
                 </View>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.profileButton}
                   onPress={() => navigation.navigate('Profile')}
                 >
@@ -147,13 +147,13 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
                   </View>
                 </TouchableOpacity>
               </View>
-              
+
               <Text style={styles.welcomeMessage}>
                 مرحباً بك في كنوني - مرشدك القانوني الذكي
               </Text>
-              
+
               <View style={styles.actionButtons}>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.chatButton}
                   onPress={() => navigation.navigate('ChatbotSelection')}
                 >
@@ -165,8 +165,8 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
                     <Text style={styles.chatButtonText}>ابدأ محادثة</Text>
                   </LinearGradient>
                 </TouchableOpacity>
-                
-                <TouchableOpacity 
+
+                <TouchableOpacity
                   style={styles.searchButton}
                   onPress={() => navigation.navigate('Search')}
                 >
@@ -182,7 +182,7 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
         <View style={styles.statsSection}>
           <Text style={styles.sectionTitle}>إحصائياتك السريعة</Text>
           <Text style={styles.sectionSubtitle}>نشاطك هذا الشهر</Text>
-          
+
           <View style={styles.statsGrid}>
             <View style={styles.statCard}>
               <View style={[styles.statIcon, { backgroundColor: '#E31E24' }]}>
@@ -191,7 +191,7 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
               <Text style={styles.statTitle}>التحديثات المقروءة</Text>
               <Text style={styles.statValue}>{user?.statistics.totalLegalUpdatesRead || 25}</Text>
             </View>
-            
+
             <View style={styles.statCard}>
               <View style={[styles.statIcon, { backgroundColor: '#D4AF37' }]}>
                 <Ionicons name="chatbubbles" size={24} color="#FFFFFF" />
@@ -199,7 +199,7 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
               <Text style={styles.statTitle}>المحادثات</Text>
               <Text style={styles.statValue}>{user?.statistics.totalChatConversations || 8}</Text>
             </View>
-            
+
             <View style={styles.statCard}>
               <View style={[styles.statIcon, { backgroundColor: '#2E8B57' }]}>
                 <Ionicons name="search" size={24} color="#FFFFFF" />
@@ -207,7 +207,7 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
               <Text style={styles.statTitle}>عمليات البحث</Text>
               <Text style={styles.statValue}>{user?.statistics.totalSearchQueries || 15}</Text>
             </View>
-            
+
             <View style={styles.statCard}>
               <View style={[styles.statIcon, { backgroundColor: '#FF8C00' }]}>
                 <Ionicons name="trophy" size={24} color="#FFFFFF" />
@@ -216,7 +216,7 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
               <Text style={styles.statValue}>{user?.statistics.totalAchievements || 3}</Text>
             </View>
           </View>
-          
+
           {/* Activity Streak */}
           <LinearGradient
             colors={['#E31E24', '#D4AF37']}
@@ -243,32 +243,32 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
         <View style={styles.updatesSection}>
           <Text style={styles.sectionTitle}>التحديثات الأخيرة</Text>
           <Text style={styles.sectionSubtitle}>آخر التطورات القانونية المهمة</Text>
-          
+
           {recentUpdates.map((update, index) => (
-            <TouchableOpacity 
-              key={update.id} 
+            <TouchableOpacity
+              key={update.id}
               style={styles.updateCard}
               onPress={() => navigation.navigate('LegalUpdateDetail', { updateId: update.id })}
             >
-              <View style={[styles.priorityIndicator, { 
-                backgroundColor: update.priority === 'high' ? '#E31E24' : 
-                                update.priority === 'medium' ? '#FF8C00' : '#2E8B57' 
+              <View style={[styles.priorityIndicator, {
+                backgroundColor: update.priority === 'high' ? '#E31E24' :
+                  update.priority === 'medium' ? '#FF8C00' : '#2E8B57'
               }]} />
-              
+
               <View style={styles.updateContent}>
                 <View style={styles.updateHeader}>
                   <Text style={styles.updateSource}>{update.source.nameAr}</Text>
                   <Text style={styles.updateTime}>منذ ساعات</Text>
                 </View>
-                
+
                 <Text style={styles.updateTitle} numberOfLines={2}>
                   {update.titleAr}
                 </Text>
-                
+
                 <Text style={styles.updateSummary} numberOfLines={3}>
                   {update.summaryAr}
                 </Text>
-                
+
                 <View style={styles.updateTags}>
                   {update.tagsAr.slice(0, 2).map((tag, tagIndex) => (
                     <View key={tagIndex} style={styles.tag}>
@@ -291,8 +291,8 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
             </View>
           </View>
           <Text style={styles.sectionSubtitle}>آخر تحديثات الوزارات والمؤسسات الحكومية</Text>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={styles.ministryCard}
             onPress={() => navigation.navigate('MinistryUpdates', { ministryId: 'ministry-finance' })}
           >
@@ -300,14 +300,14 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
               <View style={styles.liveDot} />
               <Text style={styles.liveText}>مباشر</Text>
             </View>
-            
+
             <View style={styles.ministryContent}>
               <Text style={styles.ministryName}>وزارة المالية</Text>
               <Text style={styles.ministryPlatform}>Facebook</Text>
               <Text style={styles.ministryText}>
                 إعلان لوائح ضريبية رقمية جديدة للشركات التجارة الإلكترونية
               </Text>
-              
+
               <View style={styles.ministryTags}>
                 <View style={styles.tag}>
                   <Text style={styles.tagText}>الضرائب الرقمية</Text>
@@ -322,23 +322,23 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
 
         {/* Development Test Buttons */}
         <View style={styles.authTestSection}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.authTestButton}
             onPress={() => navigation.navigate('AuthTest')}
           >
             <Ionicons name="shield-checkmark" size={20} color="#FFFFFF" />
             <Text style={styles.authTestText}>اختبار نظام المصادقة</Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={[styles.authTestButton, { backgroundColor: '#4CAF50' }]}
             onPress={() => navigation.navigate('ErrorTest')}
           >
             <Ionicons name="bug" size={20} color="#FFFFFF" />
             <Text style={styles.authTestText}>اختبار التكامل</Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={[styles.authTestButton, { backgroundColor: '#FF9800' }]}
             onPress={() => navigation.navigate('Chat')}
           >

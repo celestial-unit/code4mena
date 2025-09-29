@@ -17,14 +17,156 @@ import {
   transformSearchResults
 } from '../utils/dataTransformers';
 
-// Import mock data
-import usersDataRaw from '../data/mock/users.json';
-import chatConversationsDataRaw from '../data/mock/chat-conversations.json';
-import mascotsData from '../data/mock/mascots.json';
-import searchResultsDataRaw from '../data/mock/search-results.json';
+// Mock data - inline to avoid import issues
+const legalUpdatesDataRaw = [
+  {
+    id: "update-001",
+    title: "تحديث قانون الشركات الجديد",
+    titleAr: "تحديث قانون الشركات الجديد",
+    titleFr: "Nouvelle mise à jour du droit des sociétés",
+    content: "تم إصدار تحديثات جديدة على قانون الشركات التونسي",
+    contentAr: "تم إصدار تحديثات جديدة على قانون الشركات التونسي",
+    contentFr: "De nouvelles mises à jour ont été publiées sur le droit des sociétés tunisien",
+    summary: "تحديثات جديدة على قانون الشركات",
+    summaryAr: "تحديثات جديدة على قانون الشركات",
+    summaryFr: "Nouvelles mises à jour du droit des sociétés",
+    category: "business_law",
+    priority: "high",
+    publishedAt: "2024-01-15T10:00:00Z",
+    lastUpdated: "2024-01-15T10:00:00Z",
+    source: "وزارة العدل",
+    sourceAr: "وزارة العدل",
+    sourceFr: "Ministère de la Justice",
+    url: "https://example.com/update-001",
+    tags: ["شركات", "قانون", "تحديث"],
+    tagsAr: ["شركات", "قانون", "تحديث"],
+    tagsFr: ["sociétés", "droit", "mise à jour"],
+    isBookmarked: false,
+    viewCount: 42,
+    language: "ar",
+    readingTime: 5,
+    difficulty: "intermediate",
+    sector: "business",
+    region: "national",
+    ministry: {
+      id: "ministry-justice",
+      name: "وزارة العدل",
+      nameAr: "وزارة العدل",
+      nameFr: "Ministère de la Justice",
+      logo: "https://example.com/ministry-justice-logo.png",
+      website: "https://justice.gov.tn"
+    },
+    relatedUpdates: [],
+    attachments: [],
+    legalReferences: []
+  }
+];
+
+const usersDataRaw = [
+  {
+    id: "user-001",
+    name: "أحمد محمد",
+    email: "ahmed@example.com",
+    role: "user",
+    createdAt: "2024-01-15T10:00:00Z",
+    lastActiveAt: "2024-01-15T10:00:00Z",
+    isVerified: true,
+    achievements: [],
+    profile: {
+      sectors: [],
+      legalCategories: [],
+      region: "tunis",
+      language: "ar",
+      experienceLevel: "beginner",
+      interests: [],
+      interestsAr: [],
+      interestsFr: []
+    },
+    preferences: {
+      notifications: {
+        pushNotifications: true,
+        emailNotifications: true,
+        smsNotifications: false,
+        legalUpdates: true,
+        achievements: true,
+        reminders: true,
+        governmentAlerts: true,
+        parliamentaryUpdates: true,
+        quietHours: {
+          enabled: false,
+          startTime: "22:00",
+          endTime: "08:00"
+        },
+        categories: {}
+      },
+      privacy: {
+        dataSharing: false,
+        analytics: true,
+        personalization: true,
+        locationTracking: false,
+        voiceRecording: false,
+        communityFeatures: true,
+        profileVisibility: "private"
+      },
+      display: {
+        theme: "light",
+        fontSize: "medium",
+        animations: true,
+        reducedMotion: false,
+        highContrast: false,
+        rtlLayout: true,
+        colorScheme: "default"
+      },
+      language: "ar",
+      mascot: {
+        enabled: true,
+        preferredSector: "business",
+        animationLevel: "full",
+        voiceSync: true,
+        celebrations: true,
+        customizations: []
+      },
+      voice: {
+        enabled: true,
+        dialect: "tunis",
+        voiceSpeed: 1.0,
+        voiceGender: "neutral",
+        noiseReduction: true,
+        autoTranscription: true
+      }
+    },
+    statistics: {
+      totalLegalUpdatesRead: 42,
+      totalChatConversations: 15,
+      totalSearchQueries: 28,
+      totalDaysActive: 30,
+      currentStreak: 5,
+      longestStreak: 12,
+      totalAchievements: 3,
+      totalPoints: 150,
+      favoriteCategory: "business_law",
+      mostActiveSector: "business",
+      averageSessionDuration: 25,
+      lastWeekActivity: [
+        {
+          date: "2024-01-15T00:00:00Z",
+          updatesRead: 3,
+          chatMessages: 5,
+          searchQueries: 2,
+          timeSpent: 30
+        }
+      ],
+      monthlyStats: []
+    }
+  }
+];
+
+const chatConversationsDataRaw = [];
+const mascotsData = [];
+const searchResultsDataRaw = [];
 
 // Transform raw JSON data to proper types
-// Legal updates are now handled by the API
+const legalUpdatesData = transformLegalUpdates(legalUpdatesDataRaw);
 const usersData = transformUsers(usersDataRaw);
 const chatConversationsData = transformChatConversations(chatConversationsDataRaw);
 const searchResultsData = transformSearchResults(searchResultsDataRaw);

@@ -7,10 +7,12 @@ import {
   Animated,
   Dimensions,
   Modal,
+  Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { LegalCategory } from '../../types';
+import { useAudioRecording } from '../../hooks/useAudioRecording';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -25,14 +27,22 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
   onVoiceMessage,
   category,
 }) => {
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordingDuration, setRecordingDuration] = useState(0);
   const [waveformData, setWaveformData] = useState<number[]>([]);
-  
+
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const waveAnim = useRef(new Animated.Value(0)).current;
-  const recordingTimer = useRef<NodeJS.Timeout | null>(null);
+  const waveformTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Use the audio recording hook
+  const {
+    state: audioState,
+    startRecording,
+    stopRecording,
+    playRecording,
+    clearRecording,
+    requestPermissions,
+  } = useAudioRecording();
 
   useEffect(() => {
     // Animate modal appearance
@@ -44,14 +54,15 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
     }).start();
 
     return () => {
-      if (recordingTimer.current) {
-        clearInterval(recordingTimer.current);
+      if (waveformTimer.current) {
+        clearInterval(waveformTimer.current);
       }
+      clearRecording();
     };
   }, []);
 
   useEffect(() => {
-    if (isRecording) {
+    if (audioState.isRecording) {
       // Start pulse animation
       Animated.loop(
         Animated.sequence([
@@ -77,10 +88,9 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
         })
       ).start();
 
-      // Start recording timer
-      recordingTimer.current = setInterval(() => {
-        setRecordingDuration(prev => prev + 1);
-        // Generate mock waveform data
+      // Start waveform visualization timer
+      waveformTimer.current = setInterval(() => {
+        // Generate mock waveform data for visualization
         setWaveformData(prev => [
           ...prev.slice(-20),
           Math.random() * 100
@@ -89,24 +99,55 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
     } else {
       pulseAnim.stopAnimation();
       waveAnim.stopAnimation();
-      if (recordingTimer.current) {
-        clearInterval(recordingTimer.current);
+      if (waveformTimer.current) {
+        clearInterval(waveformTimer.current);
+        waveformTimer.current = null;
       }
+      setWaveformData([]);
     }
-  }, [isRecording]);
+  }, [audioState.isRecording]);
 
-  const handleStartRecording = () => {
-    setIsRecording(true);
-    setRecordingDuration(0);
-    setWaveformData([]);
+  const handleStartRecording = async () => {
+    try {
+      await startRecording();
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      Alert.alert(
+        'خطأ في التسجيل',
+        'لم نتمكن من بدء التسجيل. يرجى التأكد من إعطاء الإذن للوصول إلى الميكروفون.',
+        [{ text: 'حسناً', style: 'default' }]
+      );
+    }
   };
 
-  const handleStopRecording = () => {
-    setIsRecording(false);
-    // Simulate audio data
-    const mockAudioData = new Blob(['mock audio data'], { type: 'audio/wav' });
-    onVoiceMessage(mockAudioData);
-    handleClose();
+  const handleStopRecording = async () => {
+    try {
+      const audioBlob = await stopRecording();
+
+      if (audioBlob && audioBlob.size > 0) {
+        console.log('[VoiceInput] Audio recorded successfully:', audioBlob.size, 'bytes');
+        onVoiceMessage(audioBlob);
+        handleClose();
+      } else {
+        Alert.alert(
+          'خطأ في التسجيل',
+          'لم نتمكن من حفظ التسجيل الصوتي. يرجى المحاولة مرة أخرى.',
+          [{ text: 'حسناً', style: 'default' }]
+        );
+      }
+    } catch (error) {
+      console.error('Error stopping recording:', error);
+      Alert.alert(
+        'خطأ في التسجيل',
+        'حدث خطأ أثناء إيقاف التسجيل. يرجى المحاولة مرة أخرى.',
+        [{ text: 'حسناً', style: 'default' }]
+      );
+    }
+  };
+
+  const handleCancelRecording = () => {
+    clearRecording();
+    setWaveformData([]);
   };
 
   const handleClose = () => {
@@ -119,9 +160,10 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
     });
   };
 
-  const formatDuration = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
+  const formatDuration = (milliseconds: number): string => {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
@@ -199,7 +241,7 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
 
             {/* Recording Status */}
             <View style={styles.statusContainer}>
-              {isRecording ? (
+              {audioState.isRecording ? (
                 <>
                   <Animated.View
                     style={[
@@ -211,7 +253,16 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
                   </Animated.View>
                   <Text style={styles.recordingText}>جاري التسجيل...</Text>
                   <Text style={styles.durationText}>
-                    {formatDuration(Math.floor(recordingDuration / 10))}
+                    {formatDuration(audioState.duration)}
+                  </Text>
+                </>
+              ) : audioState.isLoading ? (
+                <>
+                  <View style={styles.micContainer}>
+                    <Ionicons name="hourglass-outline" size={40} color="#FFFFFF" />
+                  </View>
+                  <Text style={styles.instructionText}>
+                    جاري التحضير...
                   </Text>
                 </>
               ) : (
@@ -227,17 +278,25 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
                   </Text>
                 </>
               )}
+
+              {/* Show error if any */}
+              {audioState.error && (
+                <Text style={styles.errorText}>
+                  {audioState.error}
+                </Text>
+              )}
             </View>
 
             {/* Waveform Visualization */}
-            {isRecording && renderWaveform()}
+            {audioState.isRecording && renderWaveform()}
 
             {/* Controls */}
             <View style={styles.controlsContainer}>
-              {!isRecording ? (
+              {!audioState.isRecording ? (
                 <TouchableOpacity
-                  style={styles.recordButton}
+                  style={[styles.recordButton, audioState.isLoading && styles.disabledButton]}
                   onPress={handleStartRecording}
+                  disabled={audioState.isLoading}
                 >
                   <LinearGradient
                     colors={['#FFFFFF', '#F0F0F0']}
@@ -251,17 +310,15 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
                   <TouchableOpacity
                     style={styles.stopButton}
                     onPress={handleStopRecording}
+                    disabled={audioState.isLoading}
                   >
                     <Ionicons name="stop" size={24} color="#FFFFFF" />
                   </TouchableOpacity>
-                  
+
                   <TouchableOpacity
                     style={styles.cancelButton}
-                    onPress={() => {
-                      setIsRecording(false);
-                      setRecordingDuration(0);
-                      setWaveformData([]);
-                    }}
+                    onPress={handleCancelRecording}
+                    disabled={audioState.isLoading}
                   >
                     <Ionicons name="trash-outline" size={20} color="#FFFFFF" />
                   </TouchableOpacity>
@@ -446,5 +503,15 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.9)',
     marginBottom: 4,
     textAlign: 'right',
+  },
+  errorText: {
+    fontSize: 12,
+    color: '#FFB3B3',
+    textAlign: 'center',
+    marginTop: 8,
+    paddingHorizontal: 16,
+  },
+  disabledButton: {
+    opacity: 0.6,
   },
 });

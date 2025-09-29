@@ -8,7 +8,8 @@ import {
   ApiResponse,
   PaginatedResponse
 } from '../types';
-import { apiClient } from './api';
+import apiService from './api';
+import { legalService } from './legalService';
 
 const SEARCH_HISTORY_KEY = '@search_history';
 const SAVED_SEARCHES_KEY = '@saved_searches';
@@ -61,19 +62,63 @@ export class SearchService {
 
       const startTime = Date.now();
 
-      // Perform search using API
-      const response = await this.performApiSearch(query, filters, page, pageSize);
+      // Use the new legal service API
+      const response = await apiService.get<any[]>(`/api/v1/legal/search-results?${new URLSearchParams({
+        query,
+        language,
+        limit: pageSize.toString(),
+        offset: ((page - 1) * pageSize).toString(),
+        ...(filters.categories?.length ? { category: filters.categories[0] } : {}),
+        ...(filters.sectors?.length ? { sector: filters.sectors[0] } : {})
+      }).toString()}`);
 
-      if (response.success && response.data) {
-        searchQuery.results = response.data.items;
-        searchQuery.totalResults = response.data.totalItems;
-        searchQuery.searchTime = Date.now() - startTime;
+      // Transform API response to match expected format
+      const searchResults: SearchResult[] = response.map((item: any) => ({
+        id: item.id || `result-${Date.now()}-${Math.random()}`,
+        title: item.title || item.titleAr || '',
+        titleAr: item.titleAr || item.title || '',
+        titleFr: item.titleFr || item.title || '',
+        content: item.content || item.excerpt || '',
+        contentAr: item.contentAr || item.content || '',
+        contentFr: item.contentFr || item.content || '',
+        source: item.source || 'Unknown',
+        sourceAr: item.sourceAr || item.source || 'مصدر غير معروف',
+        sourceFr: item.sourceFr || item.source || 'Source inconnue',
+        category: item.category || 'general',
+        tags: item.tags || [],
+        publishedAt: new Date(item.publishedAt || item.published_at || Date.now()),
+        lastUpdated: new Date(item.lastUpdated || item.last_updated || Date.now()),
+        relevanceScore: item.relevanceScore || item.relevance_score || 0.5,
+        priority: item.priority || 'medium',
+        url: item.url,
+        isBookmarked: false,
+        viewCount: item.viewCount || 0,
+        language: language as any
+      }));
 
-        // Add to search history
-        await this.addToSearchHistory(searchQuery);
-      }
+      searchQuery.results = searchResults;
+      searchQuery.totalResults = response.length; // API should return total count
+      searchQuery.searchTime = Date.now() - startTime;
 
-      return response;
+      // Add to search history
+      await this.addToSearchHistory(searchQuery);
+
+      const apiResponse: ApiResponse<PaginatedResponse<SearchResult>> = {
+        success: true,
+        data: {
+          items: searchResults,
+          totalItems: response.length,
+          totalPages: Math.ceil(response.length / pageSize),
+          currentPage: page,
+          pageSize,
+          hasNext: response.length === pageSize,
+          hasPrevious: page > 1
+        },
+        timestamp: new Date(),
+        requestId: `search-${Date.now()}`
+      };
+
+      return apiResponse;
     } catch (error) {
       console.error('Search error:', error);
       return {
@@ -95,7 +140,7 @@ export class SearchService {
    */
   async getSearchSuggestions(query: string): Promise<SearchSuggestion[]> {
     try {
-      const response = await mockDataService.getSearchSuggestions(query);
+      const response = await legalService.getSearchSuggestions(query, 'ar', 10);
 
       if (response.success && response.data) {
         // Convert string suggestions to SearchSuggestion objects
@@ -297,120 +342,12 @@ export class SearchService {
    */
   async bookmarkSearchResult(resultId: string): Promise<boolean> {
     try {
-      // TODO: Implement bookmark API endpoint
+      // For now, return true as bookmarking would be handled by a separate bookmark service
+      // TODO: Implement actual bookmarking API when available
       return true;
     } catch (error) {
       console.error('Bookmark error:', error);
       return false;
-    }
-  }
-
-  /**
-   * Perform API search for legal content
-   */
-  private async performApiSearch(
-    query: string,
-    filters: Partial<SearchFilters> = {},
-    page: number = 1,
-    pageSize: number = 10
-  ): Promise<ApiResponse<PaginatedResponse<SearchResult>>> {
-    try {
-      const response = await apiClient.get('/legal/search', {
-        params: {
-          q: query,
-          category: filters.categories?.[0],
-          language: filters.languages?.[0] || 'ar',
-          limit: pageSize
-        }
-      });
-
-      if (response.data) {
-        const searchResults: SearchResult[] = response.data.map((result: any) => ({
-          id: result.document.id.toString(),
-          title: result.document.title,
-          titleAr: result.document.title,
-          titleFr: result.document.title,
-          content: result.document.content,
-          contentAr: result.document.content,
-          contentFr: result.document.content,
-          summary: result.document.content.substring(0, 200) + '...',
-          summaryAr: result.document.content.substring(0, 200) + '...',
-          summaryFr: result.document.content.substring(0, 200) + '...',
-          category: result.document.category,
-          priority: 'medium',
-          source: {
-            id: 'api-source',
-            name: result.document.source_document,
-            nameAr: result.document.source_document,
-            nameFr: result.document.source_document,
-            type: 'official',
-            url: result.document.official_url || '',
-            credibilityScore: 0.95,
-            lastUpdated: new Date()
-          },
-          publishedAt: new Date(result.document.created_at),
-          lastUpdated: new Date(result.document.updated_at),
-          effectiveDate: new Date(),
-          tags: [],
-          tagsAr: [],
-          tagsFr: [],
-          impactLevel: 'medium',
-          sectors: [],
-          ministryId: 'unknown',
-          isBookmarked: false,
-          readStatus: 'unread',
-          relevanceScore: result.similarity_score,
-          highlightedText: '',
-          matchedTerms: [query],
-          documentType: 'legal_document',
-          language: result.document.language,
-          wordCount: result.document.content.length,
-          readingTime: Math.ceil(result.document.content.length / 200),
-          relatedDocuments: [],
-          citations: [],
-          attachments: []
-        }));
-
-        return {
-          success: true,
-          data: {
-            items: searchResults,
-            totalItems: searchResults.length,
-            currentPage: page,
-            totalPages: Math.ceil(searchResults.length / pageSize),
-            pageSize: pageSize,
-            hasNextPage: false,
-            hasPreviousPage: page > 1
-          },
-          timestamp: new Date(),
-          requestId: `search-${Date.now()}`
-        };
-      }
-
-      return {
-        success: false,
-        error: {
-          code: 'NO_RESULTS',
-          message: 'No search results found',
-          messageAr: 'لم يتم العثور على نتائج',
-          messageFr: 'Aucun résultat trouvé'
-        },
-        timestamp: new Date(),
-        requestId: `search-${Date.now()}`
-      };
-    } catch (error) {
-      console.error('API search error:', error);
-      return {
-        success: false,
-        error: {
-          code: 'API_ERROR',
-          message: 'Failed to search via API',
-          messageAr: 'فشل البحث عبر API',
-          messageFr: 'Échec de la recherche via API'
-        },
-        timestamp: new Date(),
-        requestId: `search-${Date.now()}`
-      };
     }
   }
 

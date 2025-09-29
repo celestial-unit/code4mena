@@ -146,7 +146,7 @@ class ApiService {
       console.log(`[API] ${method} ${url}`, data ? { data } : '');
 
       const response = await fetch(url, requestOptions);
-      
+
       // Clear timeout
       clearTimeout(timeoutId);
 
@@ -154,7 +154,7 @@ class ApiService {
       if (!response.ok) {
         const errorText = await response.text();
         let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-        
+
         try {
           const errorJson = JSON.parse(errorText);
           errorMessage = errorJson.message || errorMessage;
@@ -181,7 +181,7 @@ class ApiService {
 
       // Parse response
       const responseText = await response.text();
-      
+
       // Handle empty responses
       if (!responseText) {
         return {} as T;
@@ -303,7 +303,7 @@ class ApiService {
 
       const headers = this.buildHeaders();
       delete headers['Content-Type']; // Let browser set content-type for FormData
-      
+
       const response = await fetch(this.buildUrl('audio/query'), {
         method: 'POST',
         headers,

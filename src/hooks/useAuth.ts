@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { authService } from '../services';
-import type { User, LoginCredentials, AuthError } from '../services';
+import authService from '../services/authService';
+import type { User, LoginCredentials, AuthError } from '../services/authService';
 
 interface UseAuthReturn {
   user: User | null;
@@ -58,7 +58,7 @@ export const useAuth = (): UseAuthReturn => {
       setError(null);
 
       const response = await authService.login(credentials);
-      
+
       setUser(response.user);
       setIsAuthenticated(true);
 
@@ -79,7 +79,7 @@ export const useAuth = (): UseAuthReturn => {
       setError(null);
 
       await authService.logout();
-      
+
       setUser(null);
       setIsAuthenticated(false);
 

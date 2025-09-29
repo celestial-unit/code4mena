@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { LoginForm } from '../components/auth';
 import { useAuth } from '../hooks';
-import type { AuthError } from '../services';
+import type { AuthError } from '../services/authService';
 
 const AuthTestScreen: React.FC = () => {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
@@ -75,23 +75,23 @@ const AuthTestScreen: React.FC = () => {
       {isAuthenticated && user ? (
         <View style={styles.userSection}>
           <Text style={styles.sectionTitle}>معلومات المستخدم</Text>
-          
+
           <View style={styles.userInfo}>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>الاسم:</Text>
               <Text style={styles.infoValue}>{user.name}</Text>
             </View>
-            
+
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>البريد الإلكتروني:</Text>
               <Text style={styles.infoValue}>{user.email}</Text>
             </View>
-            
+
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>المعرف:</Text>
               <Text style={styles.infoValue}>{user.id}</Text>
             </View>
-            
+
             {user.role && (
               <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>الدور:</Text>
@@ -107,7 +107,7 @@ const AuthTestScreen: React.FC = () => {
       ) : (
         <View style={styles.loginSection}>
           <Text style={styles.sectionTitle}>تسجيل الدخول مطلوب</Text>
-          
+
           {showLoginForm ? (
             <LoginForm
               onLoginSuccess={handleLoginSuccess}
@@ -126,7 +126,7 @@ const AuthTestScreen: React.FC = () => {
 
       <View style={styles.statusSection}>
         <Text style={styles.sectionTitle}>حالة المصادقة</Text>
-        
+
         <View style={styles.statusInfo}>
           <View style={styles.statusRow}>
             <Text style={styles.statusLabel}>مصادق:</Text>
@@ -137,7 +137,7 @@ const AuthTestScreen: React.FC = () => {
               {isAuthenticated ? 'نعم' : 'لا'}
             </Text>
           </View>
-          
+
           <View style={styles.statusRow}>
             <Text style={styles.statusLabel}>جاري التحميل:</Text>
             <Text style={styles.statusValue}>

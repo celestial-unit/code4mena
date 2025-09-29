@@ -3,40 +3,57 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-// Import the navigation system
+// Import the real navigation system
 import { AppNavigator } from './src/navigation/AppNavigator';
 
-// Import services for initialization
+// Import all services
 import apiService from './src/services/api';
+import storageService from './src/services/storage';
 import authService from './src/services/authService';
+import { chatService } from './src/services/chatService';
+import { searchService } from './src/services/searchService';
+import { legalService } from './src/services/legalService';
 
 export default function App() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
 
   useEffect(() => {
-    initializeServices();
+    initializeBasicServices();
   }, []);
 
-  const initializeServices = async () => {
+  const initializeBasicServices = async () => {
     try {
       console.log('[App] Initializing services...');
-      
+
+      // Test storage service
+      await storageService.set('app_initialized', 'true');
+      console.log('[App] Storage service working');
+
       // Initialize auth service (loads stored tokens)
       await authService.initialize();
-      
+      console.log('[App] Auth service initialized');
+
       // Set a demo token for API calls if no token exists
       const existingToken = await authService.getAuthToken();
       if (!existingToken) {
         console.log('[App] No existing token, setting demo token');
         apiService.setAuthToken('demo-token-for-legal-api');
+      } else {
+        console.log('[App] Using existing auth token');
+        apiService.setAuthToken(existingToken);
       }
 
-      console.log('[App] Services initialized successfully');
+      // Initialize other services
+      console.log('[App] Chat service ready:', typeof chatService);
+      console.log('[App] Search service ready:', typeof searchService);
+      console.log('[App] Legal service ready:', typeof legalService);
+
+      console.log('[App] All services initialized successfully');
       setIsInitialized(true);
     } catch (error) {
       console.error('[App] Failed to initialize services:', error);
-      setInitError('Failed to initialize app services');
+      setInitError('Failed to initialize services');
       // Still allow app to continue
       setIsInitialized(true);
     }
@@ -48,7 +65,7 @@ export default function App() {
         <View style={[styles.container, styles.centered]}>
           <StatusBar style="dark" backgroundColor="#FFFFFF" />
           <Text style={styles.loadingText}>
-            {initError || 'جاري تحميل التطبيق...'}
+            {initError || 'جاري تحميل الخدمات...'}
           </Text>
         </View>
       </SafeAreaProvider>

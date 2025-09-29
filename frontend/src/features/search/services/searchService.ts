@@ -1,14 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { 
-  SearchQuery, 
-  SearchResult, 
-  SearchFilters, 
-  SavedSearch, 
+import {
+  SearchQuery,
+  SearchResult,
+  SearchFilters,
+  SavedSearch,
   SearchSuggestion,
   ApiResponse,
   PaginatedResponse
 } from '../types';
-import { mockDataService } from './mockDataService';
+import apiService from '../../../shared/services/api';
+import { legalService } from '../../legal/services/legalService';
 
 const SEARCH_HISTORY_KEY = '@search_history';
 const SAVED_SEARCHES_KEY = '@saved_searches';
@@ -60,25 +61,64 @@ export class SearchService {
       };
 
       const startTime = Date.now();
-      
-      // Perform search using mock data service
-      const response = await mockDataService.searchLegalContent(
+
+      // Use the new legal service API
+      const response = await apiService.get<any[]>(`/api/v1/legal/search-results?${new URLSearchParams({
         query,
-        filters,
-        page,
-        pageSize
-      );
+        language,
+        limit: pageSize.toString(),
+        offset: ((page - 1) * pageSize).toString(),
+        ...(filters.categories?.length ? { category: filters.categories[0] } : {}),
+        ...(filters.sectors?.length ? { sector: filters.sectors[0] } : {})
+      }).toString()}`);
 
-      if (response.success && response.data) {
-        searchQuery.results = response.data.items;
-        searchQuery.totalResults = response.data.totalItems;
-        searchQuery.searchTime = Date.now() - startTime;
+      // Transform API response to match expected format
+      const searchResults: SearchResult[] = response.map((item: any) => ({
+        id: item.id || `result-${Date.now()}-${Math.random()}`,
+        title: item.title || item.titleAr || '',
+        titleAr: item.titleAr || item.title || '',
+        titleFr: item.titleFr || item.title || '',
+        content: item.content || item.excerpt || '',
+        contentAr: item.contentAr || item.content || '',
+        contentFr: item.contentFr || item.content || '',
+        source: item.source || 'Unknown',
+        sourceAr: item.sourceAr || item.source || 'مصدر غير معروف',
+        sourceFr: item.sourceFr || item.source || 'Source inconnue',
+        category: item.category || 'general',
+        tags: item.tags || [],
+        publishedAt: new Date(item.publishedAt || item.published_at || Date.now()),
+        lastUpdated: new Date(item.lastUpdated || item.last_updated || Date.now()),
+        relevanceScore: item.relevanceScore || item.relevance_score || 0.5,
+        priority: item.priority || 'medium',
+        url: item.url,
+        isBookmarked: false,
+        viewCount: item.viewCount || 0,
+        language: language as any
+      }));
 
-        // Add to search history
-        await this.addToSearchHistory(searchQuery);
-      }
+      searchQuery.results = searchResults;
+      searchQuery.totalResults = response.length; // API should return total count
+      searchQuery.searchTime = Date.now() - startTime;
 
-      return response;
+      // Add to search history
+      await this.addToSearchHistory(searchQuery);
+
+      const apiResponse: ApiResponse<PaginatedResponse<SearchResult>> = {
+        success: true,
+        data: {
+          items: searchResults,
+          totalItems: response.length,
+          totalPages: Math.ceil(response.length / pageSize),
+          currentPage: page,
+          pageSize,
+          hasNext: response.length === pageSize,
+          hasPrevious: page > 1
+        },
+        timestamp: new Date(),
+        requestId: `search-${Date.now()}`
+      };
+
+      return apiResponse;
     } catch (error) {
       console.error('Search error:', error);
       return {
@@ -100,8 +140,8 @@ export class SearchService {
    */
   async getSearchSuggestions(query: string): Promise<SearchSuggestion[]> {
     try {
-      const response = await mockDataService.getSearchSuggestions(query);
-      
+      const response = await legalService.getSearchSuggestions(query, 'ar', 10);
+
       if (response.success && response.data) {
         // Convert string suggestions to SearchSuggestion objects
         return response.data.map((suggestion, index) => ({
@@ -223,7 +263,7 @@ export class SearchService {
 
     this.savedSearches.push(savedSearch);
     await this.saveSavedSearches();
-    
+
     return savedSearch;
   }
 
@@ -252,7 +292,7 @@ export class SearchService {
     pageSize: number = 10
   ): Promise<ApiResponse<PaginatedResponse<SearchResult>>> {
     const savedSearch = this.savedSearches.find(search => search.id === savedSearchId);
-    
+
     if (!savedSearch) {
       return {
         success: false,
@@ -302,8 +342,9 @@ export class SearchService {
    */
   async bookmarkSearchResult(resultId: string): Promise<boolean> {
     try {
-      const response = await mockDataService.bookmarkLegalUpdate(resultId, 'current-user');
-      return response.success;
+      // For now, return true as bookmarking would be handled by a separate bookmark service
+      // TODO: Implement actual bookmarking API when available
+      return true;
     } catch (error) {
       console.error('Bookmark error:', error);
       return false;
@@ -344,7 +385,7 @@ export class SearchService {
         console.warn('AsyncStorage not available, using in-memory storage');
         return;
       }
-      
+
       const historyJson = await AsyncStorage.getItem(SEARCH_HISTORY_KEY);
       if (historyJson) {
         const history = JSON.parse(historyJson);
@@ -371,7 +412,7 @@ export class SearchService {
         console.warn('AsyncStorage not available, skipping save');
         return;
       }
-      
+
       await AsyncStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(this.searchHistory));
     } catch (error) {
       console.error('Failed to save search history:', error);
@@ -385,7 +426,7 @@ export class SearchService {
         console.warn('AsyncStorage not available, using in-memory storage');
         return;
       }
-      
+
       const savedJson = await AsyncStorage.getItem(SAVED_SEARCHES_KEY);
       if (savedJson) {
         const saved = JSON.parse(savedJson);
@@ -409,7 +450,7 @@ export class SearchService {
         console.warn('AsyncStorage not available, skipping save');
         return;
       }
-      
+
       await AsyncStorage.setItem(SAVED_SEARCHES_KEY, JSON.stringify(this.savedSearches));
     } catch (error) {
       console.error('Failed to save searches:', error);
@@ -428,7 +469,7 @@ export class SearchService {
       'labor code amendments': 'تعديلات قانون العمل',
       'environmental compliance': 'الامتثال البيئي'
     };
-    
+
     return translations[text.toLowerCase()] || text;
   }
 
@@ -444,7 +485,7 @@ export class SearchService {
       'الإجراءات الإدارية': 'Procédures administratives',
       'قانون البيئة': 'Droit de l\'environnement'
     };
-    
+
     return translations[text] || text;
   }
 }

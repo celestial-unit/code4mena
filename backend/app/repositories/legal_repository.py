@@ -317,3 +317,154 @@ class LegalRepository:
             results.append(result)
         
         return results
+    
+    async def get_search_results(
+        self,
+        query: str,
+        category: Optional[str] = None,
+        sector: Optional[str] = None,
+        language: str = "ar",
+        limit: int = 10,
+        offset: int = 0
+    ) -> List[Dict[str, Any]]:
+        """
+        Get search results with filtering and pagination
+        """
+        # Mock search results based on the original search-results.json
+        mock_results = [
+            {
+                "id": "search-result-001",
+                "title": "Business Registration Requirements in Tunisia 2024",
+                "titleAr": "متطلبات تسجيل الأعمال في تونس 2024",
+                "titleFr": "Exigences d'enregistrement d'entreprise en Tunisie 2024",
+                "content": "Complete guide to business registration in Tunisia, including required documents, procedures, and timelines for different business types.",
+                "contentAr": "دليل شامل لتسجيل الأعمال في تونس، بما في ذلك الوثائق المطلوبة والإجراءات والجداول الزمنية لأنواع الأعمال المختلفة.",
+                "contentFr": "Guide complet pour l'enregistrement d'entreprise en Tunisie, incluant les documents requis, les procédures et les délais pour différents types d'entreprises.",
+                "excerpt": "Business registration in Tunisia requires submission of specific documents to the CFE...",
+                "excerptAr": "يتطلب تسجيل الأعمال في تونس تقديم وثائق محددة للمركز الوحيد للمؤسسات...",
+                "excerptFr": "L'enregistrement d'entreprise en Tunisie nécessite la soumission de documents spécifiques au CFE...",
+                "type": "guide",
+                "category": "business_law",
+                "sectors": ["business"],
+                "source": {
+                    "id": "source-cfe",
+                    "name": "Centre de Formalités des Entreprises",
+                    "nameAr": "المركز الوحيد للمؤسسات",
+                    "nameFr": "Centre de Formalités des Entreprises",
+                    "type": "government",
+                    "credibilityScore": 0.98
+                },
+                "relevanceScore": 0.95,
+                "similarityScore": 0.92,
+                "publishedAt": "2024-01-10T09:00:00Z",
+                "tags": ["business registration", "CFE", "documents"],
+                "tagsAr": ["تسجيل الأعمال", "المركز الوحيد للمؤسسات", "الوثائق"],
+                "tagsFr": ["enregistrement d'entreprise", "CFE", "documents"]
+            },
+            {
+                "id": "search-result-002",
+                "title": "Digital Tax Implementation Guide 2024",
+                "titleAr": "دليل تطبيق الضرائب الرقمية 2024",
+                "titleFr": "Guide de mise en œuvre de la taxe numérique 2024",
+                "content": "Comprehensive guide on implementing digital tax requirements for e-commerce businesses in Tunisia.",
+                "contentAr": "دليل شامل حول تطبيق متطلبات الضرائب الرقمية لشركات التجارة الإلكترونية في تونس.",
+                "contentFr": "Guide complet sur la mise en œuvre des exigences fiscales numériques pour les entreprises de commerce électronique en Tunisie.",
+                "excerpt": "The new digital tax regulations require all e-commerce businesses to implement automated tax calculation systems...",
+                "excerptAr": "تتطلب لوائح الضرائب الرقمية الجديدة من جميع شركات التجارة الإلكترونية تنفيذ أنظمة حساب الضرائب الآلية...",
+                "excerptFr": "Les nouvelles réglementations fiscales numériques exigent que toutes les entreprises de commerce électronique mettent en place des systèmes de calcul automatisé des taxes...",
+                "type": "regulation",
+                "category": "tax_law",
+                "sectors": ["business", "technology"],
+                "source": {
+                    "id": "source-mof",
+                    "name": "Ministry of Finance",
+                    "nameAr": "وزارة المالية",
+                    "nameFr": "Ministère des Finances",
+                    "type": "ministry_official",
+                    "credibilityScore": 0.95
+                },
+                "relevanceScore": 0.88,
+                "similarityScore": 0.85,
+                "publishedAt": "2024-01-15T10:30:00Z",
+                "tags": ["digital tax", "e-commerce", "automation"],
+                "tagsAr": ["الضرائب الرقمية", "التجارة الإلكترونية", "الأتمتة"],
+                "tagsFr": ["taxe numérique", "commerce électronique", "automatisation"]
+            }
+        ]
+        
+        # Filter by query (simple keyword matching)
+        if query:
+            query_lower = query.lower()
+            filtered_results = []
+            for result in mock_results:
+                if (query_lower in result["title"].lower() or 
+                    query_lower in result["content"].lower() or
+                    any(query_lower in tag.lower() for tag in result["tags"])):
+                    filtered_results.append(result)
+            mock_results = filtered_results
+        
+        # Filter by category
+        if category:
+            mock_results = [r for r in mock_results if r["category"] == category]
+        
+        # Filter by sector
+        if sector:
+            mock_results = [r for r in mock_results if sector in r["sectors"]]
+        
+        # Apply pagination
+        return mock_results[offset:offset + limit]
+    
+    async def get_search_suggestions(
+        self,
+        query: str,
+        language: str = "ar",
+        limit: int = 5
+    ) -> List[str]:
+        """
+        Get search suggestions based on partial query
+        """
+        suggestions = {
+            "ar": [
+                "تسجيل شركة جديدة",
+                "الضرائب الرقمية",
+                "قانون العمل الجديد",
+                "حقوق المستهلك",
+                "قانون الأسرة",
+                "العقود التجارية",
+                "الإجراءات الإدارية",
+                "قانون البيئة"
+            ],
+            "fr": [
+                "enregistrement d'entreprise",
+                "taxe numérique",
+                "nouveau code du travail",
+                "droits du consommateur",
+                "droit de la famille",
+                "contrats commerciaux",
+                "procédures administratives",
+                "droit de l'environnement"
+            ],
+            "en": [
+                "business registration",
+                "digital tax",
+                "new labor law",
+                "consumer rights",
+                "family law",
+                "commercial contracts",
+                "administrative procedures",
+                "environmental law"
+            ]
+        }
+        
+        query_suggestions = suggestions.get(language, suggestions["ar"])
+        
+        # Filter suggestions based on query
+        if query:
+            query_lower = query.lower()
+            filtered_suggestions = [
+                s for s in query_suggestions 
+                if query_lower in s.lower()
+            ]
+            return filtered_suggestions[:limit]
+        
+        return query_suggestions[:limit]

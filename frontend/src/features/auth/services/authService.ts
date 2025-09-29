@@ -1,5 +1,5 @@
-import apiService from './api';
-import storageService from './storage';
+import apiService from '../../../shared/services/api';
+import storageService from '../../../shared/services/storage';
 
 // Authentication types
 export interface LoginCredentials {
@@ -66,38 +66,47 @@ class AuthService {
     try {
       console.log('[Auth] Attempting login for:', credentials.email);
 
-      // For now, since the backend doesn't have a login endpoint,
-      // we'll simulate a successful login with a mock token
-      // In a real implementation, this would call POST /auth/login
-      
-      // TODO: Replace with actual backend login endpoint when available
-      // const response = await apiService.post<LoginResponse>('/auth/login', credentials);
-      
-      // Mock response for demonstration
-      const mockResponse: LoginResponse = {
-        token: `mock_token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        refreshToken: `refresh_token_${Date.now()}`,
+      // Call the backend login endpoint
+      const response = await apiService.post<{
+        success: boolean;
+        user: any;
+        token?: string;
+        refresh_token?: string;
+        expires_in?: number;
+      }>('/api/v1/auth/login', {
+        email: credentials.email,
+        password: credentials.password
+      });
+
+      if (!response.success || !response.user) {
+        throw new Error('Invalid login response from server');
+      }
+
+      // Transform backend response to frontend format
+      const loginResponse: LoginResponse = {
+        token: response.token || `temp_token_${Date.now()}`,
+        refreshToken: response.refresh_token,
         user: {
-          id: `user_${Math.random().toString(36).substr(2, 9)}`,
-          email: credentials.email,
-          name: credentials.email.split('@')[0], // Use email prefix as name
-          role: 'user'
+          id: response.user.id || response.user.user_id,
+          email: response.user.email,
+          name: response.user.name || response.user.full_name || credentials.email.split('@')[0],
+          role: response.user.role || 'user'
         },
-        expiresIn: 3600 // 1 hour
+        expiresIn: response.expires_in || 3600
       };
 
       // Store tokens and user data
-      await this.storeAuthData(mockResponse);
+      await this.storeAuthData(loginResponse);
 
       // Set token in API service for future requests
-      apiService.setAuthToken(mockResponse.token);
+      apiService.setAuthToken(loginResponse.token);
 
-      console.log('[Auth] Login successful for user:', mockResponse.user.email);
-      return mockResponse;
+      console.log('[Auth] Login successful for user:', loginResponse.user.email);
+      return loginResponse;
 
     } catch (error) {
       console.error('[Auth] Login failed:', error);
-      
+
       // Convert API errors to AuthError
       if (error && typeof error === 'object' && 'message' in error) {
         const authError: AuthError = {
@@ -124,8 +133,12 @@ class AuthService {
     try {
       console.log('[Auth] Logging out user');
 
-      // TODO: Call backend logout endpoint if available
-      // await apiService.post('/auth/logout');
+      // Call backend logout endpoint
+      try {
+        await apiService.post('/api/v1/auth/logout');
+      } catch (logoutError) {
+        console.warn('[Auth] Backend logout failed, continuing with local cleanup:', logoutError);
+      }
 
       // Clear stored authentication data
       await this.clearAuthData();
@@ -137,7 +150,7 @@ class AuthService {
 
     } catch (error) {
       console.error('[Auth] Logout error:', error);
-      
+
       // Even if backend logout fails, clear local data
       try {
         await this.clearAuthData();
@@ -164,11 +177,29 @@ class AuthService {
   }
 
   /**
-   * Get current user data
+   * Get current user data from backend
    */
   async getCurrentUser(): Promise<User | null> {
     try {
       await this.initialize();
+
+      // Try to get user from backend first
+      const token = await storageService.getAuthToken();
+      if (token) {
+        try {
+          const response = await apiService.get<User>('/api/v1/auth/me');
+
+          // Update stored user data with fresh data from backend
+          await storageService.setUserData(response);
+          return response;
+        } catch (apiError) {
+          console.warn('[Auth] Failed to get user from backend, using stored data:', apiError);
+
+          // If API call fails, try to use stored data
+          return await storageService.getUserData<User>();
+        }
+      }
+
       return await storageService.getUserData<User>();
     } catch (error) {
       console.error('[Auth] Failed to get current user:', error);
@@ -196,34 +227,43 @@ class AuthService {
   async refreshToken(): Promise<string | null> {
     try {
       const refreshToken = await storageService.getRefreshToken();
-      
+
       if (!refreshToken) {
         console.log('[Auth] No refresh token available');
         return null;
       }
 
-      // TODO: Implement actual token refresh with backend
-      // const response = await apiService.post<{token: string}>('/auth/refresh', {
-      //   refreshToken
-      // });
+      // Call backend refresh endpoint
+      const response = await apiService.post<{
+        success: boolean;
+        token?: string;
+        refresh_token?: string;
+        expires_in?: number;
+      }>('/api/v1/auth/refresh', {
+        refresh_token: refreshToken
+      });
 
-      // Mock refresh for now
-      const newToken = `refreshed_token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
-      // Store new token
-      await storageService.setAuthToken(newToken);
-      apiService.setAuthToken(newToken);
+      if (!response.success || !response.token) {
+        throw new Error('Invalid refresh response from server');
+      }
+
+      // Store new tokens
+      await storageService.setAuthToken(response.token);
+      if (response.refresh_token) {
+        await storageService.setRefreshToken(response.refresh_token);
+      }
+      apiService.setAuthToken(response.token);
 
       console.log('[Auth] Token refreshed successfully');
-      return newToken;
+      return response.token;
 
     } catch (error) {
       console.error('[Auth] Token refresh failed:', error);
-      
+
       // If refresh fails, clear auth data
       await this.clearAuthData();
       apiService.setAuthToken(null);
-      
+
       return null;
     }
   }
@@ -266,6 +306,31 @@ class AuthService {
   }
 
   /**
+   * Update user profile
+   */
+  async updateProfile(profileData: Partial<User>): Promise<User | null> {
+    try {
+      const response = await apiService.put<{
+        success: boolean;
+        user: User;
+      }>('/api/v1/auth/me', profileData);
+
+      if (!response.success || !response.user) {
+        throw new Error('Invalid profile update response from server');
+      }
+
+      // Update stored user data
+      await storageService.setUserData(response.user);
+
+      console.log('[Auth] Profile updated successfully');
+      return response.user;
+    } catch (error) {
+      console.error('[Auth] Profile update failed:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Handle authentication errors (e.g., token expiry)
    * This can be called by the API service when it receives 401 responses
    */
@@ -275,7 +340,7 @@ class AuthService {
 
       // Try to refresh token first
       const newToken = await this.refreshToken();
-      
+
       if (!newToken) {
         // If refresh fails, clear all auth data
         await this.clearAuthData();
@@ -285,7 +350,7 @@ class AuthService {
 
     } catch (error) {
       console.error('[Auth] Error handling auth error:', error);
-      
+
       // Fallback: clear all auth data
       try {
         await this.clearAuthData();

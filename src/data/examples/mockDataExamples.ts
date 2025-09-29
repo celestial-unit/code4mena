@@ -5,7 +5,8 @@
  * These examples show common patterns and best practices for working with mock data.
  */
 
-import { mockApiClient, mockDataService } from '../../services';
+import { mockApiClient } from '../../services/mockApiClient';
+import { mockDataService } from '../../services/mockDataService';
 import { mockDataManager, mockDataHelpers } from '../../utils';
 import { LegalCategory, Sector, User, LegalUpdate } from '../../types';
 
@@ -28,7 +29,7 @@ async function basicApiUsageExample() {
     if (updatesResponse.success && updatesResponse.data) {
       console.log(`Found ${updatesResponse.data.totalItems} legal updates`);
       console.log(`Showing page ${updatesResponse.data.currentPage} of ${updatesResponse.data.totalPages}`);
-      
+
       updatesResponse.data.items.forEach((update: LegalUpdate) => {
         console.log(`- ${update.title} (${update.priority} priority)`);
       });
@@ -80,13 +81,13 @@ async function chatConversationExample() {
       if (messageResponse.success && messageResponse.data) {
         const conversation = messageResponse.data;
         console.log(`\nConversation has ${conversation.messages.length} messages`);
-        
+
         // Display the latest AI response
         const latestMessage = conversation.messages[conversation.messages.length - 1];
         if (latestMessage.type === 'ai') {
           console.log('\nAI Response:');
           console.log(latestMessage.content.substring(0, 200) + '...');
-          
+
           if (latestMessage.mascotAnimation) {
             console.log(`Mascot animation: ${latestMessage.mascotAnimation.type} (${latestMessage.mascotAnimation.sector})`);
           }
@@ -131,7 +132,7 @@ async function searchExample() {
         console.log(`   Source: ${result.source.name}`);
         console.log(`   Categories: ${result.category}`);
         console.log(`   Sectors: ${result.sectors.join(', ')}`);
-        
+
         if (result.highlights.length > 0) {
           console.log(`   Highlights: ${result.highlights.length} matches found`);
         }
@@ -182,7 +183,7 @@ async function mascotExample() {
       const mascot = businessMascot.data;
       console.log(`\nBusiness mascot: ${mascot.name}`);
       console.log(`Description: ${mascot.description}`);
-      
+
       if (mascot.animations.length > 0) {
         console.log('\nAvailable animations:');
         mascot.animations.forEach((animation: any) => {
@@ -268,27 +269,27 @@ async function dataAnalysisExample() {
 
   // Get all legal updates
   const allUpdatesResponse = await mockApiClient.getLegalUpdates({ pageSize: 100 });
-  
+
   if (allUpdatesResponse.success && allUpdatesResponse.data) {
     const allUpdates = allUpdatesResponse.data.items;
-    
+
     // Filter by category
     const businessUpdates = mockDataHelpers.filterLegalUpdatesByCategory(
-      allUpdates, 
+      allUpdates,
       ['business_law']
     );
     console.log(`Business law updates: ${businessUpdates.length}`);
 
     // Filter by sector
     const technologyUpdates = mockDataHelpers.filterLegalUpdatesBySector(
-      allUpdates, 
+      allUpdates,
       ['technology']
     );
     console.log(`Technology sector updates: ${technologyUpdates.length}`);
 
     // Filter by priority
     const highPriorityUpdates = mockDataHelpers.filterLegalUpdatesByPriority(
-      allUpdates, 
+      allUpdates,
       ['high']
     );
     console.log(`High priority updates: ${highPriorityUpdates.length}`);
@@ -300,7 +301,7 @@ async function dataAnalysisExample() {
     console.log(`- Bookmarked: ${stats.bookmarked}`);
     console.log(`- Read: ${stats.read}`);
     console.log(`- Average age: ${stats.averageAge.toFixed(1)} days`);
-    
+
     console.log('\nBy Category:');
     Object.entries(stats.byCategory).forEach(([category, count]) => {
       const categoryName = mockDataHelpers.translateCategory(category as LegalCategory, 'en');
@@ -399,7 +400,7 @@ async function errorHandlingExample() {
  */
 async function runAllExamples() {
   console.log('🚀 Running Mock Data System Examples\n');
-  
+
   await basicApiUsageExample();
   await chatConversationExample();
   await searchExample();
@@ -408,7 +409,7 @@ async function runAllExamples() {
   await dataAnalysisExample();
   await localizationExample();
   await errorHandlingExample();
-  
+
   console.log('\n✅ All examples completed successfully!');
 }
 

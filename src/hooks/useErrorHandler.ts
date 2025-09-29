@@ -44,7 +44,7 @@ export const useErrorHandler = (options: ErrorHandlerOptions = {}) => {
     if (error && typeof error === 'object') {
       if ('message' in error) {
         const apiError = error as ApiError;
-        
+
         // Provide user-friendly messages for common error codes
         switch (apiError.code) {
           case 'NETWORK_ERROR':

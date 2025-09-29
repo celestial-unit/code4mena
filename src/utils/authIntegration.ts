@@ -3,7 +3,8 @@
  * This demonstrates how to use storage utilities with the existing API service
  */
 
-import { apiService, storageService } from '../services';
+import apiService from '../services/api';
+import storageService from '../services/storage';
 
 /**
  * Initialize API service with stored authentication token
@@ -57,7 +58,7 @@ export async function loginAndStore(email: string, password: string): Promise<an
     if (token) {
       // Store tokens in secure storage
       await storageService.setAuthToken(token);
-      
+
       if (refresh_token) {
         await storageService.setRefreshToken(refresh_token);
       }
@@ -114,7 +115,7 @@ export async function logoutAndClear(): Promise<void> {
 export async function refreshAuthToken(): Promise<boolean> {
   try {
     const refreshToken = await storageService.getRefreshToken();
-    
+
     if (!refreshToken) {
       console.log('[Auth] No refresh token available');
       return false;
@@ -130,7 +131,7 @@ export async function refreshAuthToken(): Promise<boolean> {
     if (token) {
       // Store new tokens
       await storageService.setAuthToken(token);
-      
+
       if (newRefreshToken) {
         await storageService.setRefreshToken(newRefreshToken);
       }
@@ -146,7 +147,7 @@ export async function refreshAuthToken(): Promise<boolean> {
     }
   } catch (error) {
     console.error('[Auth] Token refresh failed:', error);
-    
+
     // If refresh fails, clear all auth data
     await logoutAndClear();
     return false;
@@ -160,7 +161,7 @@ export async function refreshAuthToken(): Promise<boolean> {
 export async function checkAuthenticationStatus(): Promise<boolean> {
   try {
     const isAuthenticated = await storageService.isAuthenticated();
-    
+
     if (!isAuthenticated) {
       return false;
     }
@@ -171,7 +172,7 @@ export async function checkAuthenticationStatus(): Promise<boolean> {
       return true;
     } catch (verifyError) {
       console.log('[Auth] Token verification failed, attempting refresh');
-      
+
       // Try to refresh the token
       const refreshSuccess = await refreshAuthToken();
       return refreshSuccess;
@@ -224,9 +225,9 @@ export async function makeAuthenticatedCall<T>(
     // If we get a 401, try to refresh the token and retry
     if (error?.status === 401) {
       console.log('[Auth] Received 401, attempting token refresh');
-      
+
       const refreshSuccess = await refreshAuthToken();
-      
+
       if (refreshSuccess) {
         console.log('[Auth] Token refreshed, retrying API call');
         return await apiCall();
@@ -235,7 +236,7 @@ export async function makeAuthenticatedCall<T>(
         throw new Error('Authentication failed - please log in again');
       }
     }
-    
+
     // Re-throw other errors
     throw error;
   }

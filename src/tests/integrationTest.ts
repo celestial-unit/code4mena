@@ -58,7 +58,7 @@ class IntegrationTester {
 
     console.log('✅ Integration Tests Complete');
     this.printResults();
-    
+
     return this.results;
   }
 
@@ -68,7 +68,7 @@ class IntegrationTester {
   private async testNetworkConnectivity(): Promise<void> {
     try {
       const networkState = await networkUtils.checkConnectivity();
-      
+
       this.addResult({
         name: 'Network Connectivity Check',
         passed: networkState.isConnected,
@@ -95,7 +95,7 @@ class IntegrationTester {
       // Check if API service is properly configured
       const hasBaseUrl = apiService['baseUrl'] && apiService['baseUrl'].length > 0;
       const hasTimeout = apiService['timeout'] && apiService['timeout'] > 0;
-      
+
       this.addResult({
         name: 'API Service Configuration',
         passed: hasBaseUrl && hasTimeout,
@@ -124,13 +124,13 @@ class IntegrationTester {
 
       // Test set
       await storageService.set(testKey, testValue);
-      
+
       // Test get
       const retrievedValue = await storageService.get(testKey);
-      
+
       // Test remove
       await storageService.remove(testKey);
-      
+
       // Verify removal
       const removedValue = await storageService.get(testKey);
 
@@ -358,11 +358,11 @@ class IntegrationTester {
   private printResults(): void {
     const passed = this.results.filter(r => r.passed).length;
     const total = this.results.length;
-    
+
     console.log('\n📊 Test Results Summary:');
     console.log(`   Passed: ${passed}/${total}`);
     console.log(`   Success Rate: ${Math.round((passed / total) * 100)}%`);
-    
+
     if (passed < total) {
       console.log('\n❌ Failed Tests:');
       this.results.filter(r => !r.passed).forEach(result => {
@@ -390,14 +390,13 @@ class IntegrationTester {
       try {
         const chatResponse = await geminiApiService.sendMessage(
           'مرحبا، ما هي متطلبات تسجيل شركة جديدة في تونس؟',
-          [],
           'ar',
           'test-user'
         );
-        tests.push({ 
-          test: 'legal_query', 
-          success: !!chatResponse.response, 
-          data: { 
+        tests.push({
+          test: 'legal_query',
+          success: !!chatResponse.response,
+          data: {
             responseLength: chatResponse.response?.length || 0,
             sourcesCount: chatResponse.sources?.length || 0,
             queryId: chatResponse.query_id
@@ -418,9 +417,9 @@ class IntegrationTester {
       // Test text-to-speech functionality
       try {
         const audioBlob = await geminiApiService.textToSpeech('مرحبا، هذا اختبار للصوت', 'ar-TN');
-        tests.push({ 
-          test: 'text_to_speech', 
-          success: audioBlob !== null, 
+        tests.push({
+          test: 'text_to_speech',
+          success: audioBlob !== null,
           data: { hasAudio: audioBlob !== null }
         });
       } catch (error) {

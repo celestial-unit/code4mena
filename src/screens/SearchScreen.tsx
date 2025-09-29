@@ -11,11 +11,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 // Note: This app uses custom navigation, not React Navigation
-import { 
-  SearchResult, 
-  SearchFilters, 
-  SearchSuggestion, 
-  SearchQuery, 
+import {
+  SearchResult,
+  SearchFilters,
+  SearchSuggestion,
+  SearchQuery,
   SavedSearch
 } from '../types';
 import { searchService } from '../services/searchService';
@@ -147,10 +147,10 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     try {
       // Try to get popular queries from API as suggestions
       const popularQueries = await apiService.getPopularQueries('ar');
-      
+
       // Filter popular queries based on current query
       const filteredSuggestions = popularQueries
-        .filter((item: any) => 
+        .filter((item: any) =>
           item.query.toLowerCase().includes(query.toLowerCase())
         )
         .slice(0, 5)
@@ -174,7 +174,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
       setSuggestions(filteredSuggestions);
     } catch (err) {
       console.error('Failed to load suggestions from API, using fallback:', err);
-      
+
       // Fallback to search service
       try {
         const suggestionsData = await searchService.getSearchSuggestions(query);
@@ -191,16 +191,16 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
 
     setSearchLoading(true);
     clearError();
-    
+
     // Check network connectivity first
     if (!networkState.isConnected || !networkState.isInternetReachable) {
       handleError(new Error('لا يوجد اتصال بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.'));
       setSearchLoading(false);
       return;
     }
-    
+
     const startTime = Date.now();
-    
+
     try {
       // Try API search first
       try {
@@ -274,14 +274,14 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           setSearchResults(prev => [...prev, ...searchResults]);
           setCurrentPage(page);
         }
-        
+
         setHasMoreResults(false); // API doesn't support pagination yet
         setTotalResults(searchResults.length);
         setSearchMode('results');
 
       } catch (apiError) {
         console.warn('API search failed, falling back to search service:', apiError);
-        
+
         // Fallback to existing search service
         const response = await searchService.searchLegalContent(
           query,
@@ -294,7 +294,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           const endTime = Date.now();
           setSearchTime(endTime - startTime);
           const data = response.data;
-          
+
           if (page === 1) {
             setSearchResults(data.items);
             setCurrentPage(1);
@@ -302,7 +302,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
             setSearchResults(prev => [...prev, ...data.items]);
             setCurrentPage(page);
           }
-          
+
           setHasMoreResults(data.hasNextPage);
           setTotalResults(data.totalItems);
           setSearchMode('results');
@@ -349,9 +349,9 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   const handleResultPress = (result: SearchResult) => {
     // Navigate to result detail screen
     if (navigation && navigation.navigate) {
-      navigation.navigate('LegalUpdateDetail', { 
+      navigation.navigate('LegalUpdateDetail', {
         contentId: result.id,
-        content: result 
+        content: result
       });
     } else {
       console.log('Would navigate to result:', result.id);
@@ -362,8 +362,8 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     try {
       const success = await searchService.bookmarkSearchResult(result.id);
       if (success) {
-        setSearchResults(prev => 
-          prev.map(r => 
+        setSearchResults(prev =>
+          prev.map(r =>
             r.id === result.id ? { ...r, isBookmarked: !r.isBookmarked } : r
           )
         );
@@ -404,9 +404,9 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   };
 
   const handleSaveNewSearch = async (
-    name: string, 
-    query: string, 
-    searchFilters: SearchFilters, 
+    name: string,
+    query: string,
+    searchFilters: SearchFilters,
     alertsEnabled: boolean
   ) => {
     try {
@@ -473,13 +473,13 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
         style={[styles.tab, searchMode === 'suggestions' && styles.activeTab]}
         onPress={() => setSearchMode('suggestions')}
       >
-        <Ionicons 
-          name="search" 
-          size={20} 
-          color={searchMode === 'suggestions' ? '#E31E24' : '#666666'} 
+        <Ionicons
+          name="search"
+          size={20}
+          color={searchMode === 'suggestions' ? '#E31E24' : '#666666'}
         />
         <Text style={[
-          styles.tabText, 
+          styles.tabText,
           searchMode === 'suggestions' && styles.activeTabText
         ]}>
           البحث
@@ -491,13 +491,13 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
         onPress={() => setSearchMode('results')}
         disabled={searchResults.length === 0}
       >
-        <Ionicons 
-          name="document-text" 
-          size={20} 
-          color={searchMode === 'results' ? '#E31E24' : '#666666'} 
+        <Ionicons
+          name="document-text"
+          size={20}
+          color={searchMode === 'results' ? '#E31E24' : '#666666'}
         />
         <Text style={[
-          styles.tabText, 
+          styles.tabText,
           searchMode === 'results' && styles.activeTabText
         ]}>
           النتائج ({totalResults})
@@ -508,13 +508,13 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
         style={[styles.tab, searchMode === 'saved' && styles.activeTab]}
         onPress={() => setSearchMode('saved')}
       >
-        <Ionicons 
-          name="bookmark" 
-          size={20} 
-          color={searchMode === 'saved' ? '#E31E24' : '#666666'} 
+        <Ionicons
+          name="bookmark"
+          size={20}
+          color={searchMode === 'saved' ? '#E31E24' : '#666666'}
         />
         <Text style={[
-          styles.tabText, 
+          styles.tabText,
           searchMode === 'saved' && styles.activeTabText
         ]}>
           المحفوظة ({savedSearches.length})
@@ -549,7 +549,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
             loading={loading}
           />
         );
-      
+
       case 'results':
         return (
           <>
@@ -584,7 +584,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
             />
           </>
         );
-      
+
       case 'saved':
         return (
           <SavedSearches
@@ -595,7 +595,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
             loading={loading}
           />
         );
-      
+
       default:
         return null;
     }
@@ -614,65 +614,65 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-        <NetworkStatusIndicator onRetry={handleRetry} />
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.backButton}
-            onPress={() => {
-              if (navigation && navigation.goBack) {
-                navigation.goBack();
-              } else {
-                // Fallback to Dashboard if no navigation
-                if (navigation && navigation.navigate) {
-                  navigation.navigate('Dashboard');
-                }
+      <NetworkStatusIndicator onRetry={handleRetry} />
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => {
+            if (navigation && navigation.goBack) {
+              navigation.goBack();
+            } else {
+              // Fallback to Dashboard if no navigation
+              if (navigation && navigation.navigate) {
+                navigation.navigate('Dashboard');
               }
-            }}
-          >
-            <Ionicons name="arrow-back" size={24} color="#E31E24" />
-          </TouchableOpacity>
-          
-          <Text style={styles.headerTitle}>البحث القانوني</Text>
-          
-          <TouchableOpacity 
-            style={[
-              styles.filterButton,
-              getActiveFiltersCount() > 0 && styles.filterButtonActive
-            ]}
-            onPress={() => setShowFilters(true)}
-          >
-            <Ionicons name="options" size={24} color="#E31E24" />
-            {getActiveFiltersCount() > 0 && (
-              <View style={styles.filterBadge}>
-                <Text style={styles.filterBadgeText}>{getActiveFiltersCount()}</Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        </View>
+            }
+          }}
+        >
+          <Ionicons name="arrow-back" size={24} color="#E31E24" />
+        </TouchableOpacity>
 
-        {/* Search Bar */}
-        {renderSearchBar()}
+        <Text style={styles.headerTitle}>البحث القانوني</Text>
 
-        {/* Tab Bar */}
-        {renderTabBar()}
+        <TouchableOpacity
+          style={[
+            styles.filterButton,
+            getActiveFiltersCount() > 0 && styles.filterButtonActive
+          ]}
+          onPress={() => setShowFilters(true)}
+        >
+          <Ionicons name="options" size={24} color="#E31E24" />
+          {getActiveFiltersCount() > 0 && (
+            <View style={styles.filterBadge}>
+              <Text style={styles.filterBadgeText}>{getActiveFiltersCount()}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      </View>
 
-        {/* Content */}
-        <View style={styles.content}>
-          {renderContent()}
-        </View>
+      {/* Search Bar */}
+      {renderSearchBar()}
 
-        {/* Loading Overlay */}
-        {searchLoading && <LoadingOverlay message="جاري البحث..." />}
+      {/* Tab Bar */}
+      {renderTabBar()}
 
-        {/* Search Filters Modal */}
-        <SearchFiltersComponent
-          filters={filters}
-          onFiltersChange={handleFiltersChange}
-          visible={showFilters}
-          onClose={() => setShowFilters(false)}
-        />
-      </SafeAreaView>
+      {/* Content */}
+      <View style={styles.content}>
+        {renderContent()}
+      </View>
+
+      {/* Loading Overlay */}
+      {searchLoading && <LoadingOverlay message="جاري البحث..." />}
+
+      {/* Search Filters Modal */}
+      <SearchFiltersComponent
+        filters={filters}
+        onFiltersChange={handleFiltersChange}
+        visible={showFilters}
+        onClose={() => setShowFilters(false)}
+      />
+    </SafeAreaView>
   );
 };
 

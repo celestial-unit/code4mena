@@ -17,7 +17,6 @@ export const testBackendConnection = async () => {
         console.log('2. Testing query endpoint...');
         const response = await geminiApiService.sendMessage(
             'مرحبا، ما هي متطلبات تسجيل شركة جديدة في تونس؟',
-            [],
             'ar',
             'debug-user'
         );
@@ -47,7 +46,7 @@ export const debugChatMessage = async (message: string) => {
 
     try {
         const startTime = Date.now();
-        const response = await geminiApiService.sendMessage(message, [], 'ar', 'debug-user');
+        const response = await geminiApiService.sendMessage(message, 'ar', 'debug-user');
         const endTime = Date.now();
 
         console.log('✅ Debug: Message sent successfully', {

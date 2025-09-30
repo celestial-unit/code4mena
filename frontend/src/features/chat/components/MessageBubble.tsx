@@ -48,11 +48,11 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   };
 
   const renderUserMessage = () => (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.messageContainer,
         styles.userMessageContainer,
-        { transform: [{ scale: scaleAnim }] }
+        { transform: [{ scale: scaleAnim }] },
       ]}
     >
       <TouchableOpacity
@@ -64,10 +64,12 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           style={styles.userMessageGradient}
         >
           <Text style={styles.userMessageText}>{message.content}</Text>
-          <Text style={styles.messageTime}>{formatTime(message.timestamp)}</Text>
+          <Text style={styles.messageTime}>
+            {formatTime(message.timestamp)}
+          </Text>
         </LinearGradient>
       </TouchableOpacity>
-      
+
       {showActions && (
         <View style={styles.messageActions}>
           <TouchableOpacity
@@ -88,57 +90,78 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   );
 
   const renderAIMessage = () => (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.messageContainer,
         styles.aiMessageContainer,
-        { transform: [{ scale: scaleAnim }] }
+        { transform: [{ scale: scaleAnim }] },
       ]}
     >
       <View style={styles.aiMessage}>
         <View style={styles.aiAvatar}>
           <Text style={styles.aiAvatarText}>⚖️</Text>
         </View>
-        
+
         <TouchableOpacity
           onLongPress={handleLongPress}
           style={styles.aiMessageContent}
         >
           <Text style={styles.aiMessageText}>{message.content}</Text>
-          
+
           {/* Legal References */}
-          {message.metadata.legalReferences && message.metadata.legalReferences.length > 0 && (
-            <View style={styles.referencesContainer}>
-              <Text style={styles.referencesTitle}>المراجع القانونية:</Text>
-              {message.metadata.legalReferences.slice(0, 2).map((ref, index) => (
-                <View key={index} style={styles.referenceItem}>
-                  <Ionicons name="document-text-outline" size={12} color="#666666" />
-                  <Text style={styles.referenceText}>{ref.titleAr}</Text>
-                </View>
-              ))}
-            </View>
-          )}
-          
+          {message.metadata.legalReferences &&
+            message.metadata.legalReferences.length > 0 && (
+              <View style={styles.referencesContainer}>
+                <Text style={styles.referencesTitle}>المراجع القانونية:</Text>
+                {message.metadata.legalReferences
+                  .slice(0, 2)
+                  .map((ref, index) => (
+                    <View key={index} style={styles.referenceItem}>
+                      <Ionicons
+                        name="document-text-outline"
+                        size={12}
+                        color="#666666"
+                      />
+                      <Text style={styles.referenceText}>{ref.titleAr}</Text>
+                    </View>
+                  ))}
+              </View>
+            )}
+
           {/* Suggested Actions */}
-          {message.metadata.suggestedActions && message.metadata.suggestedActions.length > 0 && (
-            <View style={styles.actionsContainer}>
-              {message.metadata.suggestedActions.slice(0, 2).map((action, index) => (
-                <TouchableOpacity key={index} style={styles.suggestedAction}>
-                  <Text style={styles.actionText}>{action.titleAr}</Text>
-                  <Ionicons name="chevron-forward" size={12} color="#E31E24" />
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-          
+          {message.metadata.suggestedActions &&
+            message.metadata.suggestedActions.length > 0 && (
+              <View style={styles.actionsContainer}>
+                {message.metadata.suggestedActions
+                  .slice(0, 2)
+                  .map((action, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.suggestedAction}
+                    >
+                      <Text style={styles.actionText}>{action.titleAr}</Text>
+                      <Ionicons
+                        name="chevron-forward"
+                        size={12}
+                        color="#E31E24"
+                      />
+                    </TouchableOpacity>
+                  ))}
+              </View>
+            )}
+
           <View style={styles.messageFooter}>
-            <Text style={styles.messageTime}>{formatTime(message.timestamp)}</Text>
+            <Text style={styles.messageTime}>
+              {formatTime(message.timestamp)}
+            </Text>
             {message.metadata.confidence && (
               <View style={styles.confidenceIndicator}>
-                <Ionicons 
-                  name="checkmark-circle" 
-                  size={12} 
-                  color={message.metadata.confidence > 0.8 ? "#4CAF50" : "#FF9800"} 
+                <Ionicons
+                  name="checkmark-circle"
+                  size={12}
+                  color={
+                    message.metadata.confidence > 0.8 ? '#4CAF50' : '#FF9800'
+                  }
                 />
                 <Text style={styles.confidenceText}>
                   {Math.round(message.metadata.confidence * 100)}%
@@ -148,7 +171,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           </View>
         </TouchableOpacity>
       </View>
-      
+
       {showActions && (
         <View style={styles.messageActions}>
           <TouchableOpacity
@@ -169,11 +192,11 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   );
 
   const renderSystemMessage = () => (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.messageContainer,
         styles.systemMessageContainer,
-        { transform: [{ scale: scaleAnim }] }
+        { transform: [{ scale: scaleAnim }] },
       ]}
     >
       <View style={styles.systemMessage}>

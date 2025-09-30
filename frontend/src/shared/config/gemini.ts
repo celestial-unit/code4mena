@@ -22,7 +22,7 @@ export const geminiConfig: GeminiConfig = {
   apiKey: 'demo-token-for-legal-api',
 
   // Enable/disable Gemini API integration
-  enabled: true
+  enabled: true,
 };
 
 // Alternative configurations for different environments
@@ -30,21 +30,21 @@ export const geminiConfigs = {
   development: {
     baseUrl: 'http://localhost:8000',
     timeout: 30000,
-    enabled: true
+    enabled: true,
   },
 
   production: {
     baseUrl: 'https://your-gemini-api.com',
     timeout: 30000,
-    enabled: true
+    enabled: true,
   },
 
   // If you're running Gemini API on a different port
   alternative: {
     baseUrl: 'http://localhost:3000',
     timeout: 30000,
-    enabled: true
-  }
+    enabled: true,
+  },
 };
 
 export default geminiConfig;

@@ -28,18 +28,53 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
   const [localFilters, setLocalFilters] = useState<SearchFiltersType>(filters);
 
   const categories = [
-    { id: 'business_law', name: 'قانون الأعمال', nameEn: 'Business Law', color: '#E31E24' },
-    { id: 'tax_law', name: 'قانون الضرائب', nameEn: 'Tax Law', color: '#D4AF37' },
-    { id: 'labor_law', name: 'قانون العمل', nameEn: 'Labor Law', color: '#2E8B57' },
-    { id: 'family_law', name: 'قانون الأسرة', nameEn: 'Family Law', color: '#9C27B0' },
-    { id: 'administrative_law', name: 'القانون الإداري', nameEn: 'Administrative Law', color: '#FF8C00' },
-    { id: 'environmental_law', name: 'قانون البيئة', nameEn: 'Environmental Law', color: '#4CAF50' },
+    {
+      id: 'business_law',
+      name: 'قانون الأعمال',
+      nameEn: 'Business Law',
+      color: '#E31E24',
+    },
+    {
+      id: 'tax_law',
+      name: 'قانون الضرائب',
+      nameEn: 'Tax Law',
+      color: '#D4AF37',
+    },
+    {
+      id: 'labor_law',
+      name: 'قانون العمل',
+      nameEn: 'Labor Law',
+      color: '#2E8B57',
+    },
+    {
+      id: 'family_law',
+      name: 'قانون الأسرة',
+      nameEn: 'Family Law',
+      color: '#9C27B0',
+    },
+    {
+      id: 'administrative_law',
+      name: 'القانون الإداري',
+      nameEn: 'Administrative Law',
+      color: '#FF8C00',
+    },
+    {
+      id: 'environmental_law',
+      name: 'قانون البيئة',
+      nameEn: 'Environmental Law',
+      color: '#4CAF50',
+    },
   ];
 
   const sectors = [
     { id: 'business', name: 'الأعمال', nameEn: 'Business', icon: 'business' },
     { id: 'agriculture', name: 'الزراعة', nameEn: 'Agriculture', icon: 'leaf' },
-    { id: 'technology', name: 'التكنولوجيا', nameEn: 'Technology', icon: 'laptop' },
+    {
+      id: 'technology',
+      name: 'التكنولوجيا',
+      nameEn: 'Technology',
+      icon: 'laptop',
+    },
     { id: 'food', name: 'الغذاء', nameEn: 'Food', icon: 'restaurant' },
     { id: 'tourism', name: 'السياحة', nameEn: 'Tourism', icon: 'airplane' },
     { id: 'education', name: 'التعليم', nameEn: 'Education', icon: 'school' },
@@ -49,7 +84,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
     { id: 'government', name: 'الحكومة', nameEn: 'Government' },
     { id: 'parliamentary', name: 'البرلمان', nameEn: 'Parliament' },
     { id: 'ministry', name: 'الوزارات', nameEn: 'Ministries' },
-    { id: 'legal_database', name: 'قاعدة البيانات القانونية', nameEn: 'Legal Database' },
+    {
+      id: 'legal_database',
+      name: 'قاعدة البيانات القانونية',
+      nameEn: 'Legal Database',
+    },
     { id: 'court', name: 'المحاكم', nameEn: 'Courts' },
     { id: 'academic', name: 'الأكاديمية', nameEn: 'Academic' },
   ];
@@ -82,7 +121,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
     const newCategories = localFilters.categories.includes(categoryId as any)
       ? localFilters.categories.filter(c => c !== categoryId)
       : [...localFilters.categories, categoryId as any];
-    
+
     setLocalFilters({ ...localFilters, categories: newCategories });
   };
 
@@ -90,7 +129,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
     const newSectors = localFilters.sectors.includes(sectorId as any)
       ? localFilters.sectors.filter(s => s !== sectorId)
       : [...localFilters.sectors, sectorId as any];
-    
+
     setLocalFilters({ ...localFilters, sectors: newSectors });
   };
 
@@ -98,7 +137,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
     const newSources = localFilters.sources.includes(sourceId)
       ? localFilters.sources.filter(s => s !== sourceId)
       : [...localFilters.sources, sourceId];
-    
+
     setLocalFilters({ ...localFilters, sources: newSources });
   };
 
@@ -106,14 +145,14 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
     const newTypes = localFilters.contentTypes.includes(typeId as any)
       ? localFilters.contentTypes.filter(t => t !== typeId)
       : [...localFilters.contentTypes, typeId as any];
-    
+
     setLocalFilters({ ...localFilters, contentTypes: newTypes });
   };
 
   const setDatePreset = (preset: string) => {
     setLocalFilters({
       ...localFilters,
-      dateRange: { preset: preset as any }
+      dateRange: { preset: preset as any },
     });
   };
 
@@ -137,7 +176,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
       contentTypes: [],
       languages: ['ar'],
       sortBy: 'relevance',
-      sortOrder: 'desc'
+      sortOrder: 'desc',
     };
     setLocalFilters(defaultFilters);
   };
@@ -165,9 +204,9 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Ionicons name="close" size={24} color="#666666" />
           </TouchableOpacity>
-          
+
           <Text style={styles.headerTitle}>تصفية البحث</Text>
-          
+
           <TouchableOpacity onPress={resetFilters} style={styles.resetButton}>
             <Text style={styles.resetText}>إعادة تعيين</Text>
           </TouchableOpacity>
@@ -178,21 +217,24 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>التصنيفات القانونية</Text>
             <View style={styles.chipContainer}>
-              {categories.map((category) => (
+              {categories.map(category => (
                 <TouchableOpacity
                   key={category.id}
                   style={[
                     styles.chip,
                     localFilters.categories.includes(category.id as any) && {
                       backgroundColor: category.color,
-                    }
+                    },
                   ]}
                   onPress={() => toggleCategory(category.id)}
                 >
-                  <Text style={[
-                    styles.chipText,
-                    localFilters.categories.includes(category.id as any) && styles.chipTextActive
-                  ]}>
+                  <Text
+                    style={[
+                      styles.chipText,
+                      localFilters.categories.includes(category.id as any) &&
+                        styles.chipTextActive,
+                    ]}
+                  >
                     {category.name}
                   </Text>
                 </TouchableOpacity>
@@ -204,26 +246,34 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>القطاعات</Text>
             <View style={styles.chipContainer}>
-              {sectors.map((sector) => (
+              {sectors.map(sector => (
                 <TouchableOpacity
                   key={sector.id}
                   style={[
                     styles.chip,
                     styles.sectorChip,
-                    localFilters.sectors.includes(sector.id as any) && styles.chipActive
+                    localFilters.sectors.includes(sector.id as any) &&
+                      styles.chipActive,
                   ]}
                   onPress={() => toggleSector(sector.id)}
                 >
-                  <Ionicons 
-                    name={sector.icon as any} 
-                    size={16} 
-                    color={localFilters.sectors.includes(sector.id as any) ? '#FFFFFF' : '#666666'} 
+                  <Ionicons
+                    name={sector.icon as any}
+                    size={16}
+                    color={
+                      localFilters.sectors.includes(sector.id as any)
+                        ? '#FFFFFF'
+                        : '#666666'
+                    }
                   />
-                  <Text style={[
-                    styles.chipText,
-                    styles.sectorChipText,
-                    localFilters.sectors.includes(sector.id as any) && styles.chipTextActive
-                  ]}>
+                  <Text
+                    style={[
+                      styles.chipText,
+                      styles.sectorChipText,
+                      localFilters.sectors.includes(sector.id as any) &&
+                        styles.chipTextActive,
+                    ]}
+                  >
                     {sector.name}
                   </Text>
                 </TouchableOpacity>
@@ -235,7 +285,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>المصادر</Text>
             <View style={styles.sourceContainer}>
-              {sources.map((source) => (
+              {sources.map(source => (
                 <TouchableOpacity
                   key={source.id}
                   style={styles.sourceItem}
@@ -249,7 +299,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
                     value={localFilters.sources.includes(source.id)}
                     onValueChange={() => toggleSource(source.id)}
                     trackColor={{ false: '#E0E0E0', true: '#E31E24' }}
-                    thumbColor={localFilters.sources.includes(source.id) ? '#FFFFFF' : '#FFFFFF'}
+                    thumbColor={
+                      localFilters.sources.includes(source.id)
+                        ? '#FFFFFF'
+                        : '#FFFFFF'
+                    }
                   />
                 </TouchableOpacity>
               ))}
@@ -260,19 +314,23 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>نوع المحتوى</Text>
             <View style={styles.chipContainer}>
-              {contentTypes.map((type) => (
+              {contentTypes.map(type => (
                 <TouchableOpacity
                   key={type.id}
                   style={[
                     styles.chip,
-                    localFilters.contentTypes.includes(type.id as any) && styles.chipActive
+                    localFilters.contentTypes.includes(type.id as any) &&
+                      styles.chipActive,
                   ]}
                   onPress={() => toggleContentType(type.id)}
                 >
-                  <Text style={[
-                    styles.chipText,
-                    localFilters.contentTypes.includes(type.id as any) && styles.chipTextActive
-                  ]}>
+                  <Text
+                    style={[
+                      styles.chipText,
+                      localFilters.contentTypes.includes(type.id as any) &&
+                        styles.chipTextActive,
+                    ]}
+                  >
                     {type.name}
                   </Text>
                 </TouchableOpacity>
@@ -284,19 +342,23 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>النطاق الزمني</Text>
             <View style={styles.chipContainer}>
-              {datePresets.map((preset) => (
+              {datePresets.map(preset => (
                 <TouchableOpacity
                   key={preset.id}
                   style={[
                     styles.chip,
-                    localFilters.dateRange.preset === preset.id && styles.chipActive
+                    localFilters.dateRange.preset === preset.id &&
+                      styles.chipActive,
                   ]}
                   onPress={() => setDatePreset(preset.id)}
                 >
-                  <Text style={[
-                    styles.chipText,
-                    localFilters.dateRange.preset === preset.id && styles.chipTextActive
-                  ]}>
+                  <Text
+                    style={[
+                      styles.chipText,
+                      localFilters.dateRange.preset === preset.id &&
+                        styles.chipTextActive,
+                    ]}
+                  >
                     {preset.name}
                   </Text>
                 </TouchableOpacity>
@@ -308,19 +370,23 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>ترتيب النتائج</Text>
             <View style={styles.sortContainer}>
-              {sortOptions.map((option) => (
+              {sortOptions.map(option => (
                 <TouchableOpacity
                   key={option.id}
                   style={[
                     styles.sortOption,
-                    localFilters.sortBy === option.id && styles.sortOptionActive
+                    localFilters.sortBy === option.id &&
+                      styles.sortOptionActive,
                   ]}
                   onPress={() => setSortOption(option.id)}
                 >
-                  <Text style={[
-                    styles.sortOptionText,
-                    localFilters.sortBy === option.id && styles.sortOptionTextActive
-                  ]}>
+                  <Text
+                    style={[
+                      styles.sortOptionText,
+                      localFilters.sortBy === option.id &&
+                        styles.sortOptionTextActive,
+                    ]}
+                  >
                     {option.name}
                   </Text>
                   {localFilters.sortBy === option.id && (

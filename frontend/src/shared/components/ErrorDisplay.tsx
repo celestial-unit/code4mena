@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface ErrorDisplayProps {
@@ -56,41 +51,43 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
     <View style={styles.container}>
       <View style={[styles.errorCard, { borderLeftColor: getErrorColor() }]}>
         <View style={styles.errorHeader}>
-          <Ionicons 
-            name={getErrorIcon()} 
-            size={24} 
-            color={getErrorColor()} 
-          />
+          <Ionicons name={getErrorIcon()} size={24} color={getErrorColor()} />
           <Text style={styles.errorTitle}>حدث خطأ</Text>
         </View>
-        
+
         <Text style={styles.errorMessage}>{error}</Text>
-        
+
         <View style={styles.buttonContainer}>
           {showRetry && onRetry && (
             <TouchableOpacity
-              style={[styles.button, styles.retryButton, isRetrying && styles.disabledButton]}
+              style={[
+                styles.button,
+                styles.retryButton,
+                isRetrying && styles.disabledButton,
+              ]}
               onPress={onRetry}
               disabled={isRetrying}
             >
-              <Ionicons 
-                name={isRetrying ? "hourglass-outline" : "refresh-outline"} 
-                size={16} 
-                color="#FFFFFF" 
+              <Ionicons
+                name={isRetrying ? 'hourglass-outline' : 'refresh-outline'}
+                size={16}
+                color="#FFFFFF"
               />
               <Text style={styles.buttonText}>
                 {isRetrying ? 'جاري المحاولة...' : 'إعادة المحاولة'}
               </Text>
             </TouchableOpacity>
           )}
-          
+
           {showDismiss && onDismiss && (
             <TouchableOpacity
               style={[styles.button, styles.dismissButton]}
               onPress={onDismiss}
             >
               <Ionicons name="close-outline" size={16} color="#666666" />
-              <Text style={[styles.buttonText, styles.dismissButtonText]}>إغلاق</Text>
+              <Text style={[styles.buttonText, styles.dismissButtonText]}>
+                إغلاق
+              </Text>
             </TouchableOpacity>
           )}
         </View>

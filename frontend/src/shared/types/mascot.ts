@@ -22,7 +22,14 @@ export interface TunisianMascot {
 
 export interface CulturalElement {
   id: string;
-  type: 'clothing' | 'accessories' | 'background' | 'props' | 'architecture' | 'food' | 'music';
+  type:
+    | 'clothing'
+    | 'accessories'
+    | 'background'
+    | 'props'
+    | 'architecture'
+    | 'food'
+    | 'music';
   name: string;
   nameAr: string;
   nameFr: string;
@@ -67,14 +74,25 @@ export interface TunisianSymbol {
   name: string;
   nameAr: string;
   nameFr: string;
-  type: 'geometric' | 'calligraphy' | 'architectural' | 'natural' | 'cultural' | 'religious';
+  type:
+    | 'geometric'
+    | 'calligraphy'
+    | 'architectural'
+    | 'natural'
+    | 'cultural'
+    | 'religious';
   description: string;
   descriptionAr: string;
   descriptionFr: string;
   significance: string;
   significanceAr: string;
   significanceFr: string;
-  usage: 'decoration' | 'clothing' | 'architecture' | 'ceremonial' | 'daily_life';
+  usage:
+    | 'decoration'
+    | 'clothing'
+    | 'architecture'
+    | 'ceremonial'
+    | 'daily_life';
   region?: Region;
   historicalPeriod?: string;
   modernUsage: boolean;
@@ -95,7 +113,14 @@ export interface VisualElement {
 
 export interface MascotCustomization {
   id: string;
-  type: 'clothing' | 'accessories' | 'background' | 'props' | 'animation' | 'voice' | 'personality';
+  type:
+    | 'clothing'
+    | 'accessories'
+    | 'background'
+    | 'props'
+    | 'animation'
+    | 'voice'
+    | 'personality';
   name: string;
   nameAr: string;
   nameFr: string;
@@ -235,7 +260,7 @@ export interface BehaviorPattern {
   culturalContextFr: string;
 }
 
-export type AnimationType = 
+export type AnimationType =
   | 'greeting'
   | 'thinking'
   | 'explaining'
@@ -261,7 +286,7 @@ export type AnimationType =
   | 'resting'
   | 'cultural_gesture';
 
-export type AnimationTrigger = 
+export type AnimationTrigger =
   | 'user_message'
   | 'ai_response'
   | 'achievement_unlock'
@@ -278,7 +303,7 @@ export type AnimationTrigger =
   | 'profile_updated'
   | 'settings_changed';
 
-export type EmotionalTone = 
+export type EmotionalTone =
   | 'happy'
   | 'excited'
   | 'calm'
@@ -295,7 +320,7 @@ export type EmotionalTone =
   | 'patient'
   | 'understanding';
 
-export type InteractionType = 
+export type InteractionType =
   | 'greeting'
   | 'conversation'
   | 'explanation'

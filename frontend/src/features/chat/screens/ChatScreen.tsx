@@ -12,7 +12,7 @@ import {
   ChatMessage,
   QuickReply,
   LegalCategory,
-  ChatConversation
+  ChatConversation,
 } from '../types';
 
 interface ChatScreenProps {
@@ -25,22 +25,28 @@ interface ChatScreenProps {
   };
 }
 
-export const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
+export const ChatScreen: React.FC<ChatScreenProps> = ({
+  navigation,
+  route,
+}) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [quickReplies, setQuickReplies] = useState<QuickReply[]>([]);
   const [conversationId] = useState(
-    route?.params?.conversationId || `conv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    route?.params?.conversationId ||
+      `conv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
   );
   const [currentCategory] = useState<LegalCategory>(
     route?.params?.category || 'business_law'
   );
 
   // Error handling
-  const { error, isRetrying, handleError, clearError, retry } = useErrorHandler({
-    maxRetries: 3,
-    showAlert: false
-  });
+  const { error, isRetrying, handleError, clearError, retry } = useErrorHandler(
+    {
+      maxRetries: 3,
+      showAlert: false,
+    }
+  );
   const networkState = useNetworkState();
 
   useEffect(() => {
@@ -94,7 +100,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => 
 
       // Check network connectivity first
       if (!networkState.isConnected || !networkState.isInternetReachable) {
-        throw new Error('لا يوجد اتصال بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.');
+        throw new Error(
+          'لا يوجد اتصال بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.'
+        );
       }
 
       // Create user message immediately for better UX
@@ -110,35 +118,38 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => 
           culturalContext: {
             culturalReferences: [],
             dialectTerms: [],
-            regionalRelevance: []
-          }
-        }
+            regionalRelevance: [],
+          },
+        },
       };
 
       setMessages(prev => [...prev, userMessage]);
 
       // Prepare conversation history for Gemini API
       const conversationHistory = messages.map(msg => ({
-        role: msg.type === 'user' ? 'user' as const : 'assistant' as const,
-        content: msg.content
+        role: msg.type === 'user' ? ('user' as const) : ('assistant' as const),
+        content: msg.content,
       }));
 
       // Try your Python backend API first (with your Gemini Live implementation)
       try {
-        console.log('[Chat] 🚀 Sending message to Python Backend (Gemini Live):', message);
+        console.log(
+          '[Chat] 🚀 Sending message to Python Backend (Gemini Live):',
+          message
+        );
 
         // Direct API call to your Python backend
         const response = await fetch('http://localhost:8001/query', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer demo-token'
+            Authorization: 'Bearer demo-token',
           },
           body: JSON.stringify({
             query: message,
             language: 'ar',
-            user_id: 'mobile-app-user'
-          })
+            user_id: 'mobile-app-user',
+          }),
         });
 
         if (!response.ok) {
@@ -150,7 +161,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => 
           responseLength: backendResponse.response?.length || 0,
           sourcesCount: backendResponse.sources?.length || 0,
           queryId: backendResponse.query_id,
-          hasDisclaimer: !!backendResponse.disclaimer
+          hasDisclaimer: !!backendResponse.disclaimer,
         });
 
         // Add a note to show it's coming from your backend
@@ -163,48 +174,54 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => 
           type: 'ai',
           content: responseWithNote || 'لم يتم الحصول على رد من الخادم',
           contentAr: responseWithNote || 'لم يتم الحصول على رد من الخادم',
-          contentFr: backendResponse.response || 'Aucune réponse reçue du serveur',
+          contentFr:
+            backendResponse.response || 'Aucune réponse reçue du serveur',
           timestamp: new Date(),
           isEdited: false,
           metadata: {
             confidence: 0.9,
-            sources: (backendResponse.sources || []).map((source: any) => source.source || source.title),
+            sources: (backendResponse.sources || []).map(
+              (source: any) => source.source || source.title
+            ),
             processingTime: 2.0,
-            legalReferences: (backendResponse.sources || []).map((source: any, index: number) => ({
-              id: `ref-${Date.now()}-${index}`,
-              title: source.title || 'مرجع قانوني',
-              titleAr: source.title || 'مرجع قانوني',
-              titleFr: source.title || 'Référence légale',
-              type: 'law' as const,
-              source: source.source || 'مصدر قانوني',
-              relevanceScore: source.relevance_score || 0.5,
-              excerpt: source.article || source.content || 'نص قانوني',
-              excerptAr: source.article || source.content || 'نص قانوني',
-              excerptFr: source.article || source.content || 'Texte légal',
-              url: source.url
-            })),
+            legalReferences: (backendResponse.sources || []).map(
+              (source: any, index: number) => ({
+                id: `ref-${Date.now()}-${index}`,
+                title: source.title || 'مرجع قانوني',
+                titleAr: source.title || 'مرجع قانوني',
+                titleFr: source.title || 'Référence légale',
+                type: 'law' as const,
+                source: source.source || 'مصدر قانوني',
+                relevanceScore: source.relevance_score || 0.5,
+                excerpt: source.article || source.content || 'نص قانوني',
+                excerptAr: source.article || source.content || 'نص قانوني',
+                excerptFr: source.article || source.content || 'Texte légal',
+                url: source.url,
+              })
+            ),
             suggestedActions: [],
             relatedTopics: ['legal guidance', 'tunisian law'],
             culturalContext: {
               culturalReferences: [],
               dialectTerms: [],
-              regionalRelevance: []
+              regionalRelevance: [],
             },
             disclaimer: backendResponse.disclaimer,
-            queryId: backendResponse.query_id
+            queryId: backendResponse.query_id,
           },
           mascotAnimation: {
             type: 'explaining' as const,
             sector: 'business' as const,
             duration: 3.0,
             culturalElements: ['legal_documents', 'gemini_ai'],
-            voiceSync: true
-          }
+            voiceSync: true,
+          },
         };
 
         setMessages(prev => [...prev, aiMessage]);
-        console.log('[Chat] ✅ Python Backend (Gemini Live) response received successfully');
-
+        console.log(
+          '[Chat] ✅ Python Backend (Gemini Live) response received successfully'
+        );
       } catch (backendError) {
         console.error('❌ Python Backend failed:', backendError);
 
@@ -227,14 +244,13 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => 
             culturalContext: {
               culturalReferences: [],
               dialectTerms: [],
-              regionalRelevance: []
-            }
-          }
+              regionalRelevance: [],
+            },
+          },
         };
 
         setMessages(prev => [...prev, errorMessage]);
       }
-
     } catch (error) {
       console.error('Failed to send message:', error);
       handleError(error, 'فشل في إرسال الرسالة. يرجى المحاولة مرة أخرى.');
@@ -250,13 +266,18 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => 
 
       // Check network connectivity first
       if (!networkState.isConnected || !networkState.isInternetReachable) {
-        throw new Error('لا يوجد اتصال بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.');
+        throw new Error(
+          'لا يوجد اتصال بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.'
+        );
       }
 
       console.log('[Chat] Processing voice message with Backend API');
 
       // Process audio using your backend API
-      const audioResult = await geminiApiService.processAudioQuery(audioData, 'ar-TN');
+      const audioResult = await geminiApiService.processAudioQuery(
+        audioData,
+        'ar-TN'
+      );
 
       if (audioResult.error) {
         throw new Error(audioResult.error);
@@ -275,9 +296,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => 
           culturalContext: {
             culturalReferences: [],
             dialectTerms: [],
-            regionalRelevance: []
-          }
-        }
+            regionalRelevance: [],
+          },
+        },
       };
 
       setMessages(prev => [...prev, userMessage]);
@@ -301,16 +322,16 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => 
           culturalContext: {
             culturalReferences: [],
             dialectTerms: [],
-            regionalRelevance: []
-          }
+            regionalRelevance: [],
+          },
         },
         mascotAnimation: {
           type: 'explaining' as const,
           sector: 'business' as const,
           duration: 3.0,
           culturalElements: ['voice_interaction'],
-          voiceSync: true
-        }
+          voiceSync: true,
+        },
       };
 
       setMessages(prev => [...prev, aiMessage]);
@@ -322,7 +343,6 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => 
       }
 
       console.log('[Chat] Voice message processed successfully');
-
     } catch (error) {
       console.error('Failed to process voice message:', error);
       handleError(error, 'فشل في معالجة الرسالة الصوتية');

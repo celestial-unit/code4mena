@@ -26,7 +26,9 @@ interface DashboardScreenProps {
   route: any;
 }
 
-export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigation }) => {
+export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({
+  navigation,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [recentUpdates, setRecentUpdates] = useState<LegalUpdate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +46,7 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
       // Load user data and recent legal updates in parallel
       const [userResponse, updatesResponse] = await Promise.all([
         mockDataService.getUserById(currentUserId),
-        mockDataService.getLegalUpdates(1, 5, undefined, 'high')
+        mockDataService.getLegalUpdates(1, 5, undefined, 'high'),
       ]);
 
       if (userResponse.success && userResponse.data) {
@@ -60,7 +62,9 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
       }
     } catch (err) {
       console.error('Dashboard data loading error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
+      setError(
+        err instanceof Error ? err.message : 'Failed to load dashboard data'
+      );
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -91,7 +95,10 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
       <SafeAreaView style={styles.container}>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>حدث خطأ في تحميل البيانات</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={() => loadDashboardData()}>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={() => loadDashboardData()}
+          >
             <Text style={styles.retryText}>إعادة المحاولة</Text>
           </TouchableOpacity>
         </View>
@@ -135,7 +142,9 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
               <View style={styles.welcomeHeader}>
                 <View>
                   <Text style={styles.greeting}>{getGreeting()}</Text>
-                  <Text style={styles.userName}>{user?.nameAr || 'أحمد بن سالم'}</Text>
+                  <Text style={styles.userName}>
+                    {user?.nameAr || 'أحمد بن سالم'}
+                  </Text>
                 </View>
                 <TouchableOpacity
                   style={styles.profileButton}
@@ -189,7 +198,9 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
                 <Ionicons name="document-text" size={24} color="#FFFFFF" />
               </View>
               <Text style={styles.statTitle}>التحديثات المقروءة</Text>
-              <Text style={styles.statValue}>{user?.statistics.totalLegalUpdatesRead || 25}</Text>
+              <Text style={styles.statValue}>
+                {user?.statistics.totalLegalUpdatesRead || 25}
+              </Text>
             </View>
 
             <View style={styles.statCard}>
@@ -197,7 +208,9 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
                 <Ionicons name="chatbubbles" size={24} color="#FFFFFF" />
               </View>
               <Text style={styles.statTitle}>المحادثات</Text>
-              <Text style={styles.statValue}>{user?.statistics.totalChatConversations || 8}</Text>
+              <Text style={styles.statValue}>
+                {user?.statistics.totalChatConversations || 8}
+              </Text>
             </View>
 
             <View style={styles.statCard}>
@@ -205,7 +218,9 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
                 <Ionicons name="search" size={24} color="#FFFFFF" />
               </View>
               <Text style={styles.statTitle}>عمليات البحث</Text>
-              <Text style={styles.statValue}>{user?.statistics.totalSearchQueries || 15}</Text>
+              <Text style={styles.statValue}>
+                {user?.statistics.totalSearchQueries || 15}
+              </Text>
             </View>
 
             <View style={styles.statCard}>
@@ -213,7 +228,9 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
                 <Ionicons name="trophy" size={24} color="#FFFFFF" />
               </View>
               <Text style={styles.statTitle}>الإنجازات</Text>
-              <Text style={styles.statValue}>{user?.statistics.totalAchievements || 3}</Text>
+              <Text style={styles.statValue}>
+                {user?.statistics.totalAchievements || 3}
+              </Text>
             </View>
           </View>
 
@@ -242,22 +259,39 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
         {/* Recent Updates */}
         <View style={styles.updatesSection}>
           <Text style={styles.sectionTitle}>التحديثات الأخيرة</Text>
-          <Text style={styles.sectionSubtitle}>آخر التطورات القانونية المهمة</Text>
+          <Text style={styles.sectionSubtitle}>
+            آخر التطورات القانونية المهمة
+          </Text>
 
           {recentUpdates.map((update, index) => (
             <TouchableOpacity
               key={update.id}
               style={styles.updateCard}
-              onPress={() => navigation.navigate('LegalUpdateDetail', { updateId: update.id })}
+              onPress={() =>
+                navigation.navigate('LegalUpdateDetail', {
+                  updateId: update.id,
+                })
+              }
             >
-              <View style={[styles.priorityIndicator, {
-                backgroundColor: update.priority === 'high' ? '#E31E24' :
-                  update.priority === 'medium' ? '#FF8C00' : '#2E8B57'
-              }]} />
+              <View
+                style={[
+                  styles.priorityIndicator,
+                  {
+                    backgroundColor:
+                      update.priority === 'high'
+                        ? '#E31E24'
+                        : update.priority === 'medium'
+                          ? '#FF8C00'
+                          : '#2E8B57',
+                  },
+                ]}
+              />
 
               <View style={styles.updateContent}>
                 <View style={styles.updateHeader}>
-                  <Text style={styles.updateSource}>{update.source.nameAr}</Text>
+                  <Text style={styles.updateSource}>
+                    {update.source.nameAr}
+                  </Text>
                   <Text style={styles.updateTime}>منذ ساعات</Text>
                 </View>
 
@@ -290,11 +324,17 @@ export const DashboardScreenSimple: React.FC<DashboardScreenProps> = ({ navigati
               <Text style={styles.liveText}>1 مباشر</Text>
             </View>
           </View>
-          <Text style={styles.sectionSubtitle}>آخر تحديثات الوزارات والمؤسسات الحكومية</Text>
+          <Text style={styles.sectionSubtitle}>
+            آخر تحديثات الوزارات والمؤسسات الحكومية
+          </Text>
 
           <TouchableOpacity
             style={styles.ministryCard}
-            onPress={() => navigation.navigate('MinistryUpdates', { ministryId: 'ministry-finance' })}
+            onPress={() =>
+              navigation.navigate('MinistryUpdates', {
+                ministryId: 'ministry-finance',
+              })
+            }
           >
             <View style={styles.liveIndicator}>
               <View style={styles.liveDot} />

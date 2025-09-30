@@ -9,8 +9,6 @@ interface GeminiApiConfig {
   apiKey?: string;
 }
 
-
-
 interface GeminiRequest {
   query: string;
   language?: string;
@@ -49,26 +47,29 @@ export class GeminiApiService {
       const requestBody: GeminiRequest = {
         query: message,
         language,
-        user_id: userId || 'mobile-app-user'
+        user_id: userId || 'mobile-app-user',
       };
 
       console.log('[Backend API] Sending legal query:', {
         url: `${this.config.baseUrl}/query`,
         query: message.substring(0, 100) + '...',
-        language
+        language,
       });
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
+      const timeoutId = setTimeout(
+        () => controller.abort(),
+        this.config.timeout
+      );
 
       const response = await fetch(`${this.config.baseUrl}/query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.config.apiKey || 'demo-token'}`
+          Authorization: `Bearer ${this.config.apiKey || 'demo-token'}`,
         },
         body: JSON.stringify(requestBody),
-        signal: controller.signal
+        signal: controller.signal,
       });
 
       clearTimeout(timeoutId);
@@ -83,17 +84,18 @@ export class GeminiApiService {
       console.log('[Backend API] Response received:', {
         responseLength: result.response?.length || 0,
         sourcesCount: result.sources?.length || 0,
-        queryId: result.query_id
+        queryId: result.query_id,
       });
 
       return result;
-
     } catch (error) {
       console.error('[Backend API] Request failed:', error);
 
       if (error instanceof Error) {
         if (error.name === 'AbortError') {
-          throw new Error('Request timeout - Backend API took too long to respond');
+          throw new Error(
+            'Request timeout - Backend API took too long to respond'
+          );
         }
         if (error.message.includes('fetch')) {
           throw new Error('Network error - Could not connect to Backend API');
@@ -107,7 +109,11 @@ export class GeminiApiService {
   /**
    * Health check for Backend API - focuses on core functionality
    */
-  async healthCheck(): Promise<{ status: string; timestamp: string; details?: any }> {
+  async healthCheck(): Promise<{
+    status: string;
+    timestamp: string;
+    details?: any;
+  }> {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -115,9 +121,11 @@ export class GeminiApiService {
       const response = await fetch(`${this.config.baseUrl}/health`, {
         method: 'GET',
         headers: {
-          ...(this.config.apiKey && { 'Authorization': `Bearer ${this.config.apiKey}` })
+          ...(this.config.apiKey && {
+            Authorization: `Bearer ${this.config.apiKey}`,
+          }),
         },
-        signal: controller.signal
+        signal: controller.signal,
       });
 
       clearTimeout(timeoutId);
@@ -133,16 +141,19 @@ export class GeminiApiService {
         healthDetail.external_llm.includes('healthy');
 
       if (coreServicesHealthy) {
-        console.log('[Backend API] Core services healthy for chat functionality');
+        console.log(
+          '[Backend API] Core services healthy for chat functionality'
+        );
         return {
           status: 'healthy',
           timestamp: healthDetail.timestamp,
-          details: healthDetail
+          details: healthDetail,
         };
       } else {
-        throw new Error(`Core services not healthy: ${JSON.stringify(healthDetail)}`);
+        throw new Error(
+          `Core services not healthy: ${JSON.stringify(healthDetail)}`
+        );
       }
-
     } catch (error) {
       console.error('[Backend API] Health check failed:', error);
       throw error;
@@ -152,7 +163,10 @@ export class GeminiApiService {
   /**
    * Process audio query using your backend's audio endpoint
    */
-  async processAudioQuery(audioBlob: Blob, language: string = 'ar-TN'): Promise<any> {
+  async processAudioQuery(
+    audioBlob: Blob,
+    language: string = 'ar-TN'
+  ): Promise<any> {
     try {
       const formData = new FormData();
       formData.append('audio_file', audioBlob, 'audio.webm');
@@ -161,16 +175,19 @@ export class GeminiApiService {
       console.log('[Backend API] Sending audio query');
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
+      const timeoutId = setTimeout(
+        () => controller.abort(),
+        this.config.timeout
+      );
 
       const response = await fetch(`${this.config.baseUrl}/audio/query`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.config.apiKey || 'demo-token'}`
+          Authorization: `Bearer ${this.config.apiKey || 'demo-token'}`,
           // Don't set Content-Type for FormData, let browser set it
         },
         body: formData,
-        signal: controller.signal
+        signal: controller.signal,
       });
 
       clearTimeout(timeoutId);
@@ -185,11 +202,10 @@ export class GeminiApiService {
       console.log('[Backend API] Audio response received:', {
         transcription: result.transcription?.substring(0, 50) + '...',
         hasAudio: result.audio_response_available,
-        confidence: result.confidence
+        confidence: result.confidence,
       });
 
       return result;
-
     } catch (error) {
       console.error('[Backend API] Audio request failed:', error);
       throw error;
@@ -199,22 +215,28 @@ export class GeminiApiService {
   /**
    * Convert text to speech using your backend
    */
-  async textToSpeech(text: string, language: string = 'ar-TN'): Promise<Blob | null> {
+  async textToSpeech(
+    text: string,
+    language: string = 'ar-TN'
+  ): Promise<Blob | null> {
     try {
       const requestBody = {
         text,
-        language
+        language,
       };
 
-      console.log('[Backend API] Requesting TTS for:', text.substring(0, 50) + '...');
+      console.log(
+        '[Backend API] Requesting TTS for:',
+        text.substring(0, 50) + '...'
+      );
 
       const response = await fetch(`${this.config.baseUrl}/audio/tts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.config.apiKey || 'demo-token'}`
+          Authorization: `Bearer ${this.config.apiKey || 'demo-token'}`,
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -232,7 +254,6 @@ export class GeminiApiService {
         console.log('[Backend API] TTS response:', jsonResponse.message);
         return null;
       }
-
     } catch (error) {
       console.error('[Backend API] TTS request failed:', error);
       return null;
@@ -247,16 +268,17 @@ export class GeminiApiService {
       const response = await fetch(`${this.config.baseUrl}/audio/languages`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${this.config.apiKey || 'demo-token'}`
-        }
+          Authorization: `Bearer ${this.config.apiKey || 'demo-token'}`,
+        },
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to get supported languages: ${response.status}`);
+        throw new Error(
+          `Failed to get supported languages: ${response.status}`
+        );
       }
 
       return await response.json();
-
     } catch (error) {
       console.error('[Backend API] Failed to get supported languages:', error);
       throw error;
@@ -270,7 +292,7 @@ import { geminiConfig } from '../config/gemini';
 const apiConfig: GeminiApiConfig = {
   baseUrl: geminiConfig.baseUrl,
   timeout: geminiConfig.timeout,
-  apiKey: geminiConfig.apiKey
+  apiKey: geminiConfig.apiKey,
 };
 
 export const geminiApiService = new GeminiApiService(apiConfig);

@@ -38,8 +38,10 @@ const mockUpdates: LegalUpdateItem[] = [
     id: '1',
     title: 'New Digital Tax Regulations for E-commerce',
     titleAr: 'لوائح ضريبية رقمية جديدة للتجارة الإلكترونية',
-    summary: 'Ministry of Finance announces new digital tax requirements for online businesses',
-    summaryAr: 'وزارة المالية تعلن متطلبات ضريبية رقمية جديدة للشركات الإلكترونية',
+    summary:
+      'Ministry of Finance announces new digital tax requirements for online businesses',
+    summaryAr:
+      'وزارة المالية تعلن متطلبات ضريبية رقمية جديدة للشركات الإلكترونية',
     category: 'tax_law',
     priority: 'high',
     source: 'Ministry of Finance',
@@ -55,7 +57,8 @@ const mockUpdates: LegalUpdateItem[] = [
     id: '2',
     title: 'Agricultural Land Reform Act Updates',
     titleAr: 'تحديثات قانون إصلاح الأراضي الزراعية',
-    summary: 'Parliament approves amendments to agricultural land ownership regulations',
+    summary:
+      'Parliament approves amendments to agricultural land ownership regulations',
     summaryAr: 'البرلمان يوافق على تعديلات لوائح ملكية الأراضي الزراعية',
     category: 'administrative_law',
     priority: 'high',
@@ -72,7 +75,8 @@ const mockUpdates: LegalUpdateItem[] = [
     id: '3',
     title: 'Remote Work Labor Code Amendments',
     titleAr: 'تعديلات قانون العمل للعمل عن بُعد',
-    summary: 'New regulations establish rights for remote workers and employers',
+    summary:
+      'New regulations establish rights for remote workers and employers',
     summaryAr: 'لوائح جديدة تحدد حقوق العاملين عن بُعد وأصحاب العمل',
     category: 'labor_law',
     priority: 'medium',
@@ -89,7 +93,8 @@ const mockUpdates: LegalUpdateItem[] = [
     id: '4',
     title: 'Tourism Recovery Incentives Package',
     titleAr: 'حزمة حوافز انتعاش السياحة',
-    summary: 'Government launches comprehensive support package for tourism sector',
+    summary:
+      'Government launches comprehensive support package for tourism sector',
     summaryAr: 'الحكومة تطلق حزمة دعم شاملة لقطاع السياحة',
     category: 'business_law',
     priority: 'medium',
@@ -118,38 +123,65 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return '#E31E24';
-      case 'medium': return '#FF8C00';
-      case 'low': return '#2E8B57';
-      default: return '#666666';
+      case 'high':
+        return '#E31E24';
+      case 'medium':
+        return '#FF8C00';
+      case 'low':
+        return '#2E8B57';
+      default:
+        return '#666666';
     }
   };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'business_law': return 'business';
-      case 'tax_law': return 'calculator';
-      case 'labor_law': return 'people';
-      case 'administrative_law': return 'document-text';
-      case 'family_law': return 'home';
-      case 'environmental_law': return 'leaf';
-      default: return 'document';
+      case 'business_law':
+        return 'business';
+      case 'tax_law':
+        return 'calculator';
+      case 'labor_law':
+        return 'people';
+      case 'administrative_law':
+        return 'document-text';
+      case 'family_law':
+        return 'home';
+      case 'environmental_law':
+        return 'leaf';
+      default:
+        return 'document';
     }
   };
 
   const filters = [
     { key: 'all', label: 'الكل', count: mockUpdates.length },
-    { key: 'unread', label: 'غير مقروءة', count: mockUpdates.filter(u => !u.isRead).length },
-    { key: 'high', label: 'عالية الأولوية', count: mockUpdates.filter(u => u.priority === 'high').length },
-    { key: 'bookmarked', label: 'محفوظة', count: mockUpdates.filter(u => u.isBookmarked).length },
+    {
+      key: 'unread',
+      label: 'غير مقروءة',
+      count: mockUpdates.filter(u => !u.isRead).length,
+    },
+    {
+      key: 'high',
+      label: 'عالية الأولوية',
+      count: mockUpdates.filter(u => u.priority === 'high').length,
+    },
+    {
+      key: 'bookmarked',
+      label: 'محفوظة',
+      count: mockUpdates.filter(u => u.isBookmarked).length,
+    },
   ];
 
   const filteredUpdates = mockUpdates.filter(update => {
     switch (selectedFilter) {
-      case 'unread': return !update.isRead;
-      case 'high': return update.priority === 'high';
-      case 'bookmarked': return update.isBookmarked;
-      default: return true;
+      case 'unread':
+        return !update.isRead;
+      case 'high':
+        return update.priority === 'high';
+      case 'bookmarked':
+        return update.isBookmarked;
+      default:
+        return true;
     }
   });
 
@@ -160,10 +192,12 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
         <View style={styles.headerTitle}>
           <Text style={styles.titleText}>التحديثات القانونية</Text>
           <View style={styles.updatesBadge}>
-            <Text style={styles.updatesCount}>{mockUpdates.filter(u => !u.isRead).length}</Text>
+            <Text style={styles.updatesCount}>
+              {mockUpdates.filter(u => !u.isRead).length}
+            </Text>
           </View>
         </View>
-        
+
         <TouchableOpacity style={styles.searchButton}>
           <Ionicons name="search" size={24} color="#E31E24" />
         </TouchableOpacity>
@@ -173,19 +207,21 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
       <View style={styles.filterContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={styles.filterTabs}>
-            {filters.map((filter) => (
+            {filters.map(filter => (
               <TouchableOpacity
                 key={filter.key}
                 style={[
                   styles.filterTab,
-                  selectedFilter === filter.key && styles.activeFilterTab
+                  selectedFilter === filter.key && styles.activeFilterTab,
                 ]}
                 onPress={() => setSelectedFilter(filter.key)}
               >
-                <Text style={[
-                  styles.filterText,
-                  selectedFilter === filter.key && styles.activeFilterText
-                ]}>
+                <Text
+                  style={[
+                    styles.filterText,
+                    selectedFilter === filter.key && styles.activeFilterText,
+                  ]}
+                >
                   {filter.label}
                 </Text>
                 {filter.count > 0 && (
@@ -211,30 +247,35 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
           />
         }
       >
-        {filteredUpdates.map((update) => (
+        {filteredUpdates.map(update => (
           <TouchableOpacity
             key={update.id}
-            style={[
-              styles.updateItem,
-              !update.isRead && styles.unreadUpdate
-            ]}
-            onPress={() => navigation.navigate('LegalUpdateDetail', { updateId: update.id })}
+            style={[styles.updateItem, !update.isRead && styles.unreadUpdate]}
+            onPress={() =>
+              navigation.navigate('LegalUpdateDetail', { updateId: update.id })
+            }
           >
             {/* Priority and Read Status Indicators */}
-            <View style={[
-              styles.priorityIndicator,
-              { backgroundColor: getPriorityColor(update.priority) }
-            ]} />
-            
+            <View
+              style={[
+                styles.priorityIndicator,
+                { backgroundColor: getPriorityColor(update.priority) },
+              ]}
+            />
+
             {!update.isRead && <View style={styles.unreadDot} />}
 
             {/* Header */}
             <View style={styles.updateHeader}>
               <View style={styles.updateMeta}>
-                <View style={[
-                  styles.categoryIcon,
-                  { backgroundColor: getPriorityColor(update.priority) + '15' }
-                ]}>
+                <View
+                  style={[
+                    styles.categoryIcon,
+                    {
+                      backgroundColor: getPriorityColor(update.priority) + '15',
+                    },
+                  ]}
+                >
                   <Ionicons
                     name={getCategoryIcon(update.category) as any}
                     size={16}
@@ -282,7 +323,9 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
                 </View>
               ))}
               {update.tagsAr.length > 2 && (
-                <Text style={styles.moreTagsText}>+{update.tagsAr.length - 2}</Text>
+                <Text style={styles.moreTagsText}>
+                  +{update.tagsAr.length - 2}
+                </Text>
               )}
             </View>
 

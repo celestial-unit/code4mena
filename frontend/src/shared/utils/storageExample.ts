@@ -23,15 +23,19 @@ interface UserPreferences {
 /**
  * Example: Login flow with token storage
  */
-export async function handleLogin(token: string, refreshToken: string, userData: UserData): Promise<void> {
+export async function handleLogin(
+  token: string,
+  refreshToken: string,
+  userData: UserData
+): Promise<void> {
   try {
     // Store authentication tokens
     await storageService.setAuthToken(token);
     await storageService.setRefreshToken(refreshToken);
-    
+
     // Store user data
     await storageService.setUserData(userData);
-    
+
     console.log('Login data stored successfully');
   } catch (error) {
     console.error('Failed to store login data:', error);
@@ -66,7 +70,9 @@ export async function getCurrentUser(): Promise<UserData | null> {
 /**
  * Example: Update user preferences
  */
-export async function updateUserPreferences(preferences: UserPreferences): Promise<void> {
+export async function updateUserPreferences(
+  preferences: UserPreferences
+): Promise<void> {
   try {
     await storageService.setUserPreferences(preferences);
     console.log('User preferences updated successfully');
@@ -81,8 +87,9 @@ export async function updateUserPreferences(preferences: UserPreferences): Promi
  */
 export async function getUserPreferences(): Promise<UserPreferences> {
   try {
-    const preferences = await storageService.getUserPreferences<UserPreferences>();
-    
+    const preferences =
+      await storageService.getUserPreferences<UserPreferences>();
+
     // Return defaults if no preferences are stored
     if (!preferences) {
       const defaultPreferences: UserPreferences = {
@@ -90,16 +97,16 @@ export async function getUserPreferences(): Promise<UserPreferences> {
         language: 'ar',
         notifications: true,
       };
-      
+
       // Store the defaults for next time
       await storageService.setUserPreferences(defaultPreferences);
       return defaultPreferences;
     }
-    
+
     return preferences;
   } catch (error) {
     console.error('Failed to get user preferences:', error);
-    
+
     // Return safe defaults on error
     return {
       theme: 'light',

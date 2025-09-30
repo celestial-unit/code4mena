@@ -132,7 +132,7 @@ export interface NotificationData {
   iconUrl?: string;
 }
 
-export type NotificationType = 
+export type NotificationType =
   | 'legal_update'
   | 'achievement'
   | 'reminder'

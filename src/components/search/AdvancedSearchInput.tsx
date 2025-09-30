@@ -32,7 +32,7 @@ export const AdvancedSearchInput: React.FC<AdvancedSearchInputProps> = ({
   onClear,
   onVoicePress,
   onAdvancedPress,
-  placeholder = "ابحث عن المواضيع القانونية...",
+  placeholder = 'ابحث عن المواضيع القانونية...',
   loading = false,
   suggestions = [],
   onSuggestionPress,
@@ -82,17 +82,17 @@ export const AdvancedSearchInput: React.FC<AdvancedSearchInputProps> = ({
 
   return (
     <View style={styles.container}>
-      <Animated.View 
+      <Animated.View
         style={[
           styles.searchContainer,
           {
             borderColor,
             shadowOpacity,
-          }
+          },
         ]}
       >
         <View style={styles.searchBar}>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={onSubmit}
             style={styles.searchButton}
             disabled={loading}
@@ -127,16 +127,19 @@ export const AdvancedSearchInput: React.FC<AdvancedSearchInputProps> = ({
                 <Ionicons name="close-circle" size={20} color="#999999" />
               </TouchableOpacity>
             )}
-            
+
             {onVoicePress && (
-              <TouchableOpacity onPress={onVoicePress} style={styles.actionButton}>
+              <TouchableOpacity
+                onPress={onVoicePress}
+                style={styles.actionButton}
+              >
                 <Ionicons name="mic" size={20} color="#D4AF37" />
               </TouchableOpacity>
             )}
-            
+
             {onAdvancedPress && (
-              <TouchableOpacity 
-                onPress={() => setShowAdvanced(true)} 
+              <TouchableOpacity
+                onPress={() => setShowAdvanced(true)}
                 style={styles.actionButton}
               >
                 <Ionicons name="options" size={20} color="#666666" />
@@ -148,7 +151,7 @@ export const AdvancedSearchInput: React.FC<AdvancedSearchInputProps> = ({
         {/* Search Suggestions Dropdown */}
         {showSuggestions && suggestions.length > 0 && (
           <View style={styles.suggestionsDropdown}>
-            <ScrollView 
+            <ScrollView
               style={styles.suggestionsList}
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
@@ -184,9 +187,9 @@ export const AdvancedSearchInput: React.FC<AdvancedSearchInputProps> = ({
             >
               <Ionicons name="close" size={24} color="#666666" />
             </TouchableOpacity>
-            
+
             <Text style={styles.modalTitle}>البحث المتقدم</Text>
-            
+
             <TouchableOpacity
               onPress={() => {
                 setShowAdvanced(false);
@@ -202,7 +205,7 @@ export const AdvancedSearchInput: React.FC<AdvancedSearchInputProps> = ({
             {/* Search Tips */}
             <View style={styles.tipsSection}>
               <Text style={styles.sectionTitle}>نصائح البحث المتقدم</Text>
-              
+
               <View style={styles.tipCard}>
                 <View style={styles.tipHeader}>
                   <Ionicons name="bulb" size={20} color="#D4AF37" />
@@ -247,13 +250,25 @@ export const AdvancedSearchInput: React.FC<AdvancedSearchInputProps> = ({
             {/* Quick Search Templates */}
             <View style={styles.templatesSection}>
               <Text style={styles.sectionTitle}>قوالب البحث السريع</Text>
-              
+
               {[
-                { title: 'تسجيل شركة جديدة', query: '"تسجيل شركة" +متطلبات +وثائق' },
-                { title: 'قوانين العمل الجديدة', query: '"قانون العمل" +2024 +تعديلات' },
+                {
+                  title: 'تسجيل شركة جديدة',
+                  query: '"تسجيل شركة" +متطلبات +وثائق',
+                },
+                {
+                  title: 'قوانين العمل الجديدة',
+                  query: '"قانون العمل" +2024 +تعديلات',
+                },
                 { title: 'الضرائب على الشركات', query: 'ضرائب +شركات -أفراد' },
-                { title: 'حقوق المستهلك', query: '"حماية المستهلك" +حقوق +شكاوى' },
-                { title: 'العقود التجارية', query: '"عقد تجاري" OR "اتفاقية تجارية"' },
+                {
+                  title: 'حقوق المستهلك',
+                  query: '"حماية المستهلك" +حقوق +شكاوى',
+                },
+                {
+                  title: 'العقود التجارية',
+                  query: '"عقد تجاري" OR "اتفاقية تجارية"',
+                },
               ].map((template, index) => (
                 <TouchableOpacity
                   key={index}

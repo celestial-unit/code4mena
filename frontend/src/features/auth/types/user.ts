@@ -122,7 +122,12 @@ export interface AchievementProgress {
 }
 
 export interface AchievementRequirement {
-  type: 'legal_updates_read' | 'chat_conversations' | 'search_queries' | 'days_active' | 'achievements_unlocked';
+  type:
+    | 'legal_updates_read'
+    | 'chat_conversations'
+    | 'search_queries'
+    | 'days_active'
+    | 'achievements_unlocked';
   value: number;
   description: string;
   descriptionAr: string;
@@ -130,7 +135,12 @@ export interface AchievementRequirement {
 }
 
 export interface AchievementReward {
-  type: 'mascot_unlock' | 'customization' | 'badge' | 'points' | 'feature_unlock';
+  type:
+    | 'mascot_unlock'
+    | 'customization'
+    | 'badge'
+    | 'points'
+    | 'feature_unlock';
   value: string | number;
   description: string;
   descriptionAr: string;
@@ -171,7 +181,7 @@ export interface MonthlyStatistics {
   totalTimeSpent: number;
 }
 
-export type BusinessType = 
+export type BusinessType =
   | 'sole_proprietorship'
   | 'partnership'
   | 'corporation'
@@ -181,7 +191,7 @@ export type BusinessType =
   | 'government'
   | 'other';
 
-export type Region = 
+export type Region =
   | 'tunis'
   | 'ariana'
   | 'ben_arous'
@@ -209,7 +219,7 @@ export type Region =
 
 export type Language = 'ar' | 'fr' | 'en' | 'ar-tn';
 
-export type TunisianDialect = 
+export type TunisianDialect =
   | 'tunis'
   | 'sfax'
   | 'sousse'
@@ -219,14 +229,14 @@ export type TunisianDialect =
   | 'gafsa'
   | 'standard';
 
-export type CompanySize = 
+export type CompanySize =
   | 'individual'
   | 'micro' // 1-9 employees
   | 'small' // 10-49 employees
   | 'medium' // 50-249 employees
-  | 'large' // 250+ employees;
+  | 'large'; // 250+ employees;
 
-export type AchievementCategory = 
+export type AchievementCategory =
   | 'exploration'
   | 'engagement'
   | 'knowledge'

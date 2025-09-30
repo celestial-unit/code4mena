@@ -28,7 +28,7 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
   const [isRecording, setIsRecording] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [waveformData, setWaveformData] = useState<number[]>([]);
-  
+
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const waveAnim = useRef(new Animated.Value(0)).current;
@@ -81,10 +81,7 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
       recordingTimer.current = setInterval(() => {
         setRecordingDuration(prev => prev + 1);
         // Generate mock waveform data
-        setWaveformData(prev => [
-          ...prev.slice(-20),
-          Math.random() * 100
-        ]);
+        setWaveformData(prev => [...prev.slice(-20), Math.random() * 100]);
       }, 100);
     } else {
       pulseAnim.stopAnimation();
@@ -183,7 +180,10 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
           >
             {/* Header */}
             <View style={styles.header}>
-              <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={handleClose}
+              >
                 <Ionicons name="close" size={24} color="#FFFFFF" />
               </TouchableOpacity>
               <Text style={styles.title}>التسجيل الصوتي</Text>
@@ -254,7 +254,7 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
                   >
                     <Ionicons name="stop" size={24} color="#FFFFFF" />
                   </TouchableOpacity>
-                  
+
                   <TouchableOpacity
                     style={styles.cancelButton}
                     onPress={() => {
@@ -271,9 +271,13 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
 
             {/* Tips */}
             <View style={styles.tipsContainer}>
-              <Text style={styles.tipsTitle}>نصائح للحصول على أفضل النتائج:</Text>
+              <Text style={styles.tipsTitle}>
+                نصائح للحصول على أفضل النتائج:
+              </Text>
               <Text style={styles.tipText}>• تحدث بوضوح وببطء</Text>
-              <Text style={styles.tipText}>• استخدم اللهجة التونسية الطبيعية</Text>
+              <Text style={styles.tipText}>
+                • استخدم اللهجة التونسية الطبيعية
+              </Text>
               <Text style={styles.tipText}>• تجنب الضوضاء في الخلفية</Text>
             </View>
           </LinearGradient>

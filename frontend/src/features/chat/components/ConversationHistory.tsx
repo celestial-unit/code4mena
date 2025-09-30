@@ -33,7 +33,9 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<ChatMessage[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
+  const [selectedConversation, setSelectedConversation] = useState<
+    string | null
+  >(null);
 
   useEffect(() => {
     if (visible) {
@@ -60,7 +62,7 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
           userId,
           title: 'Business Registration Inquiry',
           titleAr: 'استفسار حول تسجيل الأعمال',
-          titleFr: 'Demande d\'enregistrement d\'entreprise',
+          titleFr: "Demande d'enregistrement d'entreprise",
           messages: [],
           category: 'business_law',
           sector: 'business',
@@ -75,8 +77,8 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
             topicsDiscussed: ['business registration', 'legal requirements'],
             legalCategoriesCovered: ['business_law'],
             sectorsDiscussed: ['business'],
-            complexityLevel: 'intermediate'
-          }
+            complexityLevel: 'intermediate',
+          },
         },
         {
           id: 'conv-002',
@@ -98,8 +100,8 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
             topicsDiscussed: ['digital tax', 'e-commerce compliance'],
             legalCategoriesCovered: ['tax_law'],
             sectorsDiscussed: ['money', 'business'],
-            complexityLevel: 'advanced'
-          }
+            complexityLevel: 'advanced',
+          },
         },
         {
           id: 'conv-003',
@@ -121,11 +123,11 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
             topicsDiscussed: ['remote work', 'employee rights'],
             legalCategoriesCovered: ['labor_law'],
             sectorsDiscussed: ['business'],
-            complexityLevel: 'basic'
-          }
-        }
+            complexityLevel: 'basic',
+          },
+        },
       ];
-      
+
       setConversations(sampleConversations);
     } catch (error) {
       console.error('Failed to load conversations:', error);
@@ -134,14 +136,14 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
 
   const performSearch = async () => {
     if (!selectedConversation) return;
-    
+
     setIsSearching(true);
     try {
       const response = await chatService.searchConversationHistory(
         selectedConversation,
         searchQuery
       );
-      
+
       if (response.success && response.data) {
         setSearchResults(response.data);
       }
@@ -156,7 +158,7 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
     return new Date(date).toLocaleDateString('ar-TN', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
@@ -199,13 +201,13 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
           colors={getCategoryColor(conversation.category)}
           style={styles.categoryIcon}
         >
-          <Ionicons 
-            name={getCategoryIcon(conversation.category) as any} 
-            size={20} 
-            color="#FFFFFF" 
+          <Ionicons
+            name={getCategoryIcon(conversation.category) as any}
+            size={20}
+            color="#FFFFFF"
           />
         </LinearGradient>
-        
+
         <View style={styles.conversationInfo}>
           <Text style={styles.conversationTitle} numberOfLines={1}>
             {conversation.titleAr}
@@ -214,7 +216,7 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
             {formatDate(conversation.updatedAt)}
           </Text>
         </View>
-        
+
         <View style={styles.conversationMeta}>
           {conversation.isBookmarked && (
             <Ionicons name="bookmark" size={16} color="#E31E24" />
@@ -224,7 +226,7 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
           </Text>
         </View>
       </View>
-      
+
       <View style={styles.conversationStats}>
         <View style={styles.statItem}>
           <Ionicons name="time-outline" size={12} color="#666666" />
@@ -232,13 +234,17 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
             {conversation.metadata.averageResponseTime}ث متوسط الرد
           </Text>
         </View>
-        
+
         <View style={styles.statItem}>
           <Ionicons name="trending-up-outline" size={12} color="#666666" />
           <Text style={styles.statText}>
-            {conversation.metadata.complexityLevel === 'basic' ? 'بسيط' :
-             conversation.metadata.complexityLevel === 'intermediate' ? 'متوسط' :
-             conversation.metadata.complexityLevel === 'advanced' ? 'متقدم' : 'خبير'}
+            {conversation.metadata.complexityLevel === 'basic'
+              ? 'بسيط'
+              : conversation.metadata.complexityLevel === 'intermediate'
+                ? 'متوسط'
+                : conversation.metadata.complexityLevel === 'advanced'
+                  ? 'متقدم'
+                  : 'خبير'}
           </Text>
         </View>
       </View>
@@ -250,15 +256,19 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
       <Text style={styles.searchResultsTitle}>
         نتائج البحث ({searchResults.length})
       </Text>
-      
+
       <ScrollView style={styles.searchResultsList}>
-        {searchResults.map((message) => (
+        {searchResults.map(message => (
           <View key={message.id} style={styles.searchResultItem}>
             <View style={styles.searchResultHeader}>
-              <Ionicons 
-                name={message.type === 'user' ? 'person-outline' : 'chatbubble-outline'} 
-                size={16} 
-                color="#666666" 
+              <Ionicons
+                name={
+                  message.type === 'user'
+                    ? 'person-outline'
+                    : 'chatbubble-outline'
+                }
+                size={16}
+                color="#666666"
               />
               <Text style={styles.searchResultType}>
                 {message.type === 'user' ? 'أنت' : 'المساعد القانوني'}
@@ -267,7 +277,7 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
                 {new Date(message.timestamp).toLocaleTimeString('ar-TN')}
               </Text>
             </View>
-            
+
             <Text style={styles.searchResultContent} numberOfLines={3}>
               {message.content}
             </Text>
@@ -286,16 +296,13 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
     >
       <View style={styles.container}>
         {/* Header */}
-        <LinearGradient
-          colors={['#E31E24', '#D4AF37']}
-          style={styles.header}
-        >
+        <LinearGradient colors={['#E31E24', '#D4AF37']} style={styles.header}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Ionicons name="close" size={24} color="#FFFFFF" />
           </TouchableOpacity>
-          
+
           <Text style={styles.headerTitle}>سجل المحادثات</Text>
-          
+
           <TouchableOpacity style={styles.searchToggle}>
             <Ionicons name="search-outline" size={24} color="#FFFFFF" />
           </TouchableOpacity>
@@ -330,14 +337,21 @@ export const ConversationHistory: React.FC<ConversationHistoryProps> = ({
           ) : searchResults.length > 0 ? (
             renderSearchResults()
           ) : (
-            <ScrollView style={styles.conversationsList} showsVerticalScrollIndicator={false}>
+            <ScrollView
+              style={styles.conversationsList}
+              showsVerticalScrollIndicator={false}
+            >
               <Text style={styles.sectionTitle}>المحادثات الأخيرة</Text>
-              
+
               {conversations.map(renderConversationItem)}
-              
+
               {conversations.length === 0 && (
                 <View style={styles.emptyState}>
-                  <Ionicons name="chatbubbles-outline" size={64} color="#CCCCCC" />
+                  <Ionicons
+                    name="chatbubbles-outline"
+                    size={64}
+                    color="#CCCCCC"
+                  />
                   <Text style={styles.emptyStateText}>لا توجد محادثات بعد</Text>
                   <Text style={styles.emptyStateSubtext}>
                     ابدأ محادثة جديدة لطرح أسئلتك القانونية

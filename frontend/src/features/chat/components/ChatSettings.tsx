@@ -49,7 +49,7 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({
           { code: 'ar', name: 'العربية', flag: '🇹🇳' },
           { code: 'fr', name: 'Français', flag: '🇫🇷' },
           { code: 'en', name: 'English', flag: '🇺🇸' },
-        ].map((lang) => (
+        ].map(lang => (
           <TouchableOpacity
             key={lang.code}
             style={[
@@ -59,10 +59,12 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({
             onPress={() => handleSettingChange('language', lang.code)}
           >
             <Text style={styles.languageFlag}>{lang.flag}</Text>
-            <Text style={[
-              styles.languageName,
-              settings.language === lang.code && styles.selectedLanguageName,
-            ]}>
+            <Text
+              style={[
+                styles.languageName,
+                settings.language === lang.code && styles.selectedLanguageName,
+              ]}
+            >
               {lang.name}
             </Text>
             {settings.language === lang.code && (
@@ -83,7 +85,7 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({
           { value: 'casual', label: 'عادي', icon: 'chatbubble-outline' },
           { value: 'professional', label: 'مهني', icon: 'briefcase-outline' },
           { value: 'friendly', label: 'ودود', icon: 'happy-outline' },
-        ].map((style) => (
+        ].map(style => (
           <TouchableOpacity
             key={style.value}
             style={[
@@ -92,15 +94,20 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({
             ]}
             onPress={() => handleSettingChange('responseStyle', style.value)}
           >
-            <Ionicons 
-              name={style.icon as any} 
-              size={20} 
-              color={settings.responseStyle === style.value ? "#E31E24" : "#666666"} 
+            <Ionicons
+              name={style.icon as any}
+              size={20}
+              color={
+                settings.responseStyle === style.value ? '#E31E24' : '#666666'
+              }
             />
-            <Text style={[
-              styles.styleLabel,
-              settings.responseStyle === style.value && styles.selectedStyleLabel,
-            ]}>
+            <Text
+              style={[
+                styles.styleLabel,
+                settings.responseStyle === style.value &&
+                  styles.selectedStyleLabel,
+              ]}
+            >
               {style.label}
             </Text>
           </TouchableOpacity>
@@ -125,7 +132,7 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({
       </View>
       <Switch
         value={settings[key] as boolean}
-        onValueChange={(value) => handleSettingChange(key, value)}
+        onValueChange={value => handleSettingChange(key, value)}
         trackColor={{ false: '#E0E0E0', true: '#E31E24' }}
         thumbColor={settings[key] ? '#FFFFFF' : '#FFFFFF'}
       />
@@ -141,10 +148,7 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({
     >
       <View style={styles.container}>
         {/* Header */}
-        <LinearGradient
-          colors={['#E31E24', '#D4AF37']}
-          style={styles.header}
-        >
+        <LinearGradient colors={['#E31E24', '#D4AF37']} style={styles.header}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Ionicons name="close" size={24} color="#FFFFFF" />
           </TouchableOpacity>
@@ -232,7 +236,7 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({
           {/* Advanced Settings */}
           <View style={styles.settingSection}>
             <Text style={styles.sectionTitle}>إعدادات متقدمة</Text>
-            
+
             <TouchableOpacity style={styles.advancedOption}>
               <Ionicons name="download-outline" size={20} color="#666666" />
               <Text style={styles.advancedOptionText}>تصدير المحادثة</Text>
@@ -251,7 +255,9 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({
               <Ionicons name="chevron-forward" size={16} color="#666666" />
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.advancedOption, styles.dangerOption]}>
+            <TouchableOpacity
+              style={[styles.advancedOption, styles.dangerOption]}
+            >
               <Ionicons name="trash-outline" size={20} color="#FF4444" />
               <Text style={[styles.advancedOptionText, styles.dangerText]}>
                 حذف المحادثة

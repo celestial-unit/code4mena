@@ -18,7 +18,12 @@ interface SavedSearchesProps {
   savedSearches: SavedSearch[];
   onExecuteSearch: (savedSearch: SavedSearch) => void;
   onDeleteSearch: (searchId: string) => void;
-  onSaveNewSearch?: (name: string, query: string, filters: SearchFilters, alertsEnabled: boolean) => void;
+  onSaveNewSearch?: (
+    name: string,
+    query: string,
+    filters: SearchFilters,
+    alertsEnabled: boolean
+  ) => void;
   loading?: boolean;
 }
 
@@ -91,10 +96,15 @@ export const SavedSearches: React.FC<SavedSearchesProps> = ({
         contentTypes: [],
         languages: ['ar'],
         sortBy: 'relevance',
-        sortOrder: 'desc'
+        sortOrder: 'desc',
       };
 
-      onSaveNewSearch(newSearchName, newSearchQuery, defaultFilters, alertsEnabled);
+      onSaveNewSearch(
+        newSearchName,
+        newSearchQuery,
+        defaultFilters,
+        alertsEnabled
+      );
     }
 
     setNewSearchName('');
@@ -120,7 +130,7 @@ export const SavedSearches: React.FC<SavedSearchesProps> = ({
               {item.queryAr || item.query}
             </Text>
           </View>
-          
+
           <TouchableOpacity
             style={styles.deleteButton}
             onPress={() => handleDeleteSearch(item)}
@@ -130,33 +140,45 @@ export const SavedSearches: React.FC<SavedSearchesProps> = ({
         </View>
 
         {/* Filters Summary */}
-        {(item.filters.categories.length > 0 || item.filters.sectors.length > 0) && (
+        {(item.filters.categories.length > 0 ||
+          item.filters.sectors.length > 0) && (
           <View style={styles.filtersContainer}>
             {item.filters.categories.slice(0, 2).map((category, index) => (
               <View key={index} style={styles.filterChip}>
                 <Text style={styles.filterChipText}>
-                  {category === 'business_law' ? 'قانون الأعمال' :
-                   category === 'tax_law' ? 'قانون الضرائب' :
-                   category === 'labor_law' ? 'قانون العمل' :
-                   category === 'family_law' ? 'قانون الأسرة' :
-                   'قانوني'}
+                  {category === 'business_law'
+                    ? 'قانون الأعمال'
+                    : category === 'tax_law'
+                      ? 'قانون الضرائب'
+                      : category === 'labor_law'
+                        ? 'قانون العمل'
+                        : category === 'family_law'
+                          ? 'قانون الأسرة'
+                          : 'قانوني'}
                 </Text>
               </View>
             ))}
             {item.filters.sectors.slice(0, 2).map((sector, index) => (
               <View key={index} style={[styles.filterChip, styles.sectorChip]}>
                 <Text style={styles.filterChipText}>
-                  {sector === 'business' ? 'الأعمال' :
-                   sector === 'agriculture' ? 'الزراعة' :
-                   sector === 'technology' ? 'التكنولوجيا' :
-                   sector}
+                  {sector === 'business'
+                    ? 'الأعمال'
+                    : sector === 'agriculture'
+                      ? 'الزراعة'
+                      : sector === 'technology'
+                        ? 'التكنولوجيا'
+                        : sector}
                 </Text>
               </View>
             ))}
-            {(item.filters.categories.length + item.filters.sectors.length) > 4 && (
+            {item.filters.categories.length + item.filters.sectors.length >
+              4 && (
               <View style={styles.moreFiltersChip}>
                 <Text style={styles.moreFiltersText}>
-                  +{(item.filters.categories.length + item.filters.sectors.length) - 4}
+                  +
+                  {item.filters.categories.length +
+                    item.filters.sectors.length -
+                    4}
                 </Text>
               </View>
             )}
@@ -169,10 +191,12 @@ export const SavedSearches: React.FC<SavedSearchesProps> = ({
             <View style={styles.metaItem}>
               <Ionicons name="time" size={14} color="#666666" />
               <Text style={styles.metaText}>
-                {item.lastExecuted ? formatDate(item.lastExecuted) : 'لم يتم تنفيذه'}
+                {item.lastExecuted
+                  ? formatDate(item.lastExecuted)
+                  : 'لم يتم تنفيذه'}
               </Text>
             </View>
-            
+
             <View style={styles.metaItem}>
               <Ionicons name="document-text" size={14} color="#666666" />
               <Text style={styles.metaText}>{item.resultCount} نتيجة</Text>
@@ -217,7 +241,7 @@ export const SavedSearches: React.FC<SavedSearchesProps> = ({
       <Text style={styles.emptySubtitle}>
         احفظ عمليات البحث المهمة للوصول السريع إليها لاحقاً
       </Text>
-      
+
       {onSaveNewSearch && (
         <TouchableOpacity
           style={styles.addFirstButton}
@@ -252,9 +276,9 @@ export const SavedSearches: React.FC<SavedSearchesProps> = ({
           >
             <Ionicons name="close" size={24} color="#666666" />
           </TouchableOpacity>
-          
+
           <Text style={styles.modalTitle}>حفظ بحث جديد</Text>
-          
+
           <TouchableOpacity
             onPress={handleSaveNewSearch}
             style={styles.modalSaveButton}
@@ -310,7 +334,7 @@ export const SavedSearches: React.FC<SavedSearchesProps> = ({
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        {[1, 2, 3].map((index) => (
+        {[1, 2, 3].map(index => (
           <View key={index} style={styles.skeletonCard}>
             <View style={styles.skeletonHeader} />
             <View style={styles.skeletonContent} />
@@ -330,11 +354,11 @@ export const SavedSearches: React.FC<SavedSearchesProps> = ({
           <FlatList
             data={savedSearches}
             renderItem={renderSavedSearch}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.listContainer}
           />
-          
+
           {onSaveNewSearch && (
             <TouchableOpacity
               style={styles.fabButton}
@@ -350,7 +374,7 @@ export const SavedSearches: React.FC<SavedSearchesProps> = ({
           )}
         </>
       )}
-      
+
       {renderSaveModal()}
     </View>
   );

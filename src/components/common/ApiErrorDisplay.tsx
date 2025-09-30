@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface ApiErrorDisplayProps {
@@ -23,17 +18,17 @@ export const ApiErrorDisplay: React.FC<ApiErrorDisplayProps> = ({
       <View style={styles.iconContainer}>
         <Ionicons name="cloud-offline-outline" size={48} color="#FF6B6B" />
       </View>
-      
+
       <Text style={styles.title}>مشكلة في الاتصال</Text>
       <Text style={styles.message}>{error}</Text>
-      
+
       {showRetry && onRetry && (
         <TouchableOpacity style={styles.retryButton} onPress={onRetry}>
           <Ionicons name="refresh" size={20} color="#FFFFFF" />
           <Text style={styles.retryText}>إعادة المحاولة</Text>
         </TouchableOpacity>
       )}
-      
+
       <Text style={styles.helpText}>
         تأكد من اتصالك بالإنترنت وحاول مرة أخرى
       </Text>

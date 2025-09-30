@@ -1,11 +1,11 @@
-import { 
-  LegalUpdate, 
-  User, 
-  ChatConversation, 
-  TunisianMascot, 
+import {
+  LegalUpdate,
+  User,
+  ChatConversation,
+  TunisianMascot,
   SearchResult,
   LegalCategory,
-  Sector
+  Sector,
 } from '../types';
 
 /**
@@ -48,7 +48,7 @@ export class MockDataManager {
         nameFr: 'Source par défaut',
         type: 'ministry_official',
         credibilityScore: 0.8,
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
       },
       publishedAt: data.publishedAt || new Date(),
       effectiveDate: data.effectiveDate,
@@ -59,13 +59,16 @@ export class MockDataManager {
       sectors: data.sectors || ['business'],
       ministryId: data.ministryId,
       isBookmarked: data.isBookmarked || false,
-      readStatus: data.readStatus || 'unread'
+      readStatus: data.readStatus || 'unread',
     };
 
     return { ...defaultUpdate, ...data };
   }
 
-  generateLegalUpdatesByCategory(category: LegalCategory, count: number = 5): LegalUpdate[] {
+  generateLegalUpdatesByCategory(
+    category: LegalCategory,
+    count: number = 5
+  ): LegalUpdate[] {
     const updates: LegalUpdate[] = [];
     const categoryTemplates = this.getLegalUpdateTemplatesByCategory(category);
 
@@ -74,7 +77,9 @@ export class MockDataManager {
       const update = this.createLegalUpdate({
         ...template,
         id: `${category}-update-${Date.now()}-${i}`,
-        publishedAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000) // Random date within last 30 days
+        publishedAt: new Date(
+          Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000
+        ), // Random date within last 30 days
       });
       updates.push(update);
     }
@@ -82,17 +87,19 @@ export class MockDataManager {
     return updates;
   }
 
-  private getLegalUpdateTemplatesByCategory(category: LegalCategory): Partial<LegalUpdate>[] {
+  private getLegalUpdateTemplatesByCategory(
+    category: LegalCategory
+  ): Partial<LegalUpdate>[] {
     const templates: Record<LegalCategory, Partial<LegalUpdate>[]> = {
       business_law: [
         {
           title: 'New Business Registration Procedures',
           titleAr: 'إجراءات تسجيل الأعمال الجديدة',
-          titleFr: 'Nouvelles procédures d\'enregistrement d\'entreprise',
+          titleFr: "Nouvelles procédures d'enregistrement d'entreprise",
           category: 'business_law',
           sectors: ['business'],
           priority: 'high',
-          impactLevel: 'high'
+          impactLevel: 'high',
         },
         {
           title: 'Commercial License Updates',
@@ -101,8 +108,8 @@ export class MockDataManager {
           category: 'business_law',
           sectors: ['business'],
           priority: 'medium',
-          impactLevel: 'medium'
-        }
+          impactLevel: 'medium',
+        },
       ],
       tax_law: [
         {
@@ -112,7 +119,7 @@ export class MockDataManager {
           category: 'tax_law',
           sectors: ['business', 'technology'],
           priority: 'high',
-          impactLevel: 'critical'
+          impactLevel: 'critical',
         },
         {
           title: 'VAT Rate Changes',
@@ -121,8 +128,8 @@ export class MockDataManager {
           category: 'tax_law',
           sectors: ['business'],
           priority: 'high',
-          impactLevel: 'high'
-        }
+          impactLevel: 'high',
+        },
       ],
       administrative_law: [
         {
@@ -132,8 +139,8 @@ export class MockDataManager {
           category: 'administrative_law',
           sectors: ['agriculture', 'business'],
           priority: 'medium',
-          impactLevel: 'medium'
-        }
+          impactLevel: 'medium',
+        },
       ],
       labor_law: [
         {
@@ -143,19 +150,19 @@ export class MockDataManager {
           category: 'labor_law',
           sectors: ['business', 'technology'],
           priority: 'high',
-          impactLevel: 'high'
-        }
+          impactLevel: 'high',
+        },
       ],
       family_law: [
         {
           title: 'Child Custody Law Updates',
           titleAr: 'تحديثات قانون حضانة الأطفال',
-          titleFr: 'Mises à jour de la loi sur la garde d\'enfants',
+          titleFr: "Mises à jour de la loi sur la garde d'enfants",
           category: 'family_law',
           sectors: ['education'],
           priority: 'medium',
-          impactLevel: 'medium'
-        }
+          impactLevel: 'medium',
+        },
       ],
       civil_law: [
         {
@@ -165,8 +172,8 @@ export class MockDataManager {
           category: 'civil_law',
           sectors: ['business'],
           priority: 'medium',
-          impactLevel: 'medium'
-        }
+          impactLevel: 'medium',
+        },
       ],
       criminal_law: [
         {
@@ -176,19 +183,19 @@ export class MockDataManager {
           category: 'criminal_law',
           sectors: ['technology'],
           priority: 'high',
-          impactLevel: 'high'
-        }
+          impactLevel: 'high',
+        },
       ],
       constitutional_law: [
         {
           title: 'Constitutional Amendment Process',
           titleAr: 'عملية التعديل الدستوري',
-          titleFr: 'Processus d\'amendement constitutionnel',
+          titleFr: "Processus d'amendement constitutionnel",
           category: 'constitutional_law',
           sectors: ['business'],
           priority: 'low',
-          impactLevel: 'low'
-        }
+          impactLevel: 'low',
+        },
       ],
       commercial_law: [
         {
@@ -198,8 +205,8 @@ export class MockDataManager {
           category: 'commercial_law',
           sectors: ['business', 'technology'],
           priority: 'high',
-          impactLevel: 'high'
-        }
+          impactLevel: 'high',
+        },
       ],
       environmental_law: [
         {
@@ -209,9 +216,9 @@ export class MockDataManager {
           category: 'environmental_law',
           sectors: ['agriculture', 'food'],
           priority: 'medium',
-          impactLevel: 'medium'
-        }
-      ]
+          impactLevel: 'medium',
+        },
+      ],
     };
 
     return templates[category] || templates.business_law;
@@ -235,7 +242,7 @@ export class MockDataManager {
         experienceLevel: 'beginner',
         interests: ['business registration'],
         interestsAr: ['تسجيل الأعمال'],
-        interestsFr: ['enregistrement d\'entreprise']
+        interestsFr: ["enregistrement d'entreprise"],
       },
       preferences: data.preferences || {
         notifications: {
@@ -258,8 +265,8 @@ export class MockDataManager {
             criminal_law: false,
             constitutional_law: false,
             commercial_law: false,
-            environmental_law: false
-          }
+            environmental_law: false,
+          },
         },
         privacy: {
           dataSharing: false,
@@ -268,7 +275,7 @@ export class MockDataManager {
           locationTracking: false,
           voiceRecording: false,
           communityFeatures: true,
-          profileVisibility: 'private'
+          profileVisibility: 'private',
         },
         display: {
           theme: 'light',
@@ -277,7 +284,7 @@ export class MockDataManager {
           reducedMotion: false,
           highContrast: false,
           rtlLayout: true,
-          colorScheme: 'default'
+          colorScheme: 'default',
         },
         language: 'ar',
         mascot: {
@@ -286,7 +293,7 @@ export class MockDataManager {
           animationLevel: 'full',
           voiceSync: false,
           celebrations: true,
-          customizations: []
+          customizations: [],
         },
         voice: {
           enabled: false,
@@ -294,8 +301,8 @@ export class MockDataManager {
           voiceSpeed: 1.0,
           voiceGender: 'neutral',
           noiseReduction: true,
-          autoTranscription: false
-        }
+          autoTranscription: false,
+        },
       },
       achievements: data.achievements || [],
       statistics: data.statistics || {
@@ -311,11 +318,11 @@ export class MockDataManager {
         mostActiveSector: 'business',
         averageSessionDuration: 0,
         lastWeekActivity: [],
-        monthlyStats: []
+        monthlyStats: [],
       },
       createdAt: data.createdAt || new Date(),
       lastActiveAt: data.lastActiveAt || new Date(),
-      isVerified: data.isVerified || false
+      isVerified: data.isVerified || false,
     };
 
     return { ...defaultUser, ...data };
@@ -345,8 +352,8 @@ export class MockDataManager {
         topicsDiscussed: [],
         legalCategoriesCovered: [],
         sectorsDiscussed: [],
-        complexityLevel: 'basic'
-      }
+        complexityLevel: 'basic',
+      },
     };
 
     return { ...defaultConversation, ...data };
@@ -379,7 +386,7 @@ export class MockDataManager {
         credibilityScore: 0.8,
         description: 'Default source description',
         descriptionAr: 'وصف المصدر الافتراضي',
-        descriptionFr: 'Description de la source par défaut'
+        descriptionFr: 'Description de la source par défaut',
       },
       relevanceScore: data.relevanceScore || 0.8,
       publishedAt: data.publishedAt || new Date(),
@@ -398,8 +405,8 @@ export class MockDataManager {
         freshness: 0.8,
         popularity: 0.5,
         userEngagement: 0.5,
-        culturalRelevance: 0.8
-      }
+        culturalRelevance: 0.8,
+      },
     };
 
     return { ...defaultResult, ...data };
@@ -425,7 +432,7 @@ export class MockDataManager {
       tunisianSymbols: data.tunisianSymbols || [],
       isUnlocked: data.isUnlocked || true,
       rarity: data.rarity || 'common',
-      popularity: data.popularity || 50
+      popularity: data.popularity || 50,
     };
 
     return { ...defaultMascot, ...data };
@@ -434,7 +441,10 @@ export class MockDataManager {
   /**
    * Data Validation Utilities
    */
-  validateLegalUpdate(update: LegalUpdate): { isValid: boolean; errors: string[] } {
+  validateLegalUpdate(update: LegalUpdate): {
+    isValid: boolean;
+    errors: string[];
+  } {
     const errors: string[] = [];
 
     if (!update.id) errors.push('ID is required');
@@ -446,7 +456,7 @@ export class MockDataManager {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -467,7 +477,7 @@ export class MockDataManager {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -487,7 +497,7 @@ export class MockDataManager {
       users: [],
       conversations: [],
       mascots: [],
-      searchResults: []
+      searchResults: [],
     };
   }
 
@@ -506,7 +516,9 @@ export class MockDataManager {
         data.legalUpdates.forEach((update, index) => {
           const validation = this.validateLegalUpdate(update);
           if (!validation.isValid) {
-            errors.push(`Legal Update ${index}: ${validation.errors.join(', ')}`);
+            errors.push(
+              `Legal Update ${index}: ${validation.errors.join(', ')}`
+            );
           }
         });
       }
@@ -523,12 +535,12 @@ export class MockDataManager {
       // In a real implementation, this would update the mock data files
       return {
         success: errors.length === 0,
-        errors
+        errors,
       };
     } catch (error) {
       return {
         success: false,
-        errors: [`Import failed: ${error}`]
+        errors: [`Import failed: ${error}`],
       };
     }
   }
@@ -536,38 +548,45 @@ export class MockDataManager {
   /**
    * Development Utilities
    */
-  generateRandomData(type: 'legal_updates' | 'users' | 'conversations', count: number = 10): any[] {
+  generateRandomData(
+    type: 'legal_updates' | 'users' | 'conversations',
+    count: number = 10
+  ): any[] {
     switch (type) {
       case 'legal_updates':
-        return Array.from({ length: count }, (_, i) => 
+        return Array.from({ length: count }, (_, i) =>
           this.createLegalUpdate({
             title: `Generated Legal Update ${i + 1}`,
-            category: ['business_law', 'tax_law', 'administrative_law'][i % 3] as LegalCategory
+            category: ['business_law', 'tax_law', 'administrative_law'][
+              i % 3
+            ] as LegalCategory,
           })
         );
-      
+
       case 'users':
-        return Array.from({ length: count }, (_, i) => 
+        return Array.from({ length: count }, (_, i) =>
           this.createMockUser({
             name: `Generated User ${i + 1}`,
-            email: `user${i + 1}@example.com`
+            email: `user${i + 1}@example.com`,
           })
         );
-      
+
       case 'conversations':
-        return Array.from({ length: count }, (_, i) => 
+        return Array.from({ length: count }, (_, i) =>
           this.createMockConversation({
             title: `Generated Conversation ${i + 1}`,
-            userId: `user-${i + 1}`
+            userId: `user-${i + 1}`,
           })
         );
-      
+
       default:
         return [];
     }
   }
 
-  clearMockData(type?: 'legal_updates' | 'users' | 'conversations' | 'all'): void {
+  clearMockData(
+    type?: 'legal_updates' | 'users' | 'conversations' | 'all'
+  ): void {
     // In a real implementation, this would clear the specified mock data
     console.log(`Mock data cleared: ${type || 'all'}`);
   }
@@ -575,6 +594,160 @@ export class MockDataManager {
   resetToDefaults(): void {
     // In a real implementation, this would reset all mock data to default values
     console.log('Mock data reset to defaults');
+  }
+
+  /**
+   * Enhanced Mascot Management with Theme Support
+   */
+  createMascotWithThemeSupport(
+    data: Partial<TunisianMascot>,
+    themeMode: 'light' | 'dark' = 'light'
+  ): TunisianMascot {
+    const baseMascot = this.createMockMascot(data);
+
+    // Add theme-specific customizations
+    const themeCustomizations =
+      themeMode === 'dark'
+        ? ['dark_mode_colors', 'night_theme_elements']
+        : ['light_mode_colors', 'day_theme_elements'];
+
+    return {
+      ...baseMascot,
+      customizations: [...baseMascot.customizations, ...themeCustomizations],
+    };
+  }
+
+  /**
+   * Data Persistence with Enhanced Features Support
+   */
+  persistUserDataWithEnhancements(user: User): {
+    success: boolean;
+    errors: string[];
+  } {
+    const errors: string[] = [];
+
+    try {
+      // Validate enhanced user data
+      if (
+        user.preferences?.mascot &&
+        !user.preferences.mascot.preferredSector
+      ) {
+        errors.push('Mascot preferences must include preferred sector');
+      }
+
+      if (user.preferences?.display && !user.preferences.display.theme) {
+        errors.push('Display preferences must include theme setting');
+      }
+
+      // In a real implementation, this would persist to storage with enhanced features
+      console.log('Persisting enhanced user data:', {
+        userId: user.id,
+        hasThemePreferences: !!user.preferences?.display?.theme,
+        hasMascotPreferences: !!user.preferences?.mascot,
+        hasVoicePreferences: !!user.preferences?.voice,
+      });
+
+      return {
+        success: errors.length === 0,
+        errors,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        errors: [`Persistence failed: ${error}`],
+      };
+    }
+  }
+
+  /**
+   * Backward Compatibility Utilities
+   */
+  migrateUserDataToEnhanced(legacyUser: any): User {
+    // Ensure backward compatibility with existing user data
+    const enhancedUser = this.createMockUser(legacyUser);
+
+    // Add default enhanced preferences if missing
+    if (!enhancedUser.preferences.mascot) {
+      enhancedUser.preferences.mascot = {
+        enabled: true,
+        preferredSector: 'business',
+        animationLevel: 'full',
+        voiceSync: false,
+        celebrations: true,
+        customizations: [],
+      };
+    }
+
+    if (!enhancedUser.preferences.display?.theme) {
+      enhancedUser.preferences.display = {
+        ...enhancedUser.preferences.display,
+        theme: 'light',
+        fontSize: 'medium',
+        animations: true,
+        reducedMotion: false,
+        highContrast: false,
+        rtlLayout: true,
+        colorScheme: 'default',
+      };
+    }
+
+    return enhancedUser;
+  }
+
+  /**
+   * Test Data Generation for Enhanced Features
+   */
+  generateTestDataWithEnhancements(): {
+    users: User[];
+    mascots: TunisianMascot[];
+    themeVariations: any[];
+  } {
+    const users = Array.from({ length: 3 }, (_, i) =>
+      this.createMockUser({
+        name: `Enhanced User ${i + 1}`,
+        email: `enhanced.user${i + 1}@example.com`,
+        preferences: {
+          ...this.createMockUser({}).preferences,
+          display: {
+            theme: i % 2 === 0 ? 'light' : 'dark',
+            fontSize: ['small', 'medium', 'large'][i % 3] as any,
+            animations: true,
+            reducedMotion: false,
+            highContrast: false,
+            rtlLayout: true,
+            colorScheme: 'default',
+          },
+          mascot: {
+            enabled: true,
+            preferredSector: ['business', 'agriculture', 'technology'][
+              i % 3
+            ] as any,
+            animationLevel: 'full',
+            voiceSync: i === 1,
+            celebrations: true,
+            customizations: [`custom_${i + 1}`],
+          },
+        },
+      })
+    );
+
+    const mascots = Array.from({ length: 3 }, (_, i) =>
+      this.createMascotWithThemeSupport(
+        {
+          name: `Enhanced Mascot ${i + 1}`,
+          sector: ['business', 'agriculture', 'technology'][i % 3] as any,
+        },
+        i % 2 === 0 ? 'light' : 'dark'
+      )
+    );
+
+    const themeVariations = [
+      { name: 'Light Theme', mode: 'light', colors: ['#FFFFFF', '#000000'] },
+      { name: 'Dark Theme', mode: 'dark', colors: ['#000000', '#FFFFFF'] },
+      { name: 'High Contrast', mode: 'light', highContrast: true },
+    ];
+
+    return { users, mascots, themeVariations };
   }
 }
 

@@ -4,14 +4,33 @@ Revolutionary real-time legal intelligence platform for Tunisia built with React
 
 ## Features
 
+### Core Features
 - 🏛️ Real-time legal intelligence dashboard
-- 🎭 3D Tunisian mascots with cultural authenticity
-- 🗣️ Voice AI interface with Tunisian dialect support
-- 📱 Cross-platform mobile app (iOS, Android, Web)
 - 🔍 Multi-source legal search and discovery
-- 🎮 Gamification and achievement system
-- 👥 Community features and voting
+- 📱 Cross-platform mobile app (iOS, Android, Web)
 - 🌐 Multi-language support (Arabic, French, English)
+- 🗣️ Voice AI interface with Tunisian dialect support
+
+### Enhanced Profile System
+- 👤 **Enhanced Profile Screen** - Beautifully redesigned with smooth animations
+- 🎨 **Dynamic Theming** - Light/dark mode with cultural color schemes
+- 🎭 **3D Tunisian Mascots** - Interactive mascots with cultural authenticity
+- 🏆 **Gamification System** - Achievement badges and progress tracking
+- ⚙️ **Advanced Preferences** - Comprehensive customization options
+- 📊 **Personal Dashboard** - Individual info and achievements tracking
+
+### Cultural & Accessibility Features
+- 🌍 **RTL/LTR Support** - Seamless Arabic and French language switching
+- 🎨 **Cultural Themes** - Tunisian-inspired design elements
+- 🎮 **Interactive Mascots** - Sector-specific mascot variations
+- 🏅 **Achievement System** - Unlock celebrations and progress tracking
+- 🔄 **Theme Persistence** - Remembers user preferences across sessions
+
+### Technical Features
+- ⚡ **Performance Optimized** - Smooth animations and fast loading
+- 💾 **Offline Support** - Local data persistence and caching
+- 🔒 **Secure Storage** - Encrypted user preferences and data
+- 🧪 **Comprehensive Testing** - Full test coverage for reliability
 
 ## Getting Started
 
@@ -48,29 +67,65 @@ Revolutionary real-time legal intelligence platform for Tunisia built with React
 
 ### Development Scripts
 
+#### Basic Commands
 - `npm start` - Start Expo development server
 - `npm run android` - Run on Android device/emulator
 - `npm run ios` - Run on iOS device/simulator (macOS only)
 - `npm run web` - Run in web browser
+- `npm run clean` - Clear Expo cache
+
+#### Code Quality
 - `npm run lint` - Run ESLint
 - `npm run lint:fix` - Fix ESLint issues automatically
 - `npm run format` - Format code with Prettier
 - `npm run type-check` - Run TypeScript type checking
-- `npm run clean` - Clear Expo cache
+
+#### Testing
+- `npm run test:enhanced` - Run enhanced feature tests
+- `npm run test:comprehensive` - Run comprehensive test suite
+- `npm run test:user-flows` - Test user interaction flows
+- `npm run test:performance` - Run performance tests
+- `npm run test:compatibility` - Test backward compatibility
+
+#### Development Tools
+- `npm run dev` - Start development with hot reload
+- `npm run full-stack` - Start full-stack development environment
 
 ## Project Structure
 
 ```
 src/
-├── components/     # Reusable UI components
-├── screens/        # Screen components
-├── navigation/     # Navigation configuration
-├── services/       # API services and data fetching
-├── hooks/          # Custom React hooks
-├── utils/          # Utility functions
-├── types/          # TypeScript type definitions
-├── store/          # State management
-└── config/         # Configuration files
+├── components/           # Reusable UI components
+│   ├── auth/            # Authentication components
+│   ├── chat/            # Chat interface components
+│   ├── common/          # Common UI components
+│   ├── dashboard/       # Dashboard-specific components
+│   ├── gamification/    # Achievement and progress components
+│   ├── language/        # Language switching components
+│   ├── layout/          # Layout and navigation components
+│   ├── mascot/          # 3D mascot components
+│   ├── navigation/      # Navigation components
+│   └── search/          # Search interface components
+├── contexts/            # React context providers
+│   ├── ThemeContext.tsx # Theme management
+│   ├── MascotContext.tsx# Mascot state management
+│   └── RTLContext.tsx   # RTL/language support
+├── screens/             # Screen components
+│   ├── ProfileScreen.tsx        # Enhanced profile screen
+│   ├── PersonalInfoScreen.tsx   # Personal information
+│   ├── PreferencesScreen.tsx    # User preferences
+│   ├── AchievementsScreen.tsx   # Achievements display
+│   └── MascotDemoScreen.tsx     # Mascot interactions
+├── navigation/          # Navigation configuration
+├── services/            # API services and data fetching
+├── hooks/               # Custom React hooks
+│   └── useMascotInteractions.ts # Mascot interaction hooks
+├── utils/               # Utility functions
+├── types/               # TypeScript type definitions
+│   └── mascot.ts        # Mascot-related types
+├── store/               # State management
+├── tests/               # Test files
+└── config/              # Configuration files
 ```
 
 ## Environment Variables
@@ -100,15 +155,120 @@ Configure the following environment variables in `.env`:
 - Run linting and type checking before commits
 - Test on multiple platforms when possible
 
+## Enhanced Features Guide
+
+### Theme System
+The app includes a comprehensive theming system with:
+
+```typescript
+import { useTheme, createThemedStyles } from './src/contexts/ThemeContext';
+
+function MyComponent() {
+  const { theme, isDark, toggleTheme } = useTheme();
+  
+  const styles = createThemedStyles((theme) => ({
+    container: {
+      backgroundColor: theme.colors.background,
+      padding: 16,
+    },
+    text: {
+      color: theme.colors.text,
+      fontSize: 16,
+    },
+  }));
+  
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Themed content</Text>
+    </View>
+  );
+}
+```
+
+### Mascot Integration
+Interactive 3D mascots with cultural elements:
+
+```typescript
+import { useMascot } from './src/contexts/MascotContext';
+import { TunisianMascot3D } from './src/components/mascot';
+
+function ProfileScreen() {
+  const { mascotState, updateSector, triggerInteraction } = useMascot();
+  
+  return (
+    <TunisianMascot3D
+      sector={mascotState.currentSector}
+      emotion={mascotState.currentEmotion}
+      onInteraction={(type) => triggerInteraction(type)}
+    />
+  );
+}
+```
+
+### RTL/Language Support
+Seamless language switching with layout adaptation:
+
+```typescript
+import { useRTL } from './src/contexts/RTLContext';
+
+function MyComponent() {
+  const { isRTL, currentLanguage, setLanguage, getTextAlign } = useRTL();
+  
+  const styles = StyleSheet.create({
+    text: {
+      textAlign: getTextAlign(),
+      writingDirection: isRTL ? 'rtl' : 'ltr',
+    },
+  });
+  
+  return <Text style={styles.text}>Content</Text>;
+}
+```
+
+### Gamification System
+Achievement tracking and progress visualization:
+
+```typescript
+import { AchievementBadge, ProgressTracker } from './src/components/gamification';
+
+function AchievementsScreen() {
+  return (
+    <View>
+      <ProgressTracker 
+        current={75} 
+        total={100} 
+        label="Profile Completion" 
+      />
+      <AchievementBadge
+        title="Legal Expert"
+        description="Completed 50 legal queries"
+        isUnlocked={true}
+      />
+    </View>
+  );
+}
+```
+
 ## Architecture
 
 The app follows a modular architecture with:
 
-- **Expo Router** for file-based navigation
-- **TypeScript** for type safety
-- **React Native Skia** for 3D mascot rendering
-- **React Query** for data fetching and caching
-- **AsyncStorage** for local data persistence
+### Core Technologies
+- **React Native & Expo** - Cross-platform mobile development
+- **TypeScript** - Type safety and better developer experience
+- **React Native Skia** - High-performance 3D mascot rendering
+- **AsyncStorage** - Local data persistence and caching
+
+### State Management
+- **React Context** - Global state management for themes, mascots, and RTL
+- **Custom Hooks** - Reusable logic for mascot interactions and theming
+- **Local Storage** - Persistent user preferences and customizations
+
+### UI/UX Architecture
+- **Context-Driven Theming** - Dynamic theme switching with persistence
+- **Cultural Design System** - Tunisian-inspired colors and typography
+- **Responsive Layouts** - RTL/LTR support with proper text alignment
+- **Animation System** - Smooth transitions and micro-interactions
 
 ## Contributing
 

@@ -1,11 +1,11 @@
 /**
  * Integration Test Suite for Frontend-Backend Integration
- * 
+ *
  * This test verifies:
  * - API calls work with the backend
  * - Authentication flow works correctly
  * - Error handling works as expected
- * 
+ *
  * Requirements covered: 1.1, 2.1, 6.1
  */
 
@@ -75,14 +75,14 @@ class IntegrationTester {
         details: {
           isConnected: networkState.isConnected,
           isInternetReachable: networkState.isInternetReachable,
-          type: networkState.type
-        }
+          type: networkState.type,
+        },
       });
     } catch (error) {
       this.addResult({
         name: 'Network Connectivity Check',
         passed: false,
-        error: error instanceof Error ? error.message : 'Unknown network error'
+        error: error instanceof Error ? error.message : 'Unknown network error',
       });
     }
   }
@@ -93,7 +93,8 @@ class IntegrationTester {
   private async testApiConfiguration(): Promise<void> {
     try {
       // Check if API service is properly configured
-      const hasBaseUrl = apiService['baseUrl'] && apiService['baseUrl'].length > 0;
+      const hasBaseUrl =
+        apiService['baseUrl'] && apiService['baseUrl'].length > 0;
       const hasTimeout = apiService['timeout'] && apiService['timeout'] > 0;
 
       this.addResult({
@@ -102,14 +103,15 @@ class IntegrationTester {
         details: {
           baseUrl: apiService['baseUrl'],
           timeout: apiService['timeout'],
-          hasAuthToken: !!apiService.getAuthToken()
-        }
+          hasAuthToken: !!apiService.getAuthToken(),
+        },
       });
     } catch (error) {
       this.addResult({
         name: 'API Service Configuration',
         passed: false,
-        error: error instanceof Error ? error.message : 'API configuration error'
+        error:
+          error instanceof Error ? error.message : 'API configuration error',
       });
     }
   }
@@ -134,22 +136,25 @@ class IntegrationTester {
       // Verify removal
       const removedValue = await storageService.get(testKey);
 
-      const passed = JSON.stringify(retrievedValue) === JSON.stringify(testValue) && removedValue === null;
+      const passed =
+        JSON.stringify(retrievedValue) === JSON.stringify(testValue) &&
+        removedValue === null;
 
       this.addResult({
         name: 'Storage Service Functionality',
         passed,
         details: {
           setSuccessful: true,
-          getSuccessful: JSON.stringify(retrievedValue) === JSON.stringify(testValue),
-          removeSuccessful: removedValue === null
-        }
+          getSuccessful:
+            JSON.stringify(retrievedValue) === JSON.stringify(testValue),
+          removeSuccessful: removedValue === null,
+        },
       });
     } catch (error) {
       this.addResult({
         name: 'Storage Service Functionality',
         passed: false,
-        error: error instanceof Error ? error.message : 'Storage service error'
+        error: error instanceof Error ? error.message : 'Storage service error',
       });
     }
   }
@@ -168,7 +173,7 @@ class IntegrationTester {
       // Test mock login
       const mockCredentials = {
         email: 'test@example.com',
-        password: 'testpassword'
+        password: 'testpassword',
       };
 
       const loginResponse = await authService.login(mockCredentials);
@@ -181,20 +186,26 @@ class IntegrationTester {
 
       this.addResult({
         name: 'Authentication Service',
-        passed: !!loginResponse && isAuthenticatedAfterLogin && !isAuthenticatedAfterLogout,
+        passed:
+          !!loginResponse &&
+          isAuthenticatedAfterLogin &&
+          !isAuthenticatedAfterLogout,
         details: {
           initialAuthStatus: isAuthenticated,
           loginSuccessful: !!loginResponse,
           authAfterLogin: isAuthenticatedAfterLogin,
           userDataRetrieved: !!currentUser,
-          authAfterLogout: isAuthenticatedAfterLogout
-        }
+          authAfterLogout: isAuthenticatedAfterLogout,
+        },
       });
     } catch (error) {
       this.addResult({
         name: 'Authentication Service',
         passed: false,
-        error: error instanceof Error ? error.message : 'Authentication service error'
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Authentication service error',
       });
     }
   }
@@ -213,8 +224,8 @@ class IntegrationTester {
         passed: !!healthResponse,
         details: {
           responseTime: `${responseTime}ms`,
-          response: healthResponse
-        }
+          response: healthResponse,
+        },
       });
     } catch (error) {
       this.addResult({
@@ -222,8 +233,8 @@ class IntegrationTester {
         passed: false,
         error: error instanceof Error ? error.message : 'Health check failed',
         details: {
-          note: 'This is expected if backend is not running'
-        }
+          note: 'This is expected if backend is not running',
+        },
       });
     }
   }
@@ -244,7 +255,8 @@ class IntegrationTester {
         apiService['baseUrl'] = 'http://invalid-url-that-does-not-exist.com';
         await apiService.healthCheck();
       } catch (error: any) {
-        networkErrorCaught = error.code === 'NETWORK_ERROR' || error.message.includes('fetch');
+        networkErrorCaught =
+          error.code === 'NETWORK_ERROR' || error.message.includes('fetch');
       }
 
       // Test timeout error handling
@@ -254,7 +266,8 @@ class IntegrationTester {
         apiService['timeout'] = 1; // 1ms timeout
         await apiService.healthCheck();
       } catch (error: any) {
-        timeoutErrorCaught = error.code === 'TIMEOUT' || error.name === 'AbortError';
+        timeoutErrorCaught =
+          error.code === 'TIMEOUT' || error.name === 'AbortError';
       }
 
       // Test HTTP error handling (if backend is available)
@@ -262,7 +275,8 @@ class IntegrationTester {
         // Try to access a non-existent endpoint
         await apiService.get('/non-existent-endpoint');
       } catch (error: any) {
-        httpErrorCaught = error.status === 404 || error.code === 'NETWORK_ERROR';
+        httpErrorCaught =
+          error.status === 404 || error.code === 'NETWORK_ERROR';
       }
 
       this.addResult({
@@ -272,14 +286,15 @@ class IntegrationTester {
           networkErrorHandled: networkErrorCaught,
           timeoutErrorHandled: timeoutErrorCaught,
           httpErrorHandled: httpErrorCaught,
-          note: 'At least one error type should be properly handled'
-        }
+          note: 'At least one error type should be properly handled',
+        },
       });
     } catch (error) {
       this.addResult({
         name: 'Error Handling',
         passed: false,
-        error: error instanceof Error ? error.message : 'Error handling test failed'
+        error:
+          error instanceof Error ? error.message : 'Error handling test failed',
       });
     }
   }
@@ -294,28 +309,52 @@ class IntegrationTester {
       // Test legal categories endpoint
       try {
         const categories = await apiService.getLegalCategories();
-        endpointTests.push({ endpoint: '/legal-categories', success: true, data: categories });
+        endpointTests.push({
+          endpoint: '/legal-categories',
+          success: true,
+          data: categories,
+        });
       } catch (error) {
-        endpointTests.push({ endpoint: '/legal-categories', success: false, error: error });
+        endpointTests.push({
+          endpoint: '/legal-categories',
+          success: false,
+          error: error,
+        });
       }
 
       // Test popular queries endpoint
       try {
         const queries = await apiService.getPopularQueries();
-        endpointTests.push({ endpoint: '/popular-queries', success: true, data: queries });
+        endpointTests.push({
+          endpoint: '/popular-queries',
+          success: true,
+          data: queries,
+        });
       } catch (error) {
-        endpointTests.push({ endpoint: '/popular-queries', success: false, error: error });
+        endpointTests.push({
+          endpoint: '/popular-queries',
+          success: false,
+          error: error,
+        });
       }
 
       // Test legal query submission
       try {
         const queryResponse = await apiService.submitLegalQuery({
           query: 'ما هي حقوق المستهلك في تونس؟',
-          language: 'ar'
+          language: 'ar',
         });
-        endpointTests.push({ endpoint: '/query', success: true, data: queryResponse });
+        endpointTests.push({
+          endpoint: '/query',
+          success: true,
+          data: queryResponse,
+        });
       } catch (error) {
-        endpointTests.push({ endpoint: '/query', success: false, error: error });
+        endpointTests.push({
+          endpoint: '/query',
+          success: false,
+          error: error,
+        });
       }
 
       const successfulTests = endpointTests.filter(test => test.success).length;
@@ -328,14 +367,15 @@ class IntegrationTester {
           successfulEndpoints: successfulTests,
           totalEndpoints: totalTests,
           tests: endpointTests,
-          note: 'Some failures are expected if backend is not running'
-        }
+          note: 'Some failures are expected if backend is not running',
+        },
       });
     } catch (error) {
       this.addResult({
         name: 'API Endpoints Testing',
         passed: false,
-        error: error instanceof Error ? error.message : 'API endpoints test failed'
+        error:
+          error instanceof Error ? error.message : 'API endpoints test failed',
       });
     }
   }
@@ -365,9 +405,13 @@ class IntegrationTester {
 
     if (passed < total) {
       console.log('\n❌ Failed Tests:');
-      this.results.filter(r => !r.passed).forEach(result => {
-        console.log(`   - ${result.name}: ${result.error || 'Unknown error'}`);
-      });
+      this.results
+        .filter(r => !r.passed)
+        .forEach(result => {
+          console.log(
+            `   - ${result.name}: ${result.error || 'Unknown error'}`
+          );
+        });
     }
   }
 
@@ -381,7 +425,11 @@ class IntegrationTester {
       // Test Gemini API health check
       try {
         const healthResponse = await geminiApiService.healthCheck();
-        tests.push({ test: 'health_check', success: true, data: healthResponse });
+        tests.push({
+          test: 'health_check',
+          success: true,
+          data: healthResponse,
+        });
       } catch (error) {
         tests.push({ test: 'health_check', success: false, error: error });
       }
@@ -399,8 +447,8 @@ class IntegrationTester {
           data: {
             responseLength: chatResponse.response?.length || 0,
             sourcesCount: chatResponse.sources?.length || 0,
-            queryId: chatResponse.query_id
-          }
+            queryId: chatResponse.query_id,
+          },
         });
       } catch (error) {
         tests.push({ test: 'legal_query', success: false, error: error });
@@ -409,18 +457,29 @@ class IntegrationTester {
       // Test supported languages endpoint
       try {
         const languages = await geminiApiService.getSupportedLanguages();
-        tests.push({ test: 'supported_languages', success: true, data: languages });
+        tests.push({
+          test: 'supported_languages',
+          success: true,
+          data: languages,
+        });
       } catch (error) {
-        tests.push({ test: 'supported_languages', success: false, error: error });
+        tests.push({
+          test: 'supported_languages',
+          success: false,
+          error: error,
+        });
       }
 
       // Test text-to-speech functionality
       try {
-        const audioBlob = await geminiApiService.textToSpeech('مرحبا، هذا اختبار للصوت', 'ar-TN');
+        const audioBlob = await geminiApiService.textToSpeech(
+          'مرحبا، هذا اختبار للصوت',
+          'ar-TN'
+        );
         tests.push({
           test: 'text_to_speech',
           success: audioBlob !== null,
-          data: { hasAudio: audioBlob !== null }
+          data: { hasAudio: audioBlob !== null },
         });
       } catch (error) {
         tests.push({ test: 'text_to_speech', success: false, error: error });
@@ -436,14 +495,15 @@ class IntegrationTester {
           successfulTests,
           totalTests,
           tests,
-          note: 'Some failures are expected if Backend API is not running'
-        }
+          note: 'Some failures are expected if Backend API is not running',
+        },
       });
     } catch (error) {
       this.addResult({
         name: 'Backend API Integration (Gemini-powered)',
         passed: false,
-        error: error instanceof Error ? error.message : 'Backend API test failed'
+        error:
+          error instanceof Error ? error.message : 'Backend API test failed',
       });
     }
   }

@@ -1,13 +1,13 @@
 import { mockDataService } from './mockDataService';
-import { 
-  ApiResponse, 
+import {
+  ApiResponse,
   PaginatedResponse,
   LegalUpdate,
   User,
   ChatConversation,
   SearchResult,
   TunisianMascot,
-  LegalIntelligenceResponse
+  LegalIntelligenceResponse,
 } from '../types';
 
 /**
@@ -59,11 +59,17 @@ export class MockApiClient {
     return mockDataService.getLegalUpdateById(id);
   }
 
-  async bookmarkLegalUpdate(updateId: string, userId: string): Promise<ApiResponse<boolean>> {
+  async bookmarkLegalUpdate(
+    updateId: string,
+    userId: string
+  ): Promise<ApiResponse<boolean>> {
     return mockDataService.bookmarkLegalUpdate(updateId, userId);
   }
 
-  async markLegalUpdateAsRead(updateId: string, userId: string): Promise<ApiResponse<boolean>> {
+  async markLegalUpdateAsRead(
+    updateId: string,
+    userId: string
+  ): Promise<ApiResponse<boolean>> {
     // Simulate marking as read
     return mockDataService.bookmarkLegalUpdate(updateId, userId);
   }
@@ -75,29 +81,40 @@ export class MockApiClient {
     return mockDataService.getUserById(id);
   }
 
-  async updateUserProfile(userId: string, profileData: Partial<User>): Promise<ApiResponse<User>> {
+  async updateUserProfile(
+    userId: string,
+    profileData: Partial<User>
+  ): Promise<ApiResponse<User>> {
     return mockDataService.updateUserProfile(userId, profileData);
   }
 
-  async getUserStatistics(userId: string): Promise<ApiResponse<User['statistics'] | null>> {
+  async getUserStatistics(
+    userId: string
+  ): Promise<ApiResponse<User['statistics'] | null>> {
     return mockDataService.getUserStatistics(userId);
   }
 
   async updateUserPreferences(
-    userId: string, 
+    userId: string,
     preferences: Partial<User['preferences']>
   ): Promise<ApiResponse<User>> {
-    return mockDataService.updateUserProfile(userId, { preferences } as Partial<User>);
+    return mockDataService.updateUserProfile(userId, {
+      preferences,
+    } as Partial<User>);
   }
 
   /**
    * Chat and Conversations API
    */
-  async getChatConversations(userId: string): Promise<ApiResponse<ChatConversation[]>> {
+  async getChatConversations(
+    userId: string
+  ): Promise<ApiResponse<ChatConversation[]>> {
     return mockDataService.getChatConversations(userId);
   }
 
-  async getChatConversation(id: string): Promise<ApiResponse<ChatConversation | null>> {
+  async getChatConversation(
+    id: string
+  ): Promise<ApiResponse<ChatConversation | null>> {
     return mockDataService.getChatConversationById(id);
   }
 
@@ -148,15 +165,15 @@ export class MockApiClient {
         topicsDiscussed: [],
         legalCategoriesCovered: [],
         sectorsDiscussed: [],
-        complexityLevel: 'basic'
-      }
+        complexityLevel: 'basic',
+      },
     };
 
-    return { 
-      success: true, 
-      data: newConversation, 
-      timestamp: new Date(), 
-      requestId: `mock-${Date.now()}` 
+    return {
+      success: true,
+      data: newConversation,
+      timestamp: new Date(),
+      requestId: `mock-${Date.now()}`,
     };
   }
 
@@ -200,11 +217,11 @@ export class MockApiClient {
     alertsEnabled?: boolean;
   }): Promise<ApiResponse<any>> {
     // Simulate saving search
-    return { 
-      success: true, 
-      data: { id: `saved-search-${Date.now()}`, ...params }, 
-      timestamp: new Date(), 
-      requestId: `mock-${Date.now()}` 
+    return {
+      success: true,
+      data: { id: `saved-search-${Date.now()}`, ...params },
+      timestamp: new Date(),
+      requestId: `mock-${Date.now()}`,
     };
   }
 
@@ -215,7 +232,9 @@ export class MockApiClient {
     return mockDataService.getMascots();
   }
 
-  async getMascotBySector(sector: string): Promise<ApiResponse<TunisianMascot | null>> {
+  async getMascotBySector(
+    sector: string
+  ): Promise<ApiResponse<TunisianMascot | null>> {
     return mockDataService.getMascotBySector(sector);
   }
 
@@ -242,11 +261,11 @@ export class MockApiClient {
     };
   }): Promise<ApiResponse<boolean>> {
     // Simulate updating mascot preferences
-    return { 
-      success: true, 
-      data: true, 
-      timestamp: new Date(), 
-      requestId: `mock-${Date.now()}` 
+    return {
+      success: true,
+      data: true,
+      timestamp: new Date(),
+      requestId: `mock-${Date.now()}`,
     };
   }
 
@@ -276,14 +295,14 @@ export class MockApiClient {
       breakingNews: [],
       governmentStance: [],
       socialMediaTrends: [],
-      lastScraped: new Date()
+      lastScraped: new Date(),
     };
 
-    return { 
-      success: true, 
-      data: mockPulse, 
-      timestamp: new Date(), 
-      requestId: `mock-${Date.now()}` 
+    return {
+      success: true,
+      data: mockPulse,
+      timestamp: new Date(),
+      requestId: `mock-${Date.now()}`,
     };
   }
 
@@ -306,14 +325,14 @@ export class MockApiClient {
       totalSearches: 123456,
       popularCategories: ['business_law', 'tax_law', 'administrative_law'],
       userSatisfaction: 4.6,
-      averageSessionDuration: 18.5
+      averageSessionDuration: 18.5,
     };
 
-    return { 
-      success: true, 
-      data: mockAnalytics, 
-      timestamp: new Date(), 
-      requestId: `mock-${Date.now()}` 
+    return {
+      success: true,
+      data: mockAnalytics,
+      timestamp: new Date(),
+      requestId: `mock-${Date.now()}`,
     };
   }
 
@@ -331,28 +350,31 @@ export class MockApiClient {
         titleFr: 'Nouvelle réglementation fiscale',
         message: 'A new digital tax regulation affects your business sector',
         messageAr: 'لائحة ضريبية رقمية جديدة تؤثر على قطاع أعمالك',
-        messageFr: 'Une nouvelle réglementation fiscale numérique affecte votre secteur d\'activité',
+        messageFr:
+          "Une nouvelle réglementation fiscale numérique affecte votre secteur d'activité",
         isRead: false,
         createdAt: new Date(),
-        priority: 'high'
-      }
+        priority: 'high',
+      },
     ];
 
-    return { 
-      success: true, 
-      data: mockNotifications, 
-      timestamp: new Date(), 
-      requestId: `mock-${Date.now()}` 
+    return {
+      success: true,
+      data: mockNotifications,
+      timestamp: new Date(),
+      requestId: `mock-${Date.now()}`,
     };
   }
 
-  async markNotificationAsRead(notificationId: string): Promise<ApiResponse<boolean>> {
+  async markNotificationAsRead(
+    notificationId: string
+  ): Promise<ApiResponse<boolean>> {
     // Simulate marking notification as read
-    return { 
-      success: true, 
-      data: true, 
-      timestamp: new Date(), 
-      requestId: `mock-${Date.now()}` 
+    return {
+      success: true,
+      data: true,
+      timestamp: new Date(),
+      requestId: `mock-${Date.now()}`,
     };
   }
 
@@ -367,19 +389,21 @@ export class MockApiClient {
   }): Promise<ApiResponse<any>> {
     // Simulate voice processing
     const mockVoiceResponse = {
-      transcript: 'What are the requirements for starting a business in Tunisia?',
+      transcript:
+        'What are the requirements for starting a business in Tunisia?',
       transcriptAr: 'ما هي متطلبات بدء عمل تجاري في تونس؟',
-      transcriptFr: 'Quelles sont les exigences pour démarrer une entreprise en Tunisie ?',
+      transcriptFr:
+        'Quelles sont les exigences pour démarrer une entreprise en Tunisie ?',
       confidence: 0.92,
       detectedLanguage: params.language || 'ar',
-      detectedDialect: params.dialect || 'tunis'
+      detectedDialect: params.dialect || 'tunis',
     };
 
-    return { 
-      success: true, 
-      data: mockVoiceResponse, 
-      timestamp: new Date(), 
-      requestId: `mock-${Date.now()}` 
+    return {
+      success: true,
+      data: mockVoiceResponse,
+      timestamp: new Date(),
+      requestId: `mock-${Date.now()}`,
     };
   }
 
@@ -394,21 +418,23 @@ export class MockApiClient {
       audioUrl: 'https://example.com/audio/response.mp3',
       duration: 15.5,
       format: 'mp3',
-      quality: 'high'
+      quality: 'high',
     };
 
-    return { 
-      success: true, 
-      data: mockAudioResponse, 
-      timestamp: new Date(), 
-      requestId: `mock-${Date.now()}` 
+    return {
+      success: true,
+      data: mockAudioResponse,
+      timestamp: new Date(),
+      requestId: `mock-${Date.now()}`,
     };
   }
 
   /**
    * Health and Status API
    */
-  async healthCheck(): Promise<ApiResponse<{ status: string; timestamp: Date }>> {
+  async healthCheck(): Promise<
+    ApiResponse<{ status: string; timestamp: Date }>
+  > {
     return mockDataService.healthCheck();
   }
 
@@ -421,14 +447,14 @@ export class MockApiClient {
       voice: 'healthy',
       mascot: 'healthy',
       lastUpdated: new Date(),
-      version: '1.0.0'
+      version: '1.0.0',
     };
 
-    return { 
-      success: true, 
-      data: mockStatus, 
-      timestamp: new Date(), 
-      requestId: `mock-${Date.now()}` 
+    return {
+      success: true,
+      data: mockStatus,
+      timestamp: new Date(),
+      requestId: `mock-${Date.now()}`,
     };
   }
 }

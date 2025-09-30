@@ -21,8 +21,6 @@ import { QuickReplies } from './QuickReplies';
 import { TypingIndicator } from './TypingIndicator';
 import { MessageBubble } from './MessageBubble';
 
-
-
 interface ChatInterfaceProps {
   conversationId: string;
   messages: ChatMessage[];
@@ -132,9 +130,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           <Text style={styles.welcomeSubtext}>
             اسألني عن أي موضوع قانوني في تونس
           </Text>
-          <Text style={styles.debugText}>
-            🔗 متصل بـ Gemini Live API
-          </Text>
+          <Text style={styles.debugText}>🔗 متصل بـ Gemini Live API</Text>
           <View style={styles.categoryBadge}>
             <Text style={styles.categoryText}>
               {getCategoryDisplayName(currentCategory)}
@@ -166,7 +162,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         <View style={styles.headerButtons}>
           <TouchableOpacity
             style={styles.testButton}
-            onPress={() => onSendMessage('اختبار الاتصال مع Gemini - ما هي متطلبات تسجيل شركة جديدة في تونس؟')}
+            onPress={() =>
+              onSendMessage(
+                'اختبار الاتصال مع Gemini - ما هي متطلبات تسجيل شركة جديدة في تونس؟'
+              )
+            }
           >
             <Ionicons name="flash" size={20} color="#4CAF50" />
           </TouchableOpacity>
@@ -194,12 +194,12 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         >
           {renderWelcomeMessage()}
 
-          {messages.map((message) => (
+          {messages.map(message => (
             <MessageBubble
               key={message.id}
               message={message}
-              onBookmark={() => { }}
-              onShare={() => { }}
+              onBookmark={() => {}}
+              onShare={() => {}}
             />
           ))}
 
@@ -225,9 +225,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
               onPress={handleVoiceToggle}
             >
               <Ionicons
-                name={showVoiceInput ? "mic" : "mic-outline"}
+                name={showVoiceInput ? 'mic' : 'mic-outline'}
                 size={24}
-                color={showVoiceInput ? "#E31E24" : "#666666"}
+                color={showVoiceInput ? '#E31E24' : '#666666'}
               />
             </TouchableOpacity>
 
@@ -249,7 +249,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             <TouchableOpacity
               style={[
                 styles.sendButton,
-                { opacity: inputText.trim() ? 1 : 0.5 }
+                { opacity: inputText.trim() ? 1 : 0.5 },
               ]}
               onPress={handleSendMessage}
               disabled={!inputText.trim()}

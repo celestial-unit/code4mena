@@ -25,7 +25,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
     password: '',
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {}
+  );
 
   const validateForm = (): boolean => {
     const newErrors: { email?: string; password?: string } = {};
@@ -63,12 +65,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
       console.log('[LoginForm] Login successful:', response.user.email);
 
       // Show success message
-      Alert.alert(
-        'تم تسجيل الدخول بنجاح',
-        `مرحباً ${response.user.name}`,
-        [{ text: 'موافق', onPress: onLoginSuccess }]
-      );
-
+      Alert.alert('تم تسجيل الدخول بنجاح', `مرحباً ${response.user.name}`, [
+        { text: 'موافق', onPress: onLoginSuccess },
+      ]);
     } catch (error) {
       console.error('[LoginForm] Login failed:', error);
 
@@ -109,7 +108,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <TextInput
           style={[styles.input, errors.email && styles.inputError]}
           value={credentials.email}
-          onChangeText={(value) => updateCredentials('email', value)}
+          onChangeText={value => updateCredentials('email', value)}
           placeholder="أدخل بريدك الإلكتروني"
           keyboardType="email-address"
           autoCapitalize="none"
@@ -124,14 +123,16 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <TextInput
           style={[styles.input, errors.password && styles.inputError]}
           value={credentials.password}
-          onChangeText={(value) => updateCredentials('password', value)}
+          onChangeText={value => updateCredentials('password', value)}
           placeholder="أدخل كلمة المرور"
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
           editable={!isLoading}
         />
-        {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+        {errors.password && (
+          <Text style={styles.errorText}>{errors.password}</Text>
+        )}
       </View>
 
       <TouchableOpacity
@@ -147,7 +148,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
       </TouchableOpacity>
 
       <Text style={styles.demoNote}>
-        ملاحظة: هذا نموذج تجريبي. يمكنك استخدام أي بريد إلكتروني وكلمة مرور للاختبار.
+        ملاحظة: هذا نموذج تجريبي. يمكنك استخدام أي بريد إلكتروني وكلمة مرور
+        للاختبار.
       </Text>
     </View>
   );

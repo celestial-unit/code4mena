@@ -12,4 +12,7 @@ export * from './authIntegration';
 // Network Utilities
 export * from './networkUtils';
 
+// Debug Utilities
+export * from './debugApi';
+
 // Utility functions will be added here as the app grows

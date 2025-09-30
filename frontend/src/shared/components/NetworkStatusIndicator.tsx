@@ -21,7 +21,8 @@ export const NetworkStatusIndicator: React.FC<NetworkStatusIndicatorProps> = ({
   const networkState = useNetworkState();
   const [slideAnim] = React.useState(new Animated.Value(-100));
 
-  const isOffline = !networkState.isConnected || !networkState.isInternetReachable;
+  const isOffline =
+    !networkState.isConnected || !networkState.isInternetReachable;
 
   React.useEffect(() => {
     if (isOffline || showWhenConnected) {
@@ -78,7 +79,7 @@ export const NetworkStatusIndicator: React.FC<NetworkStatusIndicatorProps> = ({
             <Text style={styles.connectionType}>({networkState.type})</Text>
           )}
         </View>
-        
+
         {isOffline && onRetry && (
           <TouchableOpacity style={styles.retryButton} onPress={onRetry}>
             <Ionicons name="refresh-outline" size={16} color="#FFFFFF" />

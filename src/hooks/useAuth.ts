@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import authService from '../services/authService';
-import type { User, LoginCredentials, AuthError } from '../services/authService';
+import { authService } from '../services';
+import type { User, LoginCredentials, AuthError } from '../services';
 
 interface UseAuthReturn {
   user: User | null;
@@ -39,12 +39,11 @@ export const useAuth = (): UseAuthReturn => {
         const currentUser = await authService.getCurrentUser();
         setUser(currentUser);
       }
-
     } catch (err) {
       console.error('[useAuth] Failed to initialize auth:', err);
       setError({
         message: 'Failed to initialize authentication',
-        code: 'INIT_ERROR'
+        code: 'INIT_ERROR',
       });
     } finally {
       setIsLoading(false);
@@ -61,7 +60,6 @@ export const useAuth = (): UseAuthReturn => {
 
       setUser(response.user);
       setIsAuthenticated(true);
-
     } catch (err) {
       console.error('[useAuth] Login failed:', err);
       const authError = err as AuthError;
@@ -82,7 +80,6 @@ export const useAuth = (): UseAuthReturn => {
 
       setUser(null);
       setIsAuthenticated(false);
-
     } catch (err) {
       console.error('[useAuth] Logout failed:', err);
       // Don't set error for logout - always clear state

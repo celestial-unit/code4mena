@@ -113,7 +113,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
                 <Ionicons name="notifications" size={24} color="#FFFFFF" />
                 <View style={styles.notificationDot} />
               </TouchableOpacity>
-              
+
               <TouchableOpacity style={styles.headerButton}>
                 <Ionicons name="settings" size={24} color="#FFFFFF" />
               </TouchableOpacity>
@@ -132,7 +132,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
                   <Ionicons name="camera" size={16} color="#FFFFFF" />
                 </TouchableOpacity>
               </View>
-              
+
               <Text style={styles.userName}>{user.name}</Text>
               <Text style={styles.userOccupation}>{user.occupation}</Text>
               <Text style={styles.userLocation}>📍 {user.region}</Text>
@@ -172,14 +172,23 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         {/* Menu Items */}
         <View style={styles.menuSection}>
           <Text style={styles.sectionTitle}>الحساب</Text>
-          {menuItems.map((item) => (
+          {menuItems.map(item => (
             <TouchableOpacity
               key={item.id}
               style={styles.menuItem}
               onPress={item.onPress}
             >
-              <View style={[styles.menuIcon, { backgroundColor: item.color + '15' }]}>
-                <Ionicons name={item.icon as any} size={24} color={item.color} />
+              <View
+                style={[
+                  styles.menuIcon,
+                  { backgroundColor: item.color + '15' },
+                ]}
+              >
+                <Ionicons
+                  name={item.icon as any}
+                  size={24}
+                  color={item.color}
+                />
               </View>
               <Text style={styles.menuTitle}>{item.title}</Text>
               <Ionicons name="chevron-forward" size={20} color="#999999" />
@@ -190,7 +199,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         {/* Settings */}
         <View style={styles.menuSection}>
           <Text style={styles.sectionTitle}>الإعدادات</Text>
-          {settingsItems.map((item) => (
+          {settingsItems.map(item => (
             <View key={item.id} style={styles.settingItem}>
               <View style={styles.settingLeft}>
                 <View style={styles.settingIcon}>
@@ -211,7 +220,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         {/* Support Section */}
         <View style={styles.menuSection}>
           <Text style={styles.sectionTitle}>الدعم</Text>
-          
+
           <TouchableOpacity style={styles.menuItem}>
             <View style={[styles.menuIcon, { backgroundColor: '#2E8B5715' }]}>
               <Ionicons name="help-circle" size={24} color="#2E8B57" />

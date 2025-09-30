@@ -28,7 +28,7 @@ class StorageService {
   async get<T = string>(key: string): Promise<T | null> {
     try {
       const value = await AsyncStorage.getItem(key);
-      
+
       if (value === null) {
         return null;
       }
@@ -58,7 +58,8 @@ class StorageService {
    */
   async set<T>(key: string, value: T): Promise<void> {
     try {
-      const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
+      const stringValue =
+        typeof value === 'string' ? value : JSON.stringify(value);
       await AsyncStorage.setItem(key, stringValue);
       console.log(`[Storage] Successfully stored item with key "${key}"`);
     } catch (error) {
@@ -81,7 +82,10 @@ class StorageService {
       await AsyncStorage.removeItem(key);
       console.log(`[Storage] Successfully removed item with key "${key}"`);
     } catch (error) {
-      console.error(`[Storage] Failed to remove item with key "${key}":`, error);
+      console.error(
+        `[Storage] Failed to remove item with key "${key}":`,
+        error
+      );
       const storageError: StorageError = {
         message: `Failed to remove data for key: ${key}`,
         key,

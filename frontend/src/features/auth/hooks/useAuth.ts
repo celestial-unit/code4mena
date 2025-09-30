@@ -39,12 +39,11 @@ export const useAuth = (): UseAuthReturn => {
         const currentUser = await authService.getCurrentUser();
         setUser(currentUser);
       }
-
     } catch (err) {
       console.error('[useAuth] Failed to initialize auth:', err);
       setError({
         message: 'Failed to initialize authentication',
-        code: 'INIT_ERROR'
+        code: 'INIT_ERROR',
       });
     } finally {
       setIsLoading(false);
@@ -58,10 +57,9 @@ export const useAuth = (): UseAuthReturn => {
       setError(null);
 
       const response = await authService.login(credentials);
-      
+
       setUser(response.user);
       setIsAuthenticated(true);
-
     } catch (err) {
       console.error('[useAuth] Login failed:', err);
       const authError = err as AuthError;
@@ -79,10 +77,9 @@ export const useAuth = (): UseAuthReturn => {
       setError(null);
 
       await authService.logout();
-      
+
       setUser(null);
       setIsAuthenticated(false);
-
     } catch (err) {
       console.error('[useAuth] Logout failed:', err);
       // Don't set error for logout - always clear state

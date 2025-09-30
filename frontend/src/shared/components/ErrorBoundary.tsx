@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, { 
+import Animated, {
   FadeIn,
   BounceIn,
   useSharedValue,
@@ -34,7 +34,7 @@ export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
   onRetry,
   title = 'Something went wrong',
   titleAr = 'حدث خطأ ما',
-  titleFr = 'Quelque chose s\'est mal passé',
+  titleFr = "Quelque chose s'est mal passé",
   description = 'We encountered an error while loading your data.',
   descriptionAr = 'واجهنا خطأ أثناء تحميل بياناتك.',
   descriptionFr = 'Nous avons rencontré une erreur lors du chargement de vos données.',
@@ -53,17 +53,14 @@ export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
   };
 
   return (
-    <Animated.View 
-      entering={FadeIn.duration(600)}
-      style={styles.container}
-    >
+    <Animated.View entering={FadeIn.duration(600)} style={styles.container}>
       <View style={styles.errorCard}>
         <LinearGradient
           colors={['#FFFFFF', '#FFF5F5']}
           style={styles.cardGradient}
         >
           {/* Error icon */}
-          <Animated.View 
+          <Animated.View
             entering={BounceIn.delay(200).duration(800)}
             style={styles.iconContainer}
           >
@@ -76,13 +73,13 @@ export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
           </Animated.View>
 
           {/* Error content */}
-          <Animated.View 
+          <Animated.View
             entering={FadeIn.delay(400).duration(600)}
             style={styles.content}
           >
             <Text style={styles.title}>{titleAr}</Text>
             <Text style={styles.description}>{descriptionAr}</Text>
-            
+
             {/* Error details (for debugging) */}
             {__DEV__ && (
               <View style={styles.errorDetails}>
@@ -92,7 +89,7 @@ export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
           </Animated.View>
 
           {/* Retry button */}
-          <Animated.View 
+          <Animated.View
             entering={FadeIn.delay(600).duration(600)}
             style={[buttonStyle, styles.buttonContainer]}
           >

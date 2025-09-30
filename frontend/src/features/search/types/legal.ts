@@ -30,13 +30,18 @@ export interface LegalSource {
   name: string;
   nameAr: string;
   nameFr: string;
-  type: 'government_social' | 'parliamentary' | 'qanoun_tn' | 'traditional_law' | 'ministry_official';
+  type:
+    | 'government_social'
+    | 'parliamentary'
+    | 'qanoun_tn'
+    | 'traditional_law'
+    | 'ministry_official';
   url?: string;
   credibilityScore: number;
   lastUpdated: Date;
 }
 
-export type LegalCategory = 
+export type LegalCategory =
   | 'business_law'
   | 'civil_law'
   | 'administrative_law'
@@ -48,7 +53,7 @@ export type LegalCategory =
   | 'commercial_law'
   | 'environmental_law';
 
-export type Sector = 
+export type Sector =
   | 'money'
   | 'food'
   | 'agriculture'
@@ -105,7 +110,13 @@ export interface GovernmentPosition {
 export interface ParliamentaryContext {
   sessionId: string;
   lawId?: string;
-  currentStage: 'committee' | 'first_reading' | 'second_reading' | 'final_vote' | 'passed' | 'rejected';
+  currentStage:
+    | 'committee'
+    | 'first_reading'
+    | 'second_reading'
+    | 'final_vote'
+    | 'passed'
+    | 'rejected';
   votingPattern?: VotingPattern;
   timeline: ParliamentaryTimeline;
   keyPlayers: ParliamentaryMember[];
@@ -186,7 +197,15 @@ export interface DialectTerm {
 }
 
 export interface RegionalRelevance {
-  region: 'tunis' | 'sfax' | 'sousse' | 'kairouan' | 'bizerte' | 'gabes' | 'gafsa' | 'national';
+  region:
+    | 'tunis'
+    | 'sfax'
+    | 'sousse'
+    | 'kairouan'
+    | 'bizerte'
+    | 'gabes'
+    | 'gafsa'
+    | 'national';
   regionAr: string;
   relevanceScore: number;
   specificConsiderations: string[];

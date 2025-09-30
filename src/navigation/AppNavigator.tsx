@@ -11,10 +11,33 @@ import { SearchScreen } from '../screens/SearchScreen';
 import { NotificationsScreen } from '../screens/NotificationsScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { UpdatesScreen } from '../screens/UpdatesScreen';
+import {
+  PersonalInfoScreen,
+  PreferencesScreen,
+  AchievementsScreen,
+  MascotDemoScreen,
+} from '../screens';
 import { AuthTestScreen, ErrorTestScreen } from '../screens';
 import { BottomTabBar } from '../components/navigation/BottomTabBar';
 
-export type Screen = 'Dashboard' | 'Chat' | 'ChatbotSelection' | 'Search' | 'Profile' | 'Statistics' | 'Updates' | 'GovernmentPulse' | 'LegalUpdateDetail' | 'MinistryUpdates' | 'Notifications' | 'AuthTest' | 'ErrorTest';
+export type Screen =
+  | 'Dashboard'
+  | 'Chat'
+  | 'ChatbotSelection'
+  | 'Search'
+  | 'Profile'
+  | 'PersonalInfo'
+  | 'Preferences'
+  | 'Achievements'
+  | 'MascotDemo'
+  | 'Statistics'
+  | 'Updates'
+  | 'GovernmentPulse'
+  | 'LegalUpdateDetail'
+  | 'MinistryUpdates'
+  | 'Notifications'
+  | 'AuthTest'
+  | 'ErrorTest';
 
 interface NavigationState {
   currentScreen: Screen;
@@ -33,13 +56,17 @@ export const AppNavigator: React.FC = () => {
     setNavigationState(prev => ({
       currentScreen: screen,
       params,
-      history: [...prev.history, { screen: prev.currentScreen, params: prev.params }],
+      history: [
+        ...prev.history,
+        { screen: prev.currentScreen, params: prev.params },
+      ],
     }));
   };
 
   const goBack = () => {
     if (navigationState.history.length > 0) {
-      const previous = navigationState.history[navigationState.history.length - 1];
+      const previous =
+        navigationState.history[navigationState.history.length - 1];
       setNavigationState(prev => ({
         currentScreen: previous.screen,
         params: previous.params,
@@ -72,6 +99,14 @@ export const AppNavigator: React.FC = () => {
         return <NotificationsScreen navigation={navigation} />;
       case 'Profile':
         return <ProfileScreen navigation={navigation} />;
+      case 'PersonalInfo':
+        return <PersonalInfoScreen navigation={navigation} />;
+      case 'Preferences':
+        return <PreferencesScreen navigation={navigation} />;
+      case 'Achievements':
+        return <AchievementsScreen navigation={navigation} />;
+      case 'MascotDemo':
+        return <MascotDemoScreen navigation={navigation} />;
       case 'Updates':
         return <UpdatesScreen navigation={navigation} />;
       case 'AuthTest':
@@ -83,7 +118,12 @@ export const AppNavigator: React.FC = () => {
       case 'LegalUpdateDetail':
       case 'MinistryUpdates':
         // For now, show a placeholder screen for these
-        return <PlaceholderScreen navigation={navigation} screenName={navigationState.currentScreen} />;
+        return (
+          <PlaceholderScreen
+            navigation={navigation}
+            screenName={navigationState.currentScreen}
+          />
+        );
       default:
         return <DashboardScreenSimple navigation={navigation} route={route} />;
     }
@@ -92,7 +132,7 @@ export const AppNavigator: React.FC = () => {
   return (
     <View style={{ flex: 1 }}>
       {renderScreen()}
-      <BottomTabBar 
+      <BottomTabBar
         currentScreen={navigationState.currentScreen}
         onTabPress={navigate}
       />
@@ -101,17 +141,34 @@ export const AppNavigator: React.FC = () => {
 };
 
 // Placeholder screen for unimplemented screens
-const PlaceholderScreen: React.FC<{ navigation: any; screenName: string }> = ({ navigation, screenName }) => {
-
+const PlaceholderScreen: React.FC<{ navigation: any; screenName: string }> = ({
+  navigation,
+  screenName,
+}) => {
   const getScreenTitle = () => {
     switch (screenName) {
-      case 'Profile': return 'الملف الشخصي';
-      case 'Statistics': return 'الإحصائيات';
-      case 'Updates': return 'جميع التحديثات';
-      case 'GovernmentPulse': return 'نبض الحكومة الكامل';
-      case 'LegalUpdateDetail': return 'تفاصيل التحديث القانوني';
-      case 'MinistryUpdates': return 'تحديثات الوزارة';
-      default: return 'صفحة جديدة';
+      case 'Profile':
+        return 'الملف الشخصي';
+      case 'PersonalInfo':
+        return 'المعلومات الشخصية';
+      case 'Preferences':
+        return 'التفضيلات';
+      case 'Achievements':
+        return 'الإنجازات والنقاط';
+      case 'MascotDemo':
+        return 'عرض الشخصية التونسية';
+      case 'Statistics':
+        return 'الإحصائيات';
+      case 'Updates':
+        return 'جميع التحديثات';
+      case 'GovernmentPulse':
+        return 'نبض الحكومة الكامل';
+      case 'LegalUpdateDetail':
+        return 'تفاصيل التحديث القانوني';
+      case 'MinistryUpdates':
+        return 'تحديثات الوزارة';
+      default:
+        return 'صفحة جديدة';
     }
   };
 
@@ -119,15 +176,15 @@ const PlaceholderScreen: React.FC<{ navigation: any; screenName: string }> = ({ 
     <SafeAreaView style={placeholderStyles.container}>
       {/* Header */}
       <View style={placeholderStyles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={placeholderStyles.backButton}
           onPress={() => navigation.goBack()}
         >
           <Ionicons name="arrow-back" size={24} color="#E31E24" />
         </TouchableOpacity>
-        
+
         <Text style={placeholderStyles.headerTitle}>{getScreenTitle()}</Text>
-        
+
         <View style={placeholderStyles.placeholder} />
       </View>
 
@@ -135,15 +192,13 @@ const PlaceholderScreen: React.FC<{ navigation: any; screenName: string }> = ({ 
       <View style={placeholderStyles.content}>
         <View style={placeholderStyles.card}>
           <Text style={placeholderStyles.emoji}>🚧</Text>
-          
-          <Text style={placeholderStyles.title}>
-            {getScreenTitle()}
-          </Text>
-          
+
+          <Text style={placeholderStyles.title}>{getScreenTitle()}</Text>
+
           <Text style={placeholderStyles.subtitle}>
             هذه الصفحة قيد التطوير{'\n'}ستكون متاحة قريباً
           </Text>
-          
+
           <TouchableOpacity
             style={placeholderStyles.button}
             onPress={() => navigation.goBack()}

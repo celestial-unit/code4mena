@@ -1,12 +1,11 @@
 /**
  * Mock Data Usage Examples
- * 
+ *
  * This file demonstrates how to use the mock data system in the Tunisian Legal App.
  * These examples show common patterns and best practices for working with mock data.
  */
 
-import { mockApiClient } from '../../services/mockApiClient';
-import { mockDataService } from '../../services/mockDataService';
+import { mockApiClient, mockDataService } from '../../services';
 import { mockDataManager, mockDataHelpers } from '../../utils';
 import { LegalCategory, Sector, User, LegalUpdate } from '../../types';
 
@@ -23,12 +22,14 @@ async function basicApiUsageExample() {
       page: 1,
       pageSize: 5,
       category: 'business_law',
-      priority: 'high'
+      priority: 'high',
     });
 
     if (updatesResponse.success && updatesResponse.data) {
       console.log(`Found ${updatesResponse.data.totalItems} legal updates`);
-      console.log(`Showing page ${updatesResponse.data.currentPage} of ${updatesResponse.data.totalPages}`);
+      console.log(
+        `Showing page ${updatesResponse.data.currentPage} of ${updatesResponse.data.totalPages}`
+      );
 
       updatesResponse.data.items.forEach((update: LegalUpdate) => {
         console.log(`- ${update.title} (${update.priority} priority)`);
@@ -43,7 +44,6 @@ async function basicApiUsageExample() {
       console.log(`Interests: ${user.profile.interests.join(', ')}`);
       console.log(`Total achievements: ${user.statistics.totalAchievements}`);
     }
-
   } catch (error) {
     console.error('API Error:', error);
   }
@@ -63,7 +63,7 @@ async function chatConversationExample() {
       title: 'Business Registration Help',
       category: 'business_law',
       sector: 'business',
-      language: 'ar'
+      language: 'ar',
     });
 
     if (newConversation.success && newConversation.data) {
@@ -73,28 +73,33 @@ async function chatConversationExample() {
       // Send a message
       const messageResponse = await mockApiClient.sendChatMessage({
         conversationId,
-        message: 'I want to start an e-commerce business in Tunisia. What do I need to know?',
+        message:
+          'I want to start an e-commerce business in Tunisia. What do I need to know?',
         userId: 'user-001',
-        language: 'ar'
+        language: 'ar',
       });
 
       if (messageResponse.success && messageResponse.data) {
         const conversation = messageResponse.data;
-        console.log(`\nConversation has ${conversation.messages.length} messages`);
+        console.log(
+          `\nConversation has ${conversation.messages.length} messages`
+        );
 
         // Display the latest AI response
-        const latestMessage = conversation.messages[conversation.messages.length - 1];
+        const latestMessage =
+          conversation.messages[conversation.messages.length - 1];
         if (latestMessage.type === 'ai') {
           console.log('\nAI Response:');
           console.log(latestMessage.content.substring(0, 200) + '...');
 
           if (latestMessage.mascotAnimation) {
-            console.log(`Mascot animation: ${latestMessage.mascotAnimation.type} (${latestMessage.mascotAnimation.sector})`);
+            console.log(
+              `Mascot animation: ${latestMessage.mascotAnimation.type} (${latestMessage.mascotAnimation.sector})`
+            );
           }
         }
       }
     }
-
   } catch (error) {
     console.error('Chat Error:', error);
   }
@@ -114,12 +119,12 @@ async function searchExample() {
       filters: {
         categories: ['business_law', 'administrative_law'],
         sectors: ['business'],
-        priority: ['high', 'medium']
+        priority: ['high', 'medium'],
       },
       sortBy: 'relevance',
       sortOrder: 'desc',
       page: 1,
-      pageSize: 3
+      pageSize: 3,
     });
 
     if (searchResponse.success && searchResponse.data) {
@@ -128,26 +133,30 @@ async function searchExample() {
 
       results.items.forEach((result: any, index: number) => {
         console.log(`\n${index + 1}. ${result.title}`);
-        console.log(`   Relevance: ${(result.relevanceScore * 100).toFixed(1)}%`);
+        console.log(
+          `   Relevance: ${(result.relevanceScore * 100).toFixed(1)}%`
+        );
         console.log(`   Source: ${result.source.name}`);
         console.log(`   Categories: ${result.category}`);
         console.log(`   Sectors: ${result.sectors.join(', ')}`);
 
         if (result.highlights.length > 0) {
-          console.log(`   Highlights: ${result.highlights.length} matches found`);
+          console.log(
+            `   Highlights: ${result.highlights.length} matches found`
+          );
         }
       });
     }
 
     // Get search suggestions
-    const suggestionsResponse = await mockApiClient.getSearchSuggestions('business');
+    const suggestionsResponse =
+      await mockApiClient.getSearchSuggestions('business');
     if (suggestionsResponse.success && suggestionsResponse.data) {
       console.log('\nSearch suggestions:');
       suggestionsResponse.data.forEach((suggestion: string) => {
         console.log(`- ${suggestion}`);
       });
     }
-
   } catch (error) {
     console.error('Search Error:', error);
   }
@@ -191,7 +200,6 @@ async function mascotExample() {
         });
       }
     }
-
   } catch (error) {
     console.error('Mascot Error:', error);
   }
@@ -208,13 +216,15 @@ async function dataManagementExample() {
   const newUpdate = mockDataManager.createLegalUpdate({
     title: 'New Startup Incentives Program',
     titleAr: 'برنامج حوافز الشركات الناشئة الجديد',
-    titleFr: 'Nouveau programme d\'incitations pour les startups',
+    titleFr: "Nouveau programme d'incitations pour les startups",
     category: 'business_law',
     priority: 'high',
     sectors: ['business', 'technology'],
-    content: 'The government has announced a new incentives program for technology startups...',
+    content:
+      'The government has announced a new incentives program for technology startups...',
     contentAr: 'أعلنت الحكومة عن برنامج حوافز جديد للشركات الناشئة التقنية...',
-    contentFr: 'Le gouvernement a annoncé un nouveau programme d\'incitations pour les startups technologiques...'
+    contentFr:
+      "Le gouvernement a annoncé un nouveau programme d'incitations pour les startups technologiques...",
   });
 
   console.log('Created new legal update:');
@@ -225,13 +235,18 @@ async function dataManagementExample() {
 
   // Validate the update
   const validation = mockDataManager.validateLegalUpdate(newUpdate);
-  console.log(`\nValidation result: ${validation.isValid ? 'Valid' : 'Invalid'}`);
+  console.log(
+    `\nValidation result: ${validation.isValid ? 'Valid' : 'Invalid'}`
+  );
   if (!validation.isValid) {
     console.log('Validation errors:', validation.errors);
   }
 
   // Generate multiple updates for a category
-  const businessUpdates = mockDataManager.generateLegalUpdatesByCategory('business_law', 3);
+  const businessUpdates = mockDataManager.generateLegalUpdatesByCategory(
+    'business_law',
+    3
+  );
   console.log(`\nGenerated ${businessUpdates.length} business law updates:`);
   businessUpdates.forEach((update: LegalUpdate, index: number) => {
     console.log(`${index + 1}. ${update.title}`);
@@ -250,8 +265,8 @@ async function dataManagementExample() {
       experienceLevel: 'intermediate',
       interests: ['hotel management', 'tourism regulations'],
       interestsAr: ['إدارة الفنادق', 'لوائح السياحة'],
-      interestsFr: ['gestion hôtelière', 'réglementations touristiques']
-    }
+      interestsFr: ['gestion hôtelière', 'réglementations touristiques'],
+    },
   });
 
   console.log(`\nCreated new user: ${newUser.name} (${newUser.nameAr})`);
@@ -268,7 +283,9 @@ async function dataAnalysisExample() {
   console.log('\n=== Data Analysis Example ===');
 
   // Get all legal updates
-  const allUpdatesResponse = await mockApiClient.getLegalUpdates({ pageSize: 100 });
+  const allUpdatesResponse = await mockApiClient.getLegalUpdates({
+    pageSize: 100,
+  });
 
   if (allUpdatesResponse.success && allUpdatesResponse.data) {
     const allUpdates = allUpdatesResponse.data.items;
@@ -304,7 +321,10 @@ async function dataAnalysisExample() {
 
     console.log('\nBy Category:');
     Object.entries(stats.byCategory).forEach(([category, count]) => {
-      const categoryName = mockDataHelpers.translateCategory(category as LegalCategory, 'en');
+      const categoryName = mockDataHelpers.translateCategory(
+        category as LegalCategory,
+        'en'
+      );
       console.log(`- ${categoryName}: ${count}`);
     });
 
@@ -382,14 +402,13 @@ async function errorHandlingExample() {
       title: '',
       content: '',
       category: 'invalid_category',
-      source: null
+      source: null,
     } as any;
 
     const validation = mockDataManager.validateLegalUpdate(invalidUpdate);
     console.log('\nValidation of invalid data:');
     console.log(`- Valid: ${validation.isValid}`);
     console.log(`- Errors: ${validation.errors.join(', ')}`);
-
   } catch (error) {
     console.error('Unexpected error:', error);
   }
@@ -423,5 +442,5 @@ export {
   dataAnalysisExample,
   localizationExample,
   errorHandlingExample,
-  runAllExamples
+  runAllExamples,
 };

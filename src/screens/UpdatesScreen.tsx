@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme, createThemedStyles } from '../contexts/ThemeContext';
 
 interface UpdatesScreenProps {
   navigation: any;
@@ -38,8 +39,10 @@ const mockUpdates: LegalUpdateItem[] = [
     id: '1',
     title: 'New Digital Tax Regulations for E-commerce',
     titleAr: 'لوائح ضريبية رقمية جديدة للتجارة الإلكترونية',
-    summary: 'Ministry of Finance announces new digital tax requirements for online businesses',
-    summaryAr: 'وزارة المالية تعلن متطلبات ضريبية رقمية جديدة للشركات الإلكترونية',
+    summary:
+      'Ministry of Finance announces new digital tax requirements for online businesses',
+    summaryAr:
+      'وزارة المالية تعلن متطلبات ضريبية رقمية جديدة للشركات الإلكترونية',
     category: 'tax_law',
     priority: 'high',
     source: 'Ministry of Finance',
@@ -55,7 +58,8 @@ const mockUpdates: LegalUpdateItem[] = [
     id: '2',
     title: 'Agricultural Land Reform Act Updates',
     titleAr: 'تحديثات قانون إصلاح الأراضي الزراعية',
-    summary: 'Parliament approves amendments to agricultural land ownership regulations',
+    summary:
+      'Parliament approves amendments to agricultural land ownership regulations',
     summaryAr: 'البرلمان يوافق على تعديلات لوائح ملكية الأراضي الزراعية',
     category: 'administrative_law',
     priority: 'high',
@@ -72,7 +76,8 @@ const mockUpdates: LegalUpdateItem[] = [
     id: '3',
     title: 'Remote Work Labor Code Amendments',
     titleAr: 'تعديلات قانون العمل للعمل عن بُعد',
-    summary: 'New regulations establish rights for remote workers and employers',
+    summary:
+      'New regulations establish rights for remote workers and employers',
     summaryAr: 'لوائح جديدة تحدد حقوق العاملين عن بُعد وأصحاب العمل',
     category: 'labor_law',
     priority: 'medium',
@@ -89,7 +94,8 @@ const mockUpdates: LegalUpdateItem[] = [
     id: '4',
     title: 'Tourism Recovery Incentives Package',
     titleAr: 'حزمة حوافز انتعاش السياحة',
-    summary: 'Government launches comprehensive support package for tourism sector',
+    summary:
+      'Government launches comprehensive support package for tourism sector',
     summaryAr: 'الحكومة تطلق حزمة دعم شاملة لقطاع السياحة',
     category: 'business_law',
     priority: 'medium',
@@ -108,6 +114,10 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState('all');
 
+  // Theme context
+  const { theme } = useTheme();
+  const styles = createThemedStyles(createStyles)(theme);
+
   const handleRefresh = async () => {
     setIsRefreshing(true);
     // Simulate API call
@@ -118,38 +128,65 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return '#E31E24';
-      case 'medium': return '#FF8C00';
-      case 'low': return '#2E8B57';
-      default: return '#666666';
+      case 'high':
+        return theme.colors.primary;
+      case 'medium':
+        return theme.colors.warning;
+      case 'low':
+        return theme.colors.success;
+      default:
+        return theme.colors.textSecondary;
     }
   };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'business_law': return 'business';
-      case 'tax_law': return 'calculator';
-      case 'labor_law': return 'people';
-      case 'administrative_law': return 'document-text';
-      case 'family_law': return 'home';
-      case 'environmental_law': return 'leaf';
-      default: return 'document';
+      case 'business_law':
+        return 'business';
+      case 'tax_law':
+        return 'calculator';
+      case 'labor_law':
+        return 'people';
+      case 'administrative_law':
+        return 'document-text';
+      case 'family_law':
+        return 'home';
+      case 'environmental_law':
+        return 'leaf';
+      default:
+        return 'document';
     }
   };
 
   const filters = [
     { key: 'all', label: 'الكل', count: mockUpdates.length },
-    { key: 'unread', label: 'غير مقروءة', count: mockUpdates.filter(u => !u.isRead).length },
-    { key: 'high', label: 'عالية الأولوية', count: mockUpdates.filter(u => u.priority === 'high').length },
-    { key: 'bookmarked', label: 'محفوظة', count: mockUpdates.filter(u => u.isBookmarked).length },
+    {
+      key: 'unread',
+      label: 'غير مقروءة',
+      count: mockUpdates.filter(u => !u.isRead).length,
+    },
+    {
+      key: 'high',
+      label: 'عالية الأولوية',
+      count: mockUpdates.filter(u => u.priority === 'high').length,
+    },
+    {
+      key: 'bookmarked',
+      label: 'محفوظة',
+      count: mockUpdates.filter(u => u.isBookmarked).length,
+    },
   ];
 
   const filteredUpdates = mockUpdates.filter(update => {
     switch (selectedFilter) {
-      case 'unread': return !update.isRead;
-      case 'high': return update.priority === 'high';
-      case 'bookmarked': return update.isBookmarked;
-      default: return true;
+      case 'unread':
+        return !update.isRead;
+      case 'high':
+        return update.priority === 'high';
+      case 'bookmarked':
+        return update.isBookmarked;
+      default:
+        return true;
     }
   });
 
@@ -160,10 +197,12 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
         <View style={styles.headerTitle}>
           <Text style={styles.titleText}>التحديثات القانونية</Text>
           <View style={styles.updatesBadge}>
-            <Text style={styles.updatesCount}>{mockUpdates.filter(u => !u.isRead).length}</Text>
+            <Text style={styles.updatesCount}>
+              {mockUpdates.filter(u => !u.isRead).length}
+            </Text>
           </View>
         </View>
-        
+
         <TouchableOpacity style={styles.searchButton}>
           <Ionicons name="search" size={24} color="#E31E24" />
         </TouchableOpacity>
@@ -173,19 +212,21 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
       <View style={styles.filterContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={styles.filterTabs}>
-            {filters.map((filter) => (
+            {filters.map(filter => (
               <TouchableOpacity
                 key={filter.key}
                 style={[
                   styles.filterTab,
-                  selectedFilter === filter.key && styles.activeFilterTab
+                  selectedFilter === filter.key && styles.activeFilterTab,
                 ]}
                 onPress={() => setSelectedFilter(filter.key)}
               >
-                <Text style={[
-                  styles.filterText,
-                  selectedFilter === filter.key && styles.activeFilterText
-                ]}>
+                <Text
+                  style={[
+                    styles.filterText,
+                    selectedFilter === filter.key && styles.activeFilterText,
+                  ]}
+                >
                   {filter.label}
                 </Text>
                 {filter.count > 0 && (
@@ -206,35 +247,40 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={handleRefresh}
-            colors={['#E31E24', '#D4AF37']}
-            tintColor="#E31E24"
+            colors={[theme.colors.primary, theme.colors.accent]}
+            tintColor={theme.colors.primary}
           />
         }
       >
-        {filteredUpdates.map((update) => (
+        {filteredUpdates.map(update => (
           <TouchableOpacity
             key={update.id}
-            style={[
-              styles.updateItem,
-              !update.isRead && styles.unreadUpdate
-            ]}
-            onPress={() => navigation.navigate('LegalUpdateDetail', { updateId: update.id })}
+            style={[styles.updateItem, !update.isRead && styles.unreadUpdate]}
+            onPress={() =>
+              navigation.navigate('LegalUpdateDetail', { updateId: update.id })
+            }
           >
             {/* Priority and Read Status Indicators */}
-            <View style={[
-              styles.priorityIndicator,
-              { backgroundColor: getPriorityColor(update.priority) }
-            ]} />
-            
+            <View
+              style={[
+                styles.priorityIndicator,
+                { backgroundColor: getPriorityColor(update.priority) },
+              ]}
+            />
+
             {!update.isRead && <View style={styles.unreadDot} />}
 
             {/* Header */}
             <View style={styles.updateHeader}>
               <View style={styles.updateMeta}>
-                <View style={[
-                  styles.categoryIcon,
-                  { backgroundColor: getPriorityColor(update.priority) + '15' }
-                ]}>
+                <View
+                  style={[
+                    styles.categoryIcon,
+                    {
+                      backgroundColor: getPriorityColor(update.priority) + '15',
+                    },
+                  ]}
+                >
                   <Ionicons
                     name={getCategoryIcon(update.category) as any}
                     size={16}
@@ -282,7 +328,9 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
                 </View>
               ))}
               {update.tagsAr.length > 2 && (
-                <Text style={styles.moreTagsText}>+{update.tagsAr.length - 2}</Text>
+                <Text style={styles.moreTagsText}>
+                  +{update.tagsAr.length - 2}
+                </Text>
               )}
             </View>
 
@@ -300,7 +348,7 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
         {filteredUpdates.length === 0 && (
           <View style={styles.emptyState}>
             <LinearGradient
-              colors={['#E31E24', '#D4AF37']}
+              colors={[theme.colors.gradientStart, theme.colors.gradientEnd]}
               style={styles.emptyIcon}
             >
               <Ionicons name="newspaper" size={48} color="#FFFFFF" />
@@ -319,254 +367,256 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8F9FA',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  headerTitle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  titleText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-  },
-  updatesBadge: {
-    marginLeft: 8,
-    backgroundColor: '#E31E24',
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-  },
-  updatesCount: {
-    fontSize: 12,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-  },
-  searchButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFF5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  filterContainer: {
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  filterTabs: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  filterTab: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#F5F5F5',
-    marginRight: 12,
-  },
-  activeFilterTab: {
-    backgroundColor: '#E31E24',
-  },
-  filterText: {
-    fontSize: 14,
-    color: '#666666',
-    fontWeight: '500',
-  },
-  activeFilterText: {
-    color: '#FFFFFF',
-  },
-  filterBadge: {
-    marginLeft: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: 8,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-  },
-  filterBadgeText: {
-    fontSize: 10,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-  },
-  updatesList: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  updateItem: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    marginVertical: 6,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    position: 'relative',
-  },
-  unreadUpdate: {
-    borderLeftWidth: 4,
-    borderLeftColor: '#E31E24',
-  },
-  priorityIndicator: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 4,
-    height: '100%',
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 12,
-  },
-  unreadDot: {
-    position: 'absolute',
-    top: 16,
-    left: 16,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#E31E24',
-  },
-  updateHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 12,
-    marginLeft: 16, // Account for unread dot
-  },
-  updateMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  categoryIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  sourceInfo: {
-    flex: 1,
-  },
-  updateSource: {
-    fontSize: 12,
-    color: '#666666',
-    fontWeight: '500',
-  },
-  updateTime: {
-    fontSize: 11,
-    color: '#999999',
-    marginTop: 2,
-  },
-  updateActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  bookmarkButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  updateContent: {
-    marginLeft: 16, // Account for unread dot
-    marginBottom: 12,
-  },
-  updateTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    lineHeight: 22,
-    marginBottom: 8,
-  },
-  updateSummary: {
-    fontSize: 14,
-    color: '#666666',
-    lineHeight: 20,
-  },
-  updateTags: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 16, // Account for unread dot
-  },
-  tag: {
-    backgroundColor: '#F0F0F0',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginRight: 6,
-  },
-  tagText: {
-    fontSize: 10,
-    color: '#666666',
-    fontWeight: '500',
-  },
-  moreTagsText: {
-    fontSize: 10,
-    color: '#999999',
-    fontWeight: '500',
-  },
-  highPriorityBadge: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#E31E24',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  highPriorityText: {
-    fontSize: 10,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    marginLeft: 4,
-  },
-  emptyState: {
-    alignItems: 'center',
-    paddingVertical: 60,
-  },
-  emptyIcon: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  emptyTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 8,
-  },
-  emptyMessage: {
-    fontSize: 16,
-    color: '#666666',
-    textAlign: 'center',
-  },
-  bottomSpacing: {
-    height: 100,
-  },
-});
+const createStyles = createThemedStyles(theme =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      backgroundColor: theme.colors.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+    },
+    headerTitle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    titleText: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: theme.colors.text,
+    },
+    updatesBadge: {
+      marginLeft: 8,
+      backgroundColor: theme.colors.primary,
+      borderRadius: 10,
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+    },
+    updatesCount: {
+      fontSize: 12,
+      color: '#FFFFFF',
+      fontWeight: 'bold',
+    },
+    searchButton: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: theme.colors.primary + '15',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    filterContainer: {
+      backgroundColor: theme.colors.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+    },
+    filterTabs: {
+      flexDirection: 'row',
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+    },
+    filterTab: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      borderRadius: 20,
+      backgroundColor: theme.colors.card,
+      marginRight: 12,
+    },
+    activeFilterTab: {
+      backgroundColor: theme.colors.primary,
+    },
+    filterText: {
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+      fontWeight: '500',
+    },
+    activeFilterText: {
+      color: '#FFFFFF',
+    },
+    filterBadge: {
+      marginLeft: 6,
+      backgroundColor: 'rgba(255, 255, 255, 0.3)',
+      borderRadius: 8,
+      paddingHorizontal: 6,
+      paddingVertical: 2,
+    },
+    filterBadgeText: {
+      fontSize: 10,
+      color: '#FFFFFF',
+      fontWeight: 'bold',
+    },
+    updatesList: {
+      flex: 1,
+      paddingHorizontal: 16,
+    },
+    updateItem: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: 12,
+      padding: 16,
+      marginVertical: 6,
+      elevation: 2,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+      position: 'relative',
+    },
+    unreadUpdate: {
+      borderLeftWidth: 4,
+      borderLeftColor: theme.colors.primary,
+    },
+    priorityIndicator: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      width: 4,
+      height: '100%',
+      borderTopRightRadius: 12,
+      borderBottomRightRadius: 12,
+    },
+    unreadDot: {
+      position: 'absolute',
+      top: 16,
+      left: 16,
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: theme.colors.primary,
+    },
+    updateHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      marginBottom: 12,
+      marginLeft: 16, // Account for unread dot
+    },
+    updateMeta: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+    },
+    categoryIcon: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 12,
+    },
+    sourceInfo: {
+      flex: 1,
+    },
+    updateSource: {
+      fontSize: 12,
+      color: theme.colors.textSecondary,
+      fontWeight: '500',
+    },
+    updateTime: {
+      fontSize: 11,
+      color: theme.colors.textTertiary,
+      marginTop: 2,
+    },
+    updateActions: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    bookmarkButton: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      backgroundColor: theme.colors.card,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    updateContent: {
+      marginLeft: 16, // Account for unread dot
+      marginBottom: 12,
+    },
+    updateTitle: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: theme.colors.text,
+      lineHeight: 22,
+      marginBottom: 8,
+    },
+    updateSummary: {
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+      lineHeight: 20,
+    },
+    updateTags: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginLeft: 16, // Account for unread dot
+    },
+    tag: {
+      backgroundColor: theme.colors.card,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 12,
+      marginRight: 6,
+    },
+    tagText: {
+      fontSize: 10,
+      color: theme.colors.textSecondary,
+      fontWeight: '500',
+    },
+    moreTagsText: {
+      fontSize: 10,
+      color: theme.colors.textTertiary,
+      fontWeight: '500',
+    },
+    highPriorityBadge: {
+      position: 'absolute',
+      top: 12,
+      right: 12,
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: theme.colors.primary,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 12,
+    },
+    highPriorityText: {
+      fontSize: 10,
+      color: '#FFFFFF',
+      fontWeight: 'bold',
+      marginLeft: 4,
+    },
+    emptyState: {
+      alignItems: 'center',
+      paddingVertical: 60,
+    },
+    emptyIcon: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 16,
+    },
+    emptyTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: theme.colors.text,
+      marginBottom: 8,
+    },
+    emptyMessage: {
+      fontSize: 16,
+      color: theme.colors.textSecondary,
+      textAlign: 'center',
+    },
+    bottomSpacing: {
+      height: 100,
+    },
+  })
+);

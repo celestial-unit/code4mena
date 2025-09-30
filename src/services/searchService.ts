@@ -6,7 +6,7 @@ import {
   SavedSearch,
   SearchSuggestion,
   ApiResponse,
-  PaginatedResponse
+  PaginatedResponse,
 } from '../types';
 import apiService from './api';
 import { legalService } from './legalService';
@@ -57,20 +57,24 @@ export class SearchService {
         searchTime: 0,
         timestamp: new Date(),
         isBookmarked: false,
-        searchType: 'semantic'
+        searchType: 'semantic',
       };
 
       const startTime = Date.now();
 
       // Use the new legal service API
-      const response = await apiService.get<any[]>(`/api/v1/legal/search-results?${new URLSearchParams({
-        query,
-        language,
-        limit: pageSize.toString(),
-        offset: ((page - 1) * pageSize).toString(),
-        ...(filters.categories?.length ? { category: filters.categories[0] } : {}),
-        ...(filters.sectors?.length ? { sector: filters.sectors[0] } : {})
-      }).toString()}`);
+      const response = await apiService.get<any[]>(
+        `/api/v1/legal/search-results?${new URLSearchParams({
+          query,
+          language,
+          limit: pageSize.toString(),
+          offset: ((page - 1) * pageSize).toString(),
+          ...(filters.categories?.length
+            ? { category: filters.categories[0] }
+            : {}),
+          ...(filters.sectors?.length ? { sector: filters.sectors[0] } : {}),
+        }).toString()}`
+      );
 
       // Transform API response to match expected format
       const searchResults: SearchResult[] = response.map((item: any) => ({
@@ -86,14 +90,18 @@ export class SearchService {
         sourceFr: item.sourceFr || item.source || 'Source inconnue',
         category: item.category || 'general',
         tags: item.tags || [],
-        publishedAt: new Date(item.publishedAt || item.published_at || Date.now()),
-        lastUpdated: new Date(item.lastUpdated || item.last_updated || Date.now()),
+        publishedAt: new Date(
+          item.publishedAt || item.published_at || Date.now()
+        ),
+        lastUpdated: new Date(
+          item.lastUpdated || item.last_updated || Date.now()
+        ),
         relevanceScore: item.relevanceScore || item.relevance_score || 0.5,
         priority: item.priority || 'medium',
         url: item.url,
         isBookmarked: false,
         viewCount: item.viewCount || 0,
-        language: language as any
+        language: language as any,
       }));
 
       searchQuery.results = searchResults;
@@ -112,10 +120,10 @@ export class SearchService {
           currentPage: page,
           pageSize,
           hasNext: response.length === pageSize,
-          hasPrevious: page > 1
+          hasPrevious: page > 1,
         },
         timestamp: new Date(),
-        requestId: `search-${Date.now()}`
+        requestId: `search-${Date.now()}`,
       };
 
       return apiResponse;
@@ -127,10 +135,10 @@ export class SearchService {
           code: 'SEARCH_ERROR',
           message: 'Failed to perform search',
           messageAr: 'فشل في تنفيذ البحث',
-          messageFr: 'Échec de la recherche'
+          messageFr: 'Échec de la recherche',
         },
         timestamp: new Date(),
-        requestId: `error-${Date.now()}`
+        requestId: `error-${Date.now()}`,
       };
     }
   }
@@ -157,8 +165,8 @@ export class SearchService {
             successRate: Math.random(),
             averageResultCount: Math.floor(Math.random() * 50),
             userSpecific: false,
-            trending: Math.random() > 0.7
-          }
+            trending: Math.random() > 0.7,
+          },
         }));
       }
 
@@ -181,7 +189,7 @@ export class SearchService {
       'قانون الأسرة',
       'العقود التجارية',
       'الإجراءات الإدارية',
-      'قانون البيئة'
+      'قانون البيئة',
     ];
 
     return popularQueries.map((query, index) => ({
@@ -190,15 +198,15 @@ export class SearchService {
       textAr: query,
       textFr: this.translateToFrench(query),
       type: 'popular' as const,
-      popularity: 100 - (index * 10),
-      relevanceScore: 0.9 - (index * 0.1),
+      popularity: 100 - index * 10,
+      relevanceScore: 0.9 - index * 0.1,
       metadata: {
-        searchCount: 1000 - (index * 100),
-        successRate: 0.9 - (index * 0.05),
-        averageResultCount: 25 - (index * 2),
+        searchCount: 1000 - index * 100,
+        successRate: 0.9 - index * 0.05,
+        averageResultCount: 25 - index * 2,
         userSpecific: false,
-        trending: index < 3
-      }
+        trending: index < 3,
+      },
     }));
   }
 
@@ -230,7 +238,9 @@ export class SearchService {
    * Remove specific search from history
    */
   async removeFromSearchHistory(searchId: string): Promise<void> {
-    this.searchHistory = this.searchHistory.filter(search => search.id !== searchId);
+    this.searchHistory = this.searchHistory.filter(
+      search => search.id !== searchId
+    );
     await this.saveSearchHistory();
   }
 
@@ -258,7 +268,7 @@ export class SearchService {
       resultCount: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
-      isActive: true
+      isActive: true,
     };
 
     this.savedSearches.push(savedSearch);
@@ -279,7 +289,9 @@ export class SearchService {
    * Delete saved search
    */
   async deleteSavedSearch(searchId: string): Promise<void> {
-    this.savedSearches = this.savedSearches.filter(search => search.id !== searchId);
+    this.savedSearches = this.savedSearches.filter(
+      search => search.id !== searchId
+    );
     await this.saveSavedSearches();
   }
 
@@ -291,7 +303,9 @@ export class SearchService {
     page: number = 1,
     pageSize: number = 10
   ): Promise<ApiResponse<PaginatedResponse<SearchResult>>> {
-    const savedSearch = this.savedSearches.find(search => search.id === savedSearchId);
+    const savedSearch = this.savedSearches.find(
+      search => search.id === savedSearchId
+    );
 
     if (!savedSearch) {
       return {
@@ -300,10 +314,10 @@ export class SearchService {
           code: 'SAVED_SEARCH_NOT_FOUND',
           message: 'Saved search not found',
           messageAr: 'البحث المحفوظ غير موجود',
-          messageFr: 'Recherche sauvegardée introuvable'
+          messageFr: 'Recherche sauvegardée introuvable',
         },
         timestamp: new Date(),
-        requestId: `error-${Date.now()}`
+        requestId: `error-${Date.now()}`,
       };
     }
 
@@ -333,7 +347,7 @@ export class SearchService {
       contentTypes: [],
       languages: ['ar'],
       sortBy: 'relevance',
-      sortOrder: 'desc'
+      sortOrder: 'desc',
     };
   }
 
@@ -357,7 +371,7 @@ export class SearchService {
     const defaultFilters = this.getDefaultFilters();
     return {
       ...defaultFilters,
-      ...filters
+      ...filters,
     };
   }
 
@@ -395,8 +409,8 @@ export class SearchService {
           results: item.results.map((result: any) => ({
             ...result,
             publishedAt: new Date(result.publishedAt),
-            lastUpdated: new Date(result.lastUpdated)
-          }))
+            lastUpdated: new Date(result.lastUpdated),
+          })),
         }));
       }
     } catch (error) {
@@ -413,7 +427,10 @@ export class SearchService {
         return;
       }
 
-      await AsyncStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(this.searchHistory));
+      await AsyncStorage.setItem(
+        SEARCH_HISTORY_KEY,
+        JSON.stringify(this.searchHistory)
+      );
     } catch (error) {
       console.error('Failed to save search history:', error);
     }
@@ -434,7 +451,9 @@ export class SearchService {
           ...item,
           createdAt: new Date(item.createdAt),
           updatedAt: new Date(item.updatedAt),
-          lastExecuted: item.lastExecuted ? new Date(item.lastExecuted) : undefined
+          lastExecuted: item.lastExecuted
+            ? new Date(item.lastExecuted)
+            : undefined,
         }));
       }
     } catch (error) {
@@ -451,7 +470,10 @@ export class SearchService {
         return;
       }
 
-      await AsyncStorage.setItem(SAVED_SEARCHES_KEY, JSON.stringify(this.savedSearches));
+      await AsyncStorage.setItem(
+        SAVED_SEARCHES_KEY,
+        JSON.stringify(this.savedSearches)
+      );
     } catch (error) {
       console.error('Failed to save searches:', error);
     }
@@ -467,7 +489,7 @@ export class SearchService {
       'organic certification process': 'عملية الشهادة العضوية',
       'family law updates': 'تحديثات قانون الأسرة',
       'labor code amendments': 'تعديلات قانون العمل',
-      'environmental compliance': 'الامتثال البيئي'
+      'environmental compliance': 'الامتثال البيئي',
     };
 
     return translations[text.toLowerCase()] || text;
@@ -483,7 +505,7 @@ export class SearchService {
       'قانون الأسرة': 'Droit de la famille',
       'العقود التجارية': 'Contrats commerciaux',
       'الإجراءات الإدارية': 'Procédures administratives',
-      'قانون البيئة': 'Droit de l\'environnement'
+      'قانون البيئة': "Droit de l'environnement",
     };
 
     return translations[text] || text;

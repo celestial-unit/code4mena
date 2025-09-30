@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import {
   ErrorDisplay,
   NetworkStatusIndicator,
-  LoadingOverlay
+  LoadingOverlay,
 } from '../components/common';
 import { useErrorHandler } from '../hooks/useErrorHandler';
 import { useNetworkState } from '../utils/networkUtils';
@@ -23,15 +23,19 @@ interface ErrorTestScreenProps {
   navigation: any;
 }
 
-export const ErrorTestScreen: React.FC<ErrorTestScreenProps> = ({ navigation }) => {
+export const ErrorTestScreen: React.FC<ErrorTestScreenProps> = ({
+  navigation,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [testResult, setTestResult] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'error' | 'integration'>('error');
 
-  const { error, isRetrying, handleError, clearError, retry } = useErrorHandler({
-    maxRetries: 3,
-    showAlert: false
-  });
+  const { error, isRetrying, handleError, clearError, retry } = useErrorHandler(
+    {
+      maxRetries: 3,
+      showAlert: false,
+    }
+  );
   const networkState = useNetworkState();
 
   const testNetworkError = () => {
@@ -56,10 +60,7 @@ export const ErrorTestScreen: React.FC<ErrorTestScreenProps> = ({ navigation }) 
   };
 
   const testAuthError = () => {
-    handleError(
-      { code: '401', message: 'Unauthorized' },
-      'غير مصرح بالوصول'
-    );
+    handleError({ code: '401', message: 'Unauthorized' }, 'غير مصرح بالوصول');
   };
 
   const testApiCall = async () => {
@@ -74,7 +75,9 @@ export const ErrorTestScreen: React.FC<ErrorTestScreenProps> = ({ navigation }) 
       }
 
       const response = await apiService.healthCheck();
-      setTestResult(`نجح الاتصال! حالة الخادم: ${JSON.stringify(response, null, 2)}`);
+      setTestResult(
+        `نجح الاتصال! حالة الخادم: ${JSON.stringify(response, null, 2)}`
+      );
     } catch (err) {
       handleError(err, 'فشل في اختبار الاتصال بالخادم');
     } finally {
@@ -92,7 +95,9 @@ export const ErrorTestScreen: React.FC<ErrorTestScreenProps> = ({ navigation }) 
       const result = await testBackendConnection();
 
       if (result.success) {
-        setTestResult(`✅ نجح الاتصال مع Gemini Live API!\n\nتفاصيل الاختبار:\n${JSON.stringify(result, null, 2)}`);
+        setTestResult(
+          `✅ نجح الاتصال مع Gemini Live API!\n\nتفاصيل الاختبار:\n${JSON.stringify(result, null, 2)}`
+        );
       } else {
         throw new Error(result.error || 'فشل الاتصال');
       }
@@ -148,7 +153,12 @@ export const ErrorTestScreen: React.FC<ErrorTestScreenProps> = ({ navigation }) 
           style={[styles.tab, activeTab === 'error' && styles.activeTab]}
           onPress={() => setActiveTab('error')}
         >
-          <Text style={[styles.tabText, activeTab === 'error' && styles.activeTabText]}>
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === 'error' && styles.activeTabText,
+            ]}
+          >
             اختبار الأخطاء
           </Text>
         </TouchableOpacity>
@@ -156,7 +166,12 @@ export const ErrorTestScreen: React.FC<ErrorTestScreenProps> = ({ navigation }) 
           style={[styles.tab, activeTab === 'integration' && styles.activeTab]}
           onPress={() => setActiveTab('integration')}
         >
-          <Text style={[styles.tabText, activeTab === 'integration' && styles.activeTabText]}>
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === 'integration' && styles.activeTabText,
+            ]}
+          >
             اختبار التكامل
           </Text>
         </TouchableOpacity>
@@ -165,26 +180,37 @@ export const ErrorTestScreen: React.FC<ErrorTestScreenProps> = ({ navigation }) 
       {activeTab === 'integration' ? (
         <IntegrationTestRunner />
       ) : (
-        <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
+        <ScrollView
+          style={styles.content}
+          contentContainerStyle={styles.contentContainer}
+        >
           {/* Network Status */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>حالة الشبكة</Text>
             <View style={styles.statusCard}>
               <View style={styles.statusRow}>
                 <Text style={styles.statusLabel}>متصل:</Text>
-                <Text style={[
-                  styles.statusValue,
-                  { color: networkState.isConnected ? '#4CAF50' : '#F44336' }
-                ]}>
+                <Text
+                  style={[
+                    styles.statusValue,
+                    { color: networkState.isConnected ? '#4CAF50' : '#F44336' },
+                  ]}
+                >
                   {networkState.isConnected ? 'نعم' : 'لا'}
                 </Text>
               </View>
               <View style={styles.statusRow}>
                 <Text style={styles.statusLabel}>الإنترنت متاح:</Text>
-                <Text style={[
-                  styles.statusValue,
-                  { color: networkState.isInternetReachable ? '#4CAF50' : '#F44336' }
-                ]}>
+                <Text
+                  style={[
+                    styles.statusValue,
+                    {
+                      color: networkState.isInternetReachable
+                        ? '#4CAF50'
+                        : '#F44336',
+                    },
+                  ]}
+                >
                   {networkState.isInternetReachable ? 'نعم' : 'لا'}
                 </Text>
               </View>
@@ -199,23 +225,39 @@ export const ErrorTestScreen: React.FC<ErrorTestScreenProps> = ({ navigation }) 
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>اختبار أنواع الأخطاء</Text>
             <View style={styles.buttonGrid}>
-              <TouchableOpacity style={styles.testButton} onPress={testNetworkError}>
+              <TouchableOpacity
+                style={styles.testButton}
+                onPress={testNetworkError}
+              >
                 <Ionicons name="wifi" size={24} color="#FFFFFF" />
                 <Text style={styles.testButtonText}>خطأ شبكة</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.testButton} onPress={testServerError}>
+              <TouchableOpacity
+                style={styles.testButton}
+                onPress={testServerError}
+              >
                 <Ionicons name="server-outline" size={24} color="#FFFFFF" />
                 <Text style={styles.testButtonText}>خطأ خادم</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.testButton} onPress={testTimeoutError}>
+              <TouchableOpacity
+                style={styles.testButton}
+                onPress={testTimeoutError}
+              >
                 <Ionicons name="time-outline" size={24} color="#FFFFFF" />
                 <Text style={styles.testButtonText}>انتهاء المهلة</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.testButton} onPress={testAuthError}>
-                <Ionicons name="lock-closed-outline" size={24} color="#FFFFFF" />
+              <TouchableOpacity
+                style={styles.testButton}
+                onPress={testAuthError}
+              >
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={24}
+                  color="#FFFFFF"
+                />
                 <Text style={styles.testButtonText}>خطأ مصادقة</Text>
               </TouchableOpacity>
             </View>
@@ -230,7 +272,7 @@ export const ErrorTestScreen: React.FC<ErrorTestScreenProps> = ({ navigation }) 
               disabled={isLoading}
             >
               <Ionicons
-                name={isLoading ? "hourglass-outline" : "cloud-outline"}
+                name={isLoading ? 'hourglass-outline' : 'cloud-outline'}
                 size={24}
                 color="#FFFFFF"
               />
@@ -240,18 +282,15 @@ export const ErrorTestScreen: React.FC<ErrorTestScreenProps> = ({ navigation }) 
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.geminiTestButton, isLoading && styles.disabledButton]}
+              style={[
+                styles.geminiTestButton,
+                isLoading && styles.disabledButton,
+              ]}
               onPress={testGeminiConnection}
               disabled={isLoading}
             >
-              <Ionicons
-                name="flash"
-                size={24}
-                color="#FFFFFF"
-              />
-              <Text style={styles.apiTestButtonText}>
-                اختبار Gemini Live
-              </Text>
+              <Ionicons name="flash" size={24} color="#FFFFFF" />
+              <Text style={styles.apiTestButtonText}>اختبار Gemini Live</Text>
             </TouchableOpacity>
 
             {testResult && (
@@ -267,7 +306,8 @@ export const ErrorTestScreen: React.FC<ErrorTestScreenProps> = ({ navigation }) 
             <Text style={styles.sectionTitle}>التعليمات</Text>
             <View style={styles.instructionsCard}>
               <Text style={styles.instructionText}>
-                • اضغط على أزرار اختبار الأخطاء لمشاهدة كيفية عرض الأخطاء المختلفة
+                • اضغط على أزرار اختبار الأخطاء لمشاهدة كيفية عرض الأخطاء
+                المختلفة
               </Text>
               <Text style={styles.instructionText}>
                 • استخدم زر "اختبار الاتصال" لاختبار الاتصال الفعلي بالخادم

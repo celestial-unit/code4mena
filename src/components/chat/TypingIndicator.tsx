@@ -1,11 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Animated,
-  Dimensions,
-} from 'react-native';
+import { View, Text, StyleSheet, Animated, Dimensions } from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -69,17 +63,17 @@ export const TypingIndicator: React.FC = () => {
   });
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.container,
-        { opacity: containerAnim, transform: [{ scale: containerAnim }] }
+        { opacity: containerAnim, transform: [{ scale: containerAnim }] },
       ]}
     >
       <View style={styles.typingContainer}>
         <View style={styles.aiAvatar}>
           <Text style={styles.aiAvatarText}>⚖️</Text>
         </View>
-        
+
         <View style={styles.typingBubble}>
           <View style={styles.typingContent}>
             <Text style={styles.typingText}>يكتب</Text>

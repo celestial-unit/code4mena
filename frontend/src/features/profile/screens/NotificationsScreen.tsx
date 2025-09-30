@@ -73,25 +73,37 @@ const mockNotifications: NotificationItem[] = [
   },
 ];
 
-export const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ navigation }) => {
+export const NotificationsScreen: React.FC<NotificationsScreenProps> = ({
+  navigation,
+}) => {
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case 'legal_update': return 'document-text';
-      case 'achievement': return 'trophy';
-      case 'reminder': return 'time';
-      case 'system': return 'settings';
-      default: return 'notifications';
+      case 'legal_update':
+        return 'document-text';
+      case 'achievement':
+        return 'trophy';
+      case 'reminder':
+        return 'time';
+      case 'system':
+        return 'settings';
+      default:
+        return 'notifications';
     }
   };
 
   const getNotificationColor = (type: string, priority: string) => {
     if (priority === 'high') return '#E31E24';
     switch (type) {
-      case 'legal_update': return '#E31E24';
-      case 'achievement': return '#D4AF37';
-      case 'reminder': return '#2E8B57';
-      case 'system': return '#666666';
-      default: return '#666666';
+      case 'legal_update':
+        return '#E31E24';
+      case 'achievement':
+        return '#D4AF37';
+      case 'reminder':
+        return '#2E8B57';
+      case 'system':
+        return '#666666';
+      default:
+        return '#666666';
     }
   };
 
@@ -101,13 +113,13 @@ export const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ naviga
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
           <Ionicons name="arrow-back" size={24} color="#E31E24" />
         </TouchableOpacity>
-        
+
         <View style={styles.headerTitle}>
           <Text style={styles.titleText}>الإشعارات</Text>
           {unreadCount > 0 && (
@@ -116,7 +128,7 @@ export const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ naviga
             </View>
           )}
         </View>
-        
+
         <TouchableOpacity style={styles.markAllButton}>
           <Ionicons name="checkmark-done" size={24} color="#E31E24" />
         </TouchableOpacity>
@@ -132,14 +144,19 @@ export const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ naviga
               { key: 'legal', label: 'قانونية', count: 2 },
               { key: 'achievements', label: 'إنجازات', count: 1 },
             ].map((filter, index) => (
-              <TouchableOpacity key={filter.key} style={[
-                styles.filterTab,
-                index === 0 && styles.activeFilterTab
-              ]}>
-                <Text style={[
-                  styles.filterText,
-                  index === 0 && styles.activeFilterText
-                ]}>
+              <TouchableOpacity
+                key={filter.key}
+                style={[
+                  styles.filterTab,
+                  index === 0 && styles.activeFilterTab,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.filterText,
+                    index === 0 && styles.activeFilterText,
+                  ]}
+                >
                   {filter.label}
                 </Text>
                 {filter.count > 0 && (
@@ -156,22 +173,36 @@ export const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ naviga
       {/* Notifications List */}
       <ScrollView style={styles.notificationsList}>
         {mockNotifications.map((notification, index) => (
-          <TouchableOpacity key={notification.id} style={[
-            styles.notificationItem,
-            !notification.isRead && styles.unreadNotification
-          ]}>
+          <TouchableOpacity
+            key={notification.id}
+            style={[
+              styles.notificationItem,
+              !notification.isRead && styles.unreadNotification,
+            ]}
+          >
             {/* Unread indicator */}
             {!notification.isRead && <View style={styles.unreadIndicator} />}
-            
+
             {/* Icon */}
-            <View style={[
-              styles.notificationIcon,
-              { backgroundColor: getNotificationColor(notification.type, notification.priority) + '15' }
-            ]}>
-              <Ionicons 
-                name={getNotificationIcon(notification.type) as any} 
-                size={24} 
-                color={getNotificationColor(notification.type, notification.priority)} 
+            <View
+              style={[
+                styles.notificationIcon,
+                {
+                  backgroundColor:
+                    getNotificationColor(
+                      notification.type,
+                      notification.priority
+                    ) + '15',
+                },
+              ]}
+            >
+              <Ionicons
+                name={getNotificationIcon(notification.type) as any}
+                size={24}
+                color={getNotificationColor(
+                  notification.type,
+                  notification.priority
+                )}
               />
             </View>
 
@@ -181,11 +212,9 @@ export const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ naviga
                 <Text style={styles.notificationTitle}>
                   {notification.titleAr}
                 </Text>
-                <Text style={styles.notificationTime}>
-                  {notification.time}
-                </Text>
+                <Text style={styles.notificationTime}>{notification.time}</Text>
               </View>
-              
+
               <Text style={styles.notificationMessage}>
                 {notification.messageAr}
               </Text>

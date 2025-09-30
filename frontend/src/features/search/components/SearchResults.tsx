@@ -99,7 +99,9 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
     }
 
     // Simple highlighting - in a real app, you'd parse the highlight markers
-    const highlightedText = text.replace(/<mark>/g, '').replace(/<\/mark>/g, '');
+    const highlightedText = text
+      .replace(/<mark>/g, '')
+      .replace(/<\/mark>/g, '');
     return <Text style={styles.resultExcerpt}>{highlightedText}</Text>;
   };
 
@@ -112,10 +114,12 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
       {/* Header with source and bookmark */}
       <View style={styles.resultHeader}>
         <View style={styles.sourceInfo}>
-          <View style={[
-            styles.sourceIcon,
-            { backgroundColor: getSourceColor(item.source.type) }
-          ]}>
+          <View
+            style={[
+              styles.sourceIcon,
+              { backgroundColor: getSourceColor(item.source.type) },
+            ]}
+          >
             <Ionicons
               name={getSourceIcon(item.source.type) as any}
               size={14}
@@ -124,10 +128,12 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
           </View>
           <View style={styles.sourceText}>
             <Text style={styles.sourceName}>{item.source.nameAr}</Text>
-            <Text style={styles.sourceDate}>{formatDate(item.publishedAt)}</Text>
+            <Text style={styles.sourceDate}>
+              {formatDate(item.publishedAt)}
+            </Text>
           </View>
         </View>
-        
+
         <TouchableOpacity
           style={styles.bookmarkButton}
           onPress={() => onBookmarkPress(item)}
@@ -153,21 +159,29 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
       {/* Tags and category */}
       <View style={styles.resultFooter}>
         <View style={styles.tagsContainer}>
-          <View style={[
-            styles.categoryTag,
-            { backgroundColor: getCategoryColor(item.category) }
-          ]}>
+          <View
+            style={[
+              styles.categoryTag,
+              { backgroundColor: getCategoryColor(item.category) },
+            ]}
+          >
             <Text style={styles.categoryTagText}>
-              {item.category === 'business_law' ? 'قانون الأعمال' :
-               item.category === 'tax_law' ? 'قانون الضرائب' :
-               item.category === 'labor_law' ? 'قانون العمل' :
-               item.category === 'family_law' ? 'قانون الأسرة' :
-               item.category === 'administrative_law' ? 'القانون الإداري' :
-               item.category === 'environmental_law' ? 'قانون البيئة' :
-               'قانوني'}
+              {item.category === 'business_law'
+                ? 'قانون الأعمال'
+                : item.category === 'tax_law'
+                  ? 'قانون الضرائب'
+                  : item.category === 'labor_law'
+                    ? 'قانون العمل'
+                    : item.category === 'family_law'
+                      ? 'قانون الأسرة'
+                      : item.category === 'administrative_law'
+                        ? 'القانون الإداري'
+                        : item.category === 'environmental_law'
+                          ? 'قانون البيئة'
+                          : 'قانوني'}
             </Text>
           </View>
-          
+
           {item.tagsAr.slice(0, 2).map((tag, index) => (
             <View key={index} style={styles.tag}>
               <Text style={styles.tagText}>{tag}</Text>
@@ -182,7 +196,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
               {Math.round(item.relevanceScore * 100)}%
             </Text>
           </View>
-          
+
           <View style={styles.viewCount}>
             <Ionicons name="eye" size={12} color="#666666" />
             <Text style={styles.viewCountText}>{item.viewCount}</Text>
@@ -195,7 +209,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
         <View
           style={[
             styles.confidenceFill,
-            { width: `${item.metadata.confidence * 100}%` }
+            { width: `${item.metadata.confidence * 100}%` },
           ]}
         />
       </View>
@@ -234,7 +248,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
 
   const renderLoadingState = () => (
     <View style={styles.loadingState}>
-      {[1, 2, 3].map((index) => (
+      {[1, 2, 3].map(index => (
         <View key={index} style={styles.skeletonCard}>
           <View style={styles.skeletonHeader}>
             <View style={styles.skeletonSource} />
@@ -263,7 +277,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
     <FlatList
       data={results}
       renderItem={renderSearchResult}
-      keyExtractor={(item) => item.id}
+      keyExtractor={item => item.id}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.container}
       ListFooterComponent={renderLoadMoreButton}

@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  Modal,
-} from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Modal } from 'react-native';
 
 interface LoadingOverlayProps {
   visible?: boolean;

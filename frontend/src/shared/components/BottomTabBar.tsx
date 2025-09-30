@@ -76,20 +76,21 @@ export const BottomTabBar: React.FC<BottomTabBarProps> = ({
   return (
     <View style={styles.container}>
       {/* Background with Tunisian gradient */}
-      <LinearGradient
-        colors={['#FFFFFF', '#F8F9FA']}
-        style={styles.background}
-      >
+      <LinearGradient colors={['#FFFFFF', '#F8F9FA']} style={styles.background}>
         {/* Tab items */}
         <View style={styles.tabsContainer}>
           {tabs.map((tab, index) => {
             const isActive = currentScreen === tab.screen;
-            
+
             return (
               <TouchableOpacity
                 key={tab.screen}
                 style={styles.tabItem}
-                onPress={() => onTabPress(tab.screen === 'Chat' ? 'ChatbotSelection' : tab.screen)}
+                onPress={() =>
+                  onTabPress(
+                    tab.screen === 'Chat' ? 'ChatbotSelection' : tab.screen
+                  )
+                }
                 activeOpacity={0.7}
               >
                 {/* Active tab indicator */}
@@ -101,39 +102,47 @@ export const BottomTabBar: React.FC<BottomTabBarProps> = ({
                     />
                   </View>
                 )}
-                
+
                 {/* Tab content */}
-                <View style={[
-                  styles.tabContent,
-                  isActive && styles.activeTabContent
-                ]}>
+                <View
+                  style={[
+                    styles.tabContent,
+                    isActive && styles.activeTabContent,
+                  ]}
+                >
                   {/* Icon with background for active state */}
-                  <View style={[
-                    styles.iconContainer,
-                    isActive && { backgroundColor: tab.color + '15' }
-                  ]}>
+                  <View
+                    style={[
+                      styles.iconContainer,
+                      isActive && { backgroundColor: tab.color + '15' },
+                    ]}
+                  >
                     <Ionicons
-                      name={isActive ? tab.activeIcon as any : tab.icon as any}
+                      name={
+                        isActive ? (tab.activeIcon as any) : (tab.icon as any)
+                      }
                       size={isActive ? 26 : 24}
                       color={isActive ? tab.color : '#666666'}
                     />
                   </View>
-                  
+
                   {/* Label */}
-                  <Text style={[
-                    styles.tabLabel,
-                    isActive && { color: tab.color, fontWeight: 'bold' }
-                  ]}>
+                  <Text
+                    style={[
+                      styles.tabLabel,
+                      isActive && { color: tab.color, fontWeight: 'bold' },
+                    ]}
+                  >
                     {tab.labelAr}
                   </Text>
-                  
+
                   {/* Notification badge for specific tabs */}
                   {tab.screen === 'Updates' && (
                     <View style={styles.notificationBadge}>
                       <Text style={styles.notificationText}>3</Text>
                     </View>
                   )}
-                  
+
                   {tab.screen === 'Chat' && (
                     <View style={styles.notificationBadge}>
                       <Text style={styles.notificationText}>1</Text>
@@ -144,13 +153,13 @@ export const BottomTabBar: React.FC<BottomTabBarProps> = ({
             );
           })}
         </View>
-        
+
         {/* Tunisian cultural accent */}
         <View style={styles.culturalAccent}>
           <View style={styles.accentLine} />
         </View>
       </LinearGradient>
-      
+
       {/* Shadow overlay */}
       <View style={styles.shadowOverlay} />
     </View>

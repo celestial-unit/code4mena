@@ -8,7 +8,7 @@ export type {
   LegalSource,
   HealthStatus,
   PopularQuery,
-  LegalCategory
+  LegalCategory,
 } from './api';
 
 // Mock Data Services
@@ -26,13 +26,13 @@ export type {
   LoginCredentials,
   LoginResponse,
   User,
-  AuthError
+  AuthError,
 } from './authService';
 
 // Search Service
 export { searchService, SearchService } from './searchService';
 
-// Chat Service  
+// Chat Service
 export { chatService, ChatService } from './chatService';
 
 // Legal Service

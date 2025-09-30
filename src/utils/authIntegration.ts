@@ -43,7 +43,10 @@ interface RefreshResponse {
  * @param password - User password
  * @returns Promise that resolves to user data if login successful
  */
-export async function loginAndStore(email: string, password: string): Promise<any> {
+export async function loginAndStore(
+  email: string,
+  password: string
+): Promise<any> {
   try {
     // Make login request to backend (assuming there's a login endpoint)
     const loginResponse = await apiService.post<LoginResponse>('/auth/login', {
@@ -122,9 +125,12 @@ export async function refreshAuthToken(): Promise<boolean> {
     }
 
     // Call refresh endpoint (adjust endpoint and payload based on your backend)
-    const refreshResponse = await apiService.post<RefreshResponse>('/auth/refresh', {
-      refresh_token: refreshToken,
-    });
+    const refreshResponse = await apiService.post<RefreshResponse>(
+      '/auth/refresh',
+      {
+        refresh_token: refreshToken,
+      }
+    );
 
     const { token, refresh_token: newRefreshToken } = refreshResponse;
 

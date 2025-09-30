@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -12,12 +7,14 @@ interface SearchScreenSimpleProps {
   navigation: any;
 }
 
-export const SearchScreenSimple: React.FC<SearchScreenSimpleProps> = ({ navigation }) => {
+export const SearchScreenSimple: React.FC<SearchScreenSimpleProps> = ({
+  navigation,
+}) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => {
             if (navigation && navigation.goBack) {
@@ -29,9 +26,9 @@ export const SearchScreenSimple: React.FC<SearchScreenSimpleProps> = ({ navigati
         >
           <Ionicons name="arrow-back" size={24} color="#E31E24" />
         </TouchableOpacity>
-        
+
         <Text style={styles.headerTitle}>البحث القانوني</Text>
-        
+
         <View style={styles.placeholder} />
       </View>
 
@@ -39,15 +36,13 @@ export const SearchScreenSimple: React.FC<SearchScreenSimpleProps> = ({ navigati
       <View style={styles.content}>
         <View style={styles.card}>
           <Text style={styles.emoji}>🔍</Text>
-          
-          <Text style={styles.title}>
-            البحث المتقدم
-          </Text>
-          
+
+          <Text style={styles.title}>البحث المتقدم</Text>
+
           <Text style={styles.subtitle}>
             واجهة البحث المتقدمة قيد التطوير{'\n'}ستكون متاحة قريباً
           </Text>
-          
+
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.goBack()}

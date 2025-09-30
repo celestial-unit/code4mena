@@ -79,15 +79,18 @@ const chatbotOptions: ChatbotOption[] = [
   },
 ];
 
-export const ChatbotSelectionScreen: React.FC<ChatbotSelectionScreenProps> = ({ navigation }) => {
-  const [selectedCategory, setSelectedCategory] = useState<LegalCategory | null>(null);
-  const [animatedValues] = useState(() => 
+export const ChatbotSelectionScreen: React.FC<ChatbotSelectionScreenProps> = ({
+  navigation,
+}) => {
+  const [selectedCategory, setSelectedCategory] =
+    useState<LegalCategory | null>(null);
+  const [animatedValues] = useState(() =>
     chatbotOptions.map(() => new Animated.Value(1))
   );
 
   const handleCategorySelect = (category: LegalCategory, index: number) => {
     setSelectedCategory(category);
-    
+
     // Animate the selected card
     Animated.sequence([
       Animated.timing(animatedValues[index], {
@@ -110,7 +113,7 @@ export const ChatbotSelectionScreen: React.FC<ChatbotSelectionScreenProps> = ({ 
 
   const renderChatbotCard = (option: ChatbotOption, index: number) => {
     const isSelected = selectedCategory === option.category;
-    
+
     return (
       <Animated.View
         key={option.category}
@@ -136,15 +139,21 @@ export const ChatbotSelectionScreen: React.FC<ChatbotSelectionScreenProps> = ({ 
               <View style={styles.iconContainer}>
                 <Text style={styles.emoji}>{option.emoji}</Text>
                 <View style={styles.iconBackground}>
-                  <Ionicons name={option.icon as any} size={24} color="#FFFFFF" />
+                  <Ionicons
+                    name={option.icon as any}
+                    size={24}
+                    color="#FFFFFF"
+                  />
                 </View>
               </View>
-              
+
               <View style={styles.textContainer}>
                 <Text style={styles.categoryName}>{option.nameAr}</Text>
-                <Text style={styles.categoryDescription}>{option.descriptionAr}</Text>
+                <Text style={styles.categoryDescription}>
+                  {option.descriptionAr}
+                </Text>
               </View>
-              
+
               <View style={styles.arrowContainer}>
                 <Ionicons name="chevron-forward" size={20} color="#FFFFFF" />
               </View>
@@ -159,18 +168,20 @@ export const ChatbotSelectionScreen: React.FC<ChatbotSelectionScreenProps> = ({ 
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
           <Ionicons name="arrow-back" size={24} color="#E31E24" />
         </TouchableOpacity>
-        
+
         <View style={styles.headerCenter}>
           <Text style={styles.headerTitle}>اختر مساعدك القانوني</Text>
-          <Text style={styles.headerSubtitle}>اختر المجال القانوني المناسب</Text>
+          <Text style={styles.headerSubtitle}>
+            اختر المجال القانوني المناسب
+          </Text>
         </View>
-        
+
         <View style={styles.placeholder} />
       </View>
 
@@ -200,11 +211,13 @@ export const ChatbotSelectionScreen: React.FC<ChatbotSelectionScreenProps> = ({ 
         <Text style={styles.sectionSubtitle}>
           كل مساعد متخصص في مجال قانوني محدد لتقديم أفضل الاستشارات
         </Text>
-        
+
         <View style={styles.cardsContainer}>
-          {chatbotOptions.map((option, index) => renderChatbotCard(option, index))}
+          {chatbotOptions.map((option, index) =>
+            renderChatbotCard(option, index)
+          )}
         </View>
-        
+
         <View style={styles.bottomSpacing} />
       </ScrollView>
     </SafeAreaView>

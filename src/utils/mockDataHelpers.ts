@@ -1,12 +1,12 @@
-import { 
-  LegalCategory, 
-  Sector, 
-  Language, 
-  Region, 
+import {
+  LegalCategory,
+  Sector,
+  Language,
+  Region,
   TunisianDialect,
   LegalUpdate,
   User,
-  SearchResult
+  SearchResult,
 } from '../types';
 
 /**
@@ -19,7 +19,7 @@ import {
  */
 export const LEGAL_CATEGORIES: LegalCategory[] = [
   'business_law',
-  'civil_law', 
+  'civil_law',
   'administrative_law',
   'labor_law',
   'tax_law',
@@ -27,7 +27,7 @@ export const LEGAL_CATEGORIES: LegalCategory[] = [
   'criminal_law',
   'constitutional_law',
   'commercial_law',
-  'environmental_law'
+  'environmental_law',
 ];
 
 export const SECTORS: Sector[] = [
@@ -40,41 +40,100 @@ export const SECTORS: Sector[] = [
   'healthcare',
   'technology',
   'manufacturing',
-  'services'
+  'services',
 ];
 
 export const LANGUAGES: Language[] = ['ar', 'fr', 'en', 'ar-tn'];
 
 export const REGIONS: Region[] = [
-  'tunis', 'ariana', 'ben_arous', 'manouba', 'nabeul', 'zaghouan',
-  'bizerte', 'beja', 'jendouba', 'kef', 'siliana',
-  'sousse', 'monastir', 'mahdia', 'sfax',
-  'kairouan', 'kasserine', 'sidi_bouzid',
-  'gabes', 'medenine', 'tataouine',
-  'gafsa', 'tozeur', 'kebili'
+  'tunis',
+  'ariana',
+  'ben_arous',
+  'manouba',
+  'nabeul',
+  'zaghouan',
+  'bizerte',
+  'beja',
+  'jendouba',
+  'kef',
+  'siliana',
+  'sousse',
+  'monastir',
+  'mahdia',
+  'sfax',
+  'kairouan',
+  'kasserine',
+  'sidi_bouzid',
+  'gabes',
+  'medenine',
+  'tataouine',
+  'gafsa',
+  'tozeur',
+  'kebili',
 ];
 
 export const TUNISIAN_DIALECTS: TunisianDialect[] = [
-  'tunis', 'sfax', 'sousse', 'kairouan', 'bizerte', 'gabes', 'gafsa', 'standard'
+  'tunis',
+  'sfax',
+  'sousse',
+  'kairouan',
+  'bizerte',
+  'gabes',
+  'gafsa',
+  'standard',
 ];
 
 /**
  * Localization helpers
  */
-export const CATEGORY_TRANSLATIONS: Record<LegalCategory, { ar: string; fr: string; en: string }> = {
-  business_law: { ar: 'قانون الأعمال', fr: 'Droit des affaires', en: 'Business Law' },
+export const CATEGORY_TRANSLATIONS: Record<
+  LegalCategory,
+  { ar: string; fr: string; en: string }
+> = {
+  business_law: {
+    ar: 'قانون الأعمال',
+    fr: 'Droit des affaires',
+    en: 'Business Law',
+  },
   civil_law: { ar: 'القانون المدني', fr: 'Droit civil', en: 'Civil Law' },
-  administrative_law: { ar: 'القانون الإداري', fr: 'Droit administratif', en: 'Administrative Law' },
+  administrative_law: {
+    ar: 'القانون الإداري',
+    fr: 'Droit administratif',
+    en: 'Administrative Law',
+  },
   labor_law: { ar: 'قانون العمل', fr: 'Droit du travail', en: 'Labor Law' },
   tax_law: { ar: 'القانون الضريبي', fr: 'Droit fiscal', en: 'Tax Law' },
-  family_law: { ar: 'قانون الأسرة', fr: 'Droit de la famille', en: 'Family Law' },
-  criminal_law: { ar: 'القانون الجنائي', fr: 'Droit pénal', en: 'Criminal Law' },
-  constitutional_law: { ar: 'القانون الدستوري', fr: 'Droit constitutionnel', en: 'Constitutional Law' },
-  commercial_law: { ar: 'القانون التجاري', fr: 'Droit commercial', en: 'Commercial Law' },
-  environmental_law: { ar: 'القانون البيئي', fr: 'Droit de l\'environnement', en: 'Environmental Law' }
+  family_law: {
+    ar: 'قانون الأسرة',
+    fr: 'Droit de la famille',
+    en: 'Family Law',
+  },
+  criminal_law: {
+    ar: 'القانون الجنائي',
+    fr: 'Droit pénal',
+    en: 'Criminal Law',
+  },
+  constitutional_law: {
+    ar: 'القانون الدستوري',
+    fr: 'Droit constitutionnel',
+    en: 'Constitutional Law',
+  },
+  commercial_law: {
+    ar: 'القانون التجاري',
+    fr: 'Droit commercial',
+    en: 'Commercial Law',
+  },
+  environmental_law: {
+    ar: 'القانون البيئي',
+    fr: "Droit de l'environnement",
+    en: 'Environmental Law',
+  },
 };
 
-export const SECTOR_TRANSLATIONS: Record<Sector, { ar: string; fr: string; en: string }> = {
+export const SECTOR_TRANSLATIONS: Record<
+  Sector,
+  { ar: string; fr: string; en: string }
+> = {
   money: { ar: 'المال', fr: 'Argent', en: 'Money' },
   food: { ar: 'الغذاء', fr: 'Alimentation', en: 'Food' },
   agriculture: { ar: 'الزراعة', fr: 'Agriculture', en: 'Agriculture' },
@@ -84,10 +143,13 @@ export const SECTOR_TRANSLATIONS: Record<Sector, { ar: string; fr: string; en: s
   healthcare: { ar: 'الصحة', fr: 'Santé', en: 'Healthcare' },
   technology: { ar: 'التكنولوجيا', fr: 'Technologie', en: 'Technology' },
   manufacturing: { ar: 'التصنيع', fr: 'Fabrication', en: 'Manufacturing' },
-  services: { ar: 'الخدمات', fr: 'Services', en: 'Services' }
+  services: { ar: 'الخدمات', fr: 'Services', en: 'Services' },
 };
 
-export const REGION_TRANSLATIONS: Record<Region, { ar: string; fr: string; en: string }> = {
+export const REGION_TRANSLATIONS: Record<
+  Region,
+  { ar: string; fr: string; en: string }
+> = {
   tunis: { ar: 'تونس', fr: 'Tunis', en: 'Tunis' },
   ariana: { ar: 'أريانة', fr: 'Ariana', en: 'Ariana' },
   ben_arous: { ar: 'بن عروس', fr: 'Ben Arous', en: 'Ben Arous' },
@@ -111,7 +173,7 @@ export const REGION_TRANSLATIONS: Record<Region, { ar: string; fr: string; en: s
   tataouine: { ar: 'تطاوين', fr: 'Tataouine', en: 'Tataouine' },
   gafsa: { ar: 'قفصة', fr: 'Gafsa', en: 'Gafsa' },
   tozeur: { ar: 'توزر', fr: 'Tozeur', en: 'Tozeur' },
-  kebili: { ar: 'قبلي', fr: 'Kébili', en: 'Kebili' }
+  kebili: { ar: 'قبلي', fr: 'Kébili', en: 'Kebili' },
 };
 
 /**
@@ -141,14 +203,68 @@ export function generateRandomId(prefix: string = 'item'): string {
  */
 export function generateLoremIpsum(wordCount: number = 50): string {
   const words = [
-    'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
-    'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore',
-    'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud',
-    'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo',
-    'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate',
-    'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint',
-    'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia',
-    'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum'
+    'lorem',
+    'ipsum',
+    'dolor',
+    'sit',
+    'amet',
+    'consectetur',
+    'adipiscing',
+    'elit',
+    'sed',
+    'do',
+    'eiusmod',
+    'tempor',
+    'incididunt',
+    'ut',
+    'labore',
+    'et',
+    'dolore',
+    'magna',
+    'aliqua',
+    'enim',
+    'ad',
+    'minim',
+    'veniam',
+    'quis',
+    'nostrud',
+    'exercitation',
+    'ullamco',
+    'laboris',
+    'nisi',
+    'aliquip',
+    'ex',
+    'ea',
+    'commodo',
+    'consequat',
+    'duis',
+    'aute',
+    'irure',
+    'in',
+    'reprehenderit',
+    'voluptate',
+    'velit',
+    'esse',
+    'cillum',
+    'fugiat',
+    'nulla',
+    'pariatur',
+    'excepteur',
+    'sint',
+    'occaecat',
+    'cupidatat',
+    'non',
+    'proident',
+    'sunt',
+    'culpa',
+    'qui',
+    'officia',
+    'deserunt',
+    'mollit',
+    'anim',
+    'id',
+    'est',
+    'laborum',
   ];
 
   const result = [];
@@ -161,11 +277,39 @@ export function generateLoremIpsum(wordCount: number = 50): string {
 
 export function generateArabicText(wordCount: number = 20): string {
   const words = [
-    'القانون', 'التونسي', 'الأعمال', 'الشركة', 'التسجيل', 'الضرائب', 'الإجراءات',
-    'الوثائق', 'المتطلبات', 'الامتثال', 'اللوائح', 'الحكومة', 'الوزارة',
-    'المركز', 'الخدمات', 'التطبيق', 'النظام', 'المنصة', 'الرقمية', 'الإلكترونية',
-    'التجارة', 'الصناعة', 'الزراعة', 'السياحة', 'التعليم', 'الصحة', 'البيئة',
-    'العمل', 'الموظفين', 'أصحاب', 'المؤسسات', 'التعاونيات', 'الجمعيات'
+    'القانون',
+    'التونسي',
+    'الأعمال',
+    'الشركة',
+    'التسجيل',
+    'الضرائب',
+    'الإجراءات',
+    'الوثائق',
+    'المتطلبات',
+    'الامتثال',
+    'اللوائح',
+    'الحكومة',
+    'الوزارة',
+    'المركز',
+    'الخدمات',
+    'التطبيق',
+    'النظام',
+    'المنصة',
+    'الرقمية',
+    'الإلكترونية',
+    'التجارة',
+    'الصناعة',
+    'الزراعة',
+    'السياحة',
+    'التعليم',
+    'الصحة',
+    'البيئة',
+    'العمل',
+    'الموظفين',
+    'أصحاب',
+    'المؤسسات',
+    'التعاونيات',
+    'الجمعيات',
   ];
 
   const result = [];
@@ -178,11 +322,39 @@ export function generateArabicText(wordCount: number = 20): string {
 
 export function generateFrenchText(wordCount: number = 20): string {
   const words = [
-    'droit', 'tunisien', 'affaires', 'entreprise', 'enregistrement', 'taxes', 'procédures',
-    'documents', 'exigences', 'conformité', 'réglementations', 'gouvernement', 'ministère',
-    'centre', 'services', 'application', 'système', 'plateforme', 'numérique', 'électronique',
-    'commerce', 'industrie', 'agriculture', 'tourisme', 'éducation', 'santé', 'environnement',
-    'travail', 'employés', 'employeurs', 'institutions', 'coopératives', 'associations'
+    'droit',
+    'tunisien',
+    'affaires',
+    'entreprise',
+    'enregistrement',
+    'taxes',
+    'procédures',
+    'documents',
+    'exigences',
+    'conformité',
+    'réglementations',
+    'gouvernement',
+    'ministère',
+    'centre',
+    'services',
+    'application',
+    'système',
+    'plateforme',
+    'numérique',
+    'électronique',
+    'commerce',
+    'industrie',
+    'agriculture',
+    'tourisme',
+    'éducation',
+    'santé',
+    'environnement',
+    'travail',
+    'employés',
+    'employeurs',
+    'institutions',
+    'coopératives',
+    'associations',
   ];
 
   const result = [];
@@ -196,7 +368,10 @@ export function generateFrenchText(wordCount: number = 20): string {
 /**
  * Localization utilities
  */
-export function translateCategory(category: LegalCategory, language: Language): string {
+export function translateCategory(
+  category: LegalCategory,
+  language: Language
+): string {
   const translations = CATEGORY_TRANSLATIONS[category];
   switch (language) {
     case 'ar':
@@ -242,7 +417,7 @@ export function translateRegion(region: Region, language: Language): string {
  * Data filtering utilities
  */
 export function filterLegalUpdatesByCategory(
-  updates: LegalUpdate[], 
+  updates: LegalUpdate[],
   categories: LegalCategory[]
 ): LegalUpdate[] {
   if (categories.length === 0) return updates;
@@ -250,17 +425,17 @@ export function filterLegalUpdatesByCategory(
 }
 
 export function filterLegalUpdatesBySector(
-  updates: LegalUpdate[], 
+  updates: LegalUpdate[],
   sectors: Sector[]
 ): LegalUpdate[] {
   if (sectors.length === 0) return updates;
-  return updates.filter(update => 
+  return updates.filter(update =>
     update.sectors.some(sector => sectors.includes(sector))
   );
 }
 
 export function filterLegalUpdatesByPriority(
-  updates: LegalUpdate[], 
+  updates: LegalUpdate[],
   priorities: ('high' | 'medium' | 'low')[]
 ): LegalUpdate[] {
   if (priorities.length === 0) return updates;
@@ -273,7 +448,7 @@ export function filterUsersByRegion(users: User[], regions: Region[]): User[] {
 }
 
 export function filterSearchResultsByType(
-  results: SearchResult[], 
+  results: SearchResult[],
   types: string[]
 ): SearchResult[] {
   if (types.length === 0) return results;
@@ -284,7 +459,7 @@ export function filterSearchResultsByType(
  * Data sorting utilities
  */
 export function sortLegalUpdatesByDate(
-  updates: LegalUpdate[], 
+  updates: LegalUpdate[],
   order: 'asc' | 'desc' = 'desc'
 ): LegalUpdate[] {
   return [...updates].sort((a, b) => {
@@ -295,7 +470,7 @@ export function sortLegalUpdatesByDate(
 }
 
 export function sortLegalUpdatesByPriority(
-  updates: LegalUpdate[], 
+  updates: LegalUpdate[],
   order: 'asc' | 'desc' = 'desc'
 ): LegalUpdate[] {
   const priorityOrder = { high: 3, medium: 2, low: 1 };
@@ -307,12 +482,12 @@ export function sortLegalUpdatesByPriority(
 }
 
 export function sortSearchResultsByRelevance(
-  results: SearchResult[], 
+  results: SearchResult[],
   order: 'asc' | 'desc' = 'desc'
 ): SearchResult[] {
   return [...results].sort((a, b) => {
-    return order === 'desc' 
-      ? b.relevanceScore - a.relevanceScore 
+    return order === 'desc'
+      ? b.relevanceScore - a.relevanceScore
       : a.relevanceScore - b.relevanceScore;
   });
 }
@@ -359,24 +534,25 @@ export function calculateLegalUpdateStats(updates: LegalUpdate[]) {
     byImpactLevel: { critical: 0, high: 0, medium: 0, low: 0 },
     averageAge: 0,
     bookmarked: 0,
-    read: 0
+    read: 0,
   };
 
   updates.forEach(update => {
     // Category stats
-    stats.byCategory[update.category] = (stats.byCategory[update.category] || 0) + 1;
-    
+    stats.byCategory[update.category] =
+      (stats.byCategory[update.category] || 0) + 1;
+
     // Sector stats
     update.sectors.forEach(sector => {
       stats.bySector[sector] = (stats.bySector[sector] || 0) + 1;
     });
-    
+
     // Priority stats
     stats.byPriority[update.priority]++;
-    
+
     // Impact level stats
     stats.byImpactLevel[update.impactLevel]++;
-    
+
     // Bookmark and read stats
     if (update.isBookmarked) stats.bookmarked++;
     if (update.readStatus === 'read') stats.read++;
@@ -403,21 +579,22 @@ export function calculateUserEngagementStats(users: User[]) {
     averageSessionDuration: 0,
     totalAchievements: 0,
     totalPoints: 0,
-    activeUsers: 0 // active in last 7 days
+    activeUsers: 0, // active in last 7 days
   };
 
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
   users.forEach(user => {
     if (user.isVerified) stats.verified++;
-    
-    stats.byRegion[user.profile.region] = (stats.byRegion[user.profile.region] || 0) + 1;
+
+    stats.byRegion[user.profile.region] =
+      (stats.byRegion[user.profile.region] || 0) + 1;
     stats.byExperienceLevel[user.profile.experienceLevel]++;
-    
+
     stats.averageSessionDuration += user.statistics.averageSessionDuration;
     stats.totalAchievements += user.statistics.totalAchievements;
     stats.totalPoints += user.statistics.totalPoints;
-    
+
     if (new Date(user.lastActiveAt).getTime() > sevenDaysAgo) {
       stats.activeUsers++;
     }
@@ -433,21 +610,23 @@ export function calculateUserEngagementStats(users: User[]) {
 /**
  * Development and testing utilities
  */
-export function createTestDataSet(size: 'small' | 'medium' | 'large' = 'medium') {
+export function createTestDataSet(
+  size: 'small' | 'medium' | 'large' = 'medium'
+) {
   const sizes = {
     small: { updates: 10, users: 5, conversations: 8 },
     medium: { updates: 50, users: 20, conversations: 30 },
-    large: { updates: 200, users: 100, conversations: 150 }
+    large: { updates: 200, users: 100, conversations: 150 },
   };
 
   const config = sizes[size];
-  
+
   return {
     legalUpdates: config.updates,
     users: config.users,
     conversations: config.conversations,
     searchResults: Math.floor(config.updates * 1.5),
-    mascots: SECTORS.length
+    mascots: SECTORS.length,
   };
 }
 

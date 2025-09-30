@@ -91,10 +91,7 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
       // Start waveform visualization timer
       waveformTimer.current = setInterval(() => {
         // Generate mock waveform data for visualization
-        setWaveformData(prev => [
-          ...prev.slice(-20),
-          Math.random() * 100
-        ]);
+        setWaveformData(prev => [...prev.slice(-20), Math.random() * 100]);
       }, 100);
     } else {
       pulseAnim.stopAnimation();
@@ -125,7 +122,11 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
       const audioBlob = await stopRecording();
 
       if (audioBlob && audioBlob.size > 0) {
-        console.log('[VoiceInput] Audio recorded successfully:', audioBlob.size, 'bytes');
+        console.log(
+          '[VoiceInput] Audio recorded successfully:',
+          audioBlob.size,
+          'bytes'
+        );
         onVoiceMessage(audioBlob);
         handleClose();
       } else {
@@ -225,7 +226,10 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
           >
             {/* Header */}
             <View style={styles.header}>
-              <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={handleClose}
+              >
                 <Ionicons name="close" size={24} color="#FFFFFF" />
               </TouchableOpacity>
               <Text style={styles.title}>التسجيل الصوتي</Text>
@@ -259,11 +263,13 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
               ) : audioState.isLoading ? (
                 <>
                   <View style={styles.micContainer}>
-                    <Ionicons name="hourglass-outline" size={40} color="#FFFFFF" />
+                    <Ionicons
+                      name="hourglass-outline"
+                      size={40}
+                      color="#FFFFFF"
+                    />
                   </View>
-                  <Text style={styles.instructionText}>
-                    جاري التحضير...
-                  </Text>
+                  <Text style={styles.instructionText}>جاري التحضير...</Text>
                 </>
               ) : (
                 <>
@@ -281,9 +287,7 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
 
               {/* Show error if any */}
               {audioState.error && (
-                <Text style={styles.errorText}>
-                  {audioState.error}
-                </Text>
+                <Text style={styles.errorText}>{audioState.error}</Text>
               )}
             </View>
 
@@ -294,7 +298,10 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
             <View style={styles.controlsContainer}>
               {!audioState.isRecording ? (
                 <TouchableOpacity
-                  style={[styles.recordButton, audioState.isLoading && styles.disabledButton]}
+                  style={[
+                    styles.recordButton,
+                    audioState.isLoading && styles.disabledButton,
+                  ]}
                   onPress={handleStartRecording}
                   disabled={audioState.isLoading}
                 >
@@ -328,9 +335,13 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
 
             {/* Tips */}
             <View style={styles.tipsContainer}>
-              <Text style={styles.tipsTitle}>نصائح للحصول على أفضل النتائج:</Text>
+              <Text style={styles.tipsTitle}>
+                نصائح للحصول على أفضل النتائج:
+              </Text>
               <Text style={styles.tipText}>• تحدث بوضوح وببطء</Text>
-              <Text style={styles.tipText}>• استخدم اللهجة التونسية الطبيعية</Text>
+              <Text style={styles.tipText}>
+                • استخدم اللهجة التونسية الطبيعية
+              </Text>
               <Text style={styles.tipText}>• تجنب الضوضاء في الخلفية</Text>
             </View>
           </LinearGradient>

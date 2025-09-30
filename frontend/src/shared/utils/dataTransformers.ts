@@ -3,7 +3,13 @@
  * Utilities to transform JSON data to proper TypeScript types
  */
 
-import { LegalUpdate, User, ChatConversation, SearchResult, TunisianMascot } from '../types';
+import {
+  LegalUpdate,
+  User,
+  ChatConversation,
+  SearchResult,
+  TunisianMascot,
+} from '../types';
 
 /**
  * Transform JSON legal update to proper LegalUpdate type
@@ -12,11 +18,13 @@ export function transformLegalUpdate(jsonUpdate: any): LegalUpdate {
   return {
     ...jsonUpdate,
     publishedAt: new Date(jsonUpdate.publishedAt),
-    effectiveDate: jsonUpdate.effectiveDate ? new Date(jsonUpdate.effectiveDate) : undefined,
+    effectiveDate: jsonUpdate.effectiveDate
+      ? new Date(jsonUpdate.effectiveDate)
+      : undefined,
     source: {
       ...jsonUpdate.source,
-      lastUpdated: new Date(jsonUpdate.source.lastUpdated)
-    }
+      lastUpdated: new Date(jsonUpdate.source.lastUpdated),
+    },
   };
 }
 
@@ -30,22 +38,28 @@ export function transformUser(jsonUser: any): User {
     lastActiveAt: new Date(jsonUser.lastActiveAt),
     achievements: jsonUser.achievements.map((achievement: any) => ({
       ...achievement,
-      unlockedAt: achievement.unlockedAt ? new Date(achievement.unlockedAt) : undefined
+      unlockedAt: achievement.unlockedAt
+        ? new Date(achievement.unlockedAt)
+        : undefined,
     })),
     statistics: {
       ...jsonUser.statistics,
-      lastWeekActivity: jsonUser.statistics.lastWeekActivity.map((activity: any) => ({
-        ...activity,
-        date: new Date(activity.date)
-      }))
-    }
+      lastWeekActivity: jsonUser.statistics.lastWeekActivity.map(
+        (activity: any) => ({
+          ...activity,
+          date: new Date(activity.date),
+        })
+      ),
+    },
   };
 }
 
 /**
  * Transform JSON chat conversation to proper ChatConversation type
  */
-export function transformChatConversation(jsonConversation: any): ChatConversation {
+export function transformChatConversation(
+  jsonConversation: any
+): ChatConversation {
   return {
     ...jsonConversation,
     createdAt: new Date(jsonConversation.createdAt),
@@ -53,8 +67,8 @@ export function transformChatConversation(jsonConversation: any): ChatConversati
     messages: jsonConversation.messages.map((message: any) => ({
       ...message,
       timestamp: new Date(message.timestamp),
-      editedAt: message.editedAt ? new Date(message.editedAt) : undefined
-    }))
+      editedAt: message.editedAt ? new Date(message.editedAt) : undefined,
+    })),
   };
 }
 
@@ -65,7 +79,7 @@ export function transformSearchResult(jsonResult: any): SearchResult {
   return {
     ...jsonResult,
     publishedAt: new Date(jsonResult.publishedAt),
-    lastUpdated: new Date(jsonResult.lastUpdated)
+    lastUpdated: new Date(jsonResult.lastUpdated),
   };
 }
 
@@ -80,7 +94,9 @@ export function transformUsers(jsonUsers: any[]): User[] {
   return jsonUsers.map(transformUser);
 }
 
-export function transformChatConversations(jsonConversations: any[]): ChatConversation[] {
+export function transformChatConversations(
+  jsonConversations: any[]
+): ChatConversation[] {
   return jsonConversations.map(transformChatConversation);
 }
 

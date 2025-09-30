@@ -7,80 +7,81 @@ import {
   SearchQuery,
   LegalIntelligenceResponse,
   ApiResponse,
-  PaginatedResponse
+  PaginatedResponse,
 } from '../types';
 
 import {
   transformLegalUpdates,
   transformUsers,
   transformChatConversations,
-  transformSearchResults
+  transformSearchResults,
 } from '../utils/dataTransformers';
 
 // Mock data - inline to avoid import issues
 const legalUpdatesDataRaw = [
   {
-    id: "update-001",
-    title: "تحديث قانون الشركات الجديد",
-    titleAr: "تحديث قانون الشركات الجديد",
-    titleFr: "Nouvelle mise à jour du droit des sociétés",
-    content: "تم إصدار تحديثات جديدة على قانون الشركات التونسي",
-    contentAr: "تم إصدار تحديثات جديدة على قانون الشركات التونسي",
-    contentFr: "De nouvelles mises à jour ont été publiées sur le droit des sociétés tunisien",
-    summary: "تحديثات جديدة على قانون الشركات",
-    summaryAr: "تحديثات جديدة على قانون الشركات",
-    summaryFr: "Nouvelles mises à jour du droit des sociétés",
-    category: "business_law",
-    priority: "high",
-    publishedAt: "2024-01-15T10:00:00Z",
-    lastUpdated: "2024-01-15T10:00:00Z",
-    source: "وزارة العدل",
-    sourceAr: "وزارة العدل",
-    sourceFr: "Ministère de la Justice",
-    url: "https://example.com/update-001",
-    tags: ["شركات", "قانون", "تحديث"],
-    tagsAr: ["شركات", "قانون", "تحديث"],
-    tagsFr: ["sociétés", "droit", "mise à jour"],
+    id: 'update-001',
+    title: 'تحديث قانون الشركات الجديد',
+    titleAr: 'تحديث قانون الشركات الجديد',
+    titleFr: 'Nouvelle mise à jour du droit des sociétés',
+    content: 'تم إصدار تحديثات جديدة على قانون الشركات التونسي',
+    contentAr: 'تم إصدار تحديثات جديدة على قانون الشركات التونسي',
+    contentFr:
+      'De nouvelles mises à jour ont été publiées sur le droit des sociétés tunisien',
+    summary: 'تحديثات جديدة على قانون الشركات',
+    summaryAr: 'تحديثات جديدة على قانون الشركات',
+    summaryFr: 'Nouvelles mises à jour du droit des sociétés',
+    category: 'business_law',
+    priority: 'high',
+    publishedAt: '2024-01-15T10:00:00Z',
+    lastUpdated: '2024-01-15T10:00:00Z',
+    source: 'وزارة العدل',
+    sourceAr: 'وزارة العدل',
+    sourceFr: 'Ministère de la Justice',
+    url: 'https://example.com/update-001',
+    tags: ['شركات', 'قانون', 'تحديث'],
+    tagsAr: ['شركات', 'قانون', 'تحديث'],
+    tagsFr: ['sociétés', 'droit', 'mise à jour'],
     isBookmarked: false,
     viewCount: 42,
-    language: "ar",
+    language: 'ar',
     readingTime: 5,
-    difficulty: "intermediate",
-    sector: "business",
-    region: "national",
+    difficulty: 'intermediate',
+    sector: 'business',
+    region: 'national',
     ministry: {
-      id: "ministry-justice",
-      name: "وزارة العدل",
-      nameAr: "وزارة العدل",
-      nameFr: "Ministère de la Justice",
-      logo: "https://example.com/ministry-justice-logo.png",
-      website: "https://justice.gov.tn"
+      id: 'ministry-justice',
+      name: 'وزارة العدل',
+      nameAr: 'وزارة العدل',
+      nameFr: 'Ministère de la Justice',
+      logo: 'https://example.com/ministry-justice-logo.png',
+      website: 'https://justice.gov.tn',
     },
     relatedUpdates: [],
     attachments: [],
-    legalReferences: []
-  }
+    legalReferences: [],
+  },
 ];
 
 const usersDataRaw = [
   {
-    id: "user-001",
-    name: "أحمد محمد",
-    email: "ahmed@example.com",
-    role: "user",
-    createdAt: "2024-01-15T10:00:00Z",
-    lastActiveAt: "2024-01-15T10:00:00Z",
+    id: 'user-001',
+    name: 'أحمد محمد',
+    email: 'ahmed@example.com',
+    role: 'user',
+    createdAt: '2024-01-15T10:00:00Z',
+    lastActiveAt: '2024-01-15T10:00:00Z',
     isVerified: true,
     achievements: [],
     profile: {
       sectors: [],
       legalCategories: [],
-      region: "tunis",
-      language: "ar",
-      experienceLevel: "beginner",
+      region: 'tunis',
+      language: 'ar',
+      experienceLevel: 'beginner',
       interests: [],
       interestsAr: [],
-      interestsFr: []
+      interestsFr: [],
     },
     preferences: {
       notifications: {
@@ -94,10 +95,10 @@ const usersDataRaw = [
         parliamentaryUpdates: true,
         quietHours: {
           enabled: false,
-          startTime: "22:00",
-          endTime: "08:00"
+          startTime: '22:00',
+          endTime: '08:00',
         },
-        categories: {}
+        categories: {},
       },
       privacy: {
         dataSharing: false,
@@ -106,34 +107,34 @@ const usersDataRaw = [
         locationTracking: false,
         voiceRecording: false,
         communityFeatures: true,
-        profileVisibility: "private"
+        profileVisibility: 'private',
       },
       display: {
-        theme: "light",
-        fontSize: "medium",
+        theme: 'light',
+        fontSize: 'medium',
         animations: true,
         reducedMotion: false,
         highContrast: false,
         rtlLayout: true,
-        colorScheme: "default"
+        colorScheme: 'default',
       },
-      language: "ar",
+      language: 'ar',
       mascot: {
         enabled: true,
-        preferredSector: "business",
-        animationLevel: "full",
+        preferredSector: 'business',
+        animationLevel: 'full',
         voiceSync: true,
         celebrations: true,
-        customizations: []
+        customizations: [],
       },
       voice: {
         enabled: true,
-        dialect: "tunis",
+        dialect: 'tunis',
         voiceSpeed: 1.0,
-        voiceGender: "neutral",
+        voiceGender: 'neutral',
         noiseReduction: true,
-        autoTranscription: true
-      }
+        autoTranscription: true,
+      },
     },
     statistics: {
       totalLegalUpdatesRead: 42,
@@ -144,21 +145,21 @@ const usersDataRaw = [
       longestStreak: 12,
       totalAchievements: 3,
       totalPoints: 150,
-      favoriteCategory: "business_law",
-      mostActiveSector: "business",
+      favoriteCategory: 'business_law',
+      mostActiveSector: 'business',
       averageSessionDuration: 25,
       lastWeekActivity: [
         {
-          date: "2024-01-15T00:00:00Z",
+          date: '2024-01-15T00:00:00Z',
           updatesRead: 3,
           chatMessages: 5,
           searchQueries: 2,
-          timeSpent: 30
-        }
+          timeSpent: 30,
+        },
       ],
-      monthlyStats: []
-    }
-  }
+      monthlyStats: [],
+    },
+  },
 ];
 
 const chatConversationsDataRaw = [];
@@ -168,7 +169,9 @@ const searchResultsDataRaw = [];
 // Transform raw JSON data to proper types
 const legalUpdatesData = transformLegalUpdates(legalUpdatesDataRaw);
 const usersData = transformUsers(usersDataRaw);
-const chatConversationsData = transformChatConversations(chatConversationsDataRaw);
+const chatConversationsData = transformChatConversations(
+  chatConversationsDataRaw
+);
 const searchResultsData = transformSearchResults(searchResultsDataRaw);
 
 /**
@@ -180,7 +183,7 @@ export class MockDataService {
   private readonly baseDelay = 500; // Base delay in milliseconds
   private readonly maxDelay = 2000; // Maximum delay for complex operations
 
-  private constructor() { }
+  private constructor() {}
 
   public static getInstance(): MockDataService {
     if (!MockDataService.instance) {
@@ -192,11 +195,13 @@ export class MockDataService {
   /**
    * Simulate network delay
    */
-  private async simulateDelay(complexity: 'simple' | 'medium' | 'complex' = 'medium'): Promise<void> {
+  private async simulateDelay(
+    complexity: 'simple' | 'medium' | 'complex' = 'medium'
+  ): Promise<void> {
     const delays = {
       simple: this.baseDelay,
       medium: this.baseDelay * 1.5,
-      complex: this.baseDelay * 2.5
+      complex: this.baseDelay * 2.5,
     };
 
     const delay = delays[complexity] + Math.random() * 500;
@@ -206,18 +211,23 @@ export class MockDataService {
   /**
    * Simulate API response wrapper
    */
-  private createApiResponse<T>(data: T, success: boolean = true): ApiResponse<T> {
+  private createApiResponse<T>(
+    data: T,
+    success: boolean = true
+  ): ApiResponse<T> {
     return {
       success,
       data: success ? data : undefined,
-      error: success ? undefined : {
-        code: 'MOCK_ERROR',
-        message: 'Simulated error for testing',
-        messageAr: 'خطأ محاكي للاختبار',
-        messageFr: 'Erreur simulée pour les tests'
-      },
+      error: success
+        ? undefined
+        : {
+            code: 'MOCK_ERROR',
+            message: 'Simulated error for testing',
+            messageAr: 'خطأ محاكي للاختبار',
+            messageFr: 'Erreur simulée pour les tests',
+          },
       timestamp: new Date(),
-      requestId: `mock-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      requestId: `mock-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     };
   }
 
@@ -240,7 +250,7 @@ export class MockDataService {
       currentPage: page,
       pageSize,
       hasNextPage: endIndex < items.length,
-      hasPreviousPage: page > 1
+      hasPreviousPage: page > 1,
     };
   }
 
@@ -257,24 +267,37 @@ export class MockDataService {
 
     // Apply filters
     if (category) {
-      filteredUpdates = filteredUpdates.filter(update => update.category === category);
+      filteredUpdates = filteredUpdates.filter(
+        update => update.category === category
+      );
     }
     if (priority) {
-      filteredUpdates = filteredUpdates.filter(update => update.priority === priority);
+      filteredUpdates = filteredUpdates.filter(
+        update => update.priority === priority
+      );
     }
 
-    const paginatedData = this.createPaginatedResponse(filteredUpdates, page, pageSize);
+    const paginatedData = this.createPaginatedResponse(
+      filteredUpdates,
+      page,
+      pageSize
+    );
     return this.createApiResponse(paginatedData);
   }
 
-  async getLegalUpdateById(id: string): Promise<ApiResponse<LegalUpdate | null>> {
+  async getLegalUpdateById(
+    id: string
+  ): Promise<ApiResponse<LegalUpdate | null>> {
     await this.simulateDelay('simple');
 
     const update = legalUpdatesData.find(update => update.id === id);
     return this.createApiResponse(update || null);
   }
 
-  async bookmarkLegalUpdate(updateId: string, userId: string): Promise<ApiResponse<boolean>> {
+  async bookmarkLegalUpdate(
+    updateId: string,
+    userId: string
+  ): Promise<ApiResponse<boolean>> {
     await this.simulateDelay('simple');
 
     // Simulate bookmark operation
@@ -294,7 +317,10 @@ export class MockDataService {
     return this.createApiResponse(user || null);
   }
 
-  async updateUserProfile(userId: string, profileData: Partial<User>): Promise<ApiResponse<User>> {
+  async updateUserProfile(
+    userId: string,
+    profileData: Partial<User>
+  ): Promise<ApiResponse<User>> {
     await this.simulateDelay('medium');
 
     const userIndex = usersData.findIndex(user => user.id === userId);
@@ -307,7 +333,9 @@ export class MockDataService {
     return this.createApiResponse(null as any, false);
   }
 
-  async getUserStatistics(userId: string): Promise<ApiResponse<User['statistics'] | null>> {
+  async getUserStatistics(
+    userId: string
+  ): Promise<ApiResponse<User['statistics'] | null>> {
     await this.simulateDelay('simple');
 
     const user = usersData.find(user => user.id === userId);
@@ -315,7 +343,9 @@ export class MockDataService {
   }
 
   // Chat Services
-  async getChatConversations(userId: string): Promise<ApiResponse<ChatConversation[]>> {
+  async getChatConversations(
+    userId: string
+  ): Promise<ApiResponse<ChatConversation[]>> {
     await this.simulateDelay('medium');
 
     const userConversations = chatConversationsData.filter(
@@ -325,12 +355,12 @@ export class MockDataService {
     return this.createApiResponse(userConversations);
   }
 
-  async getChatConversationById(id: string): Promise<ApiResponse<ChatConversation | null>> {
+  async getChatConversationById(
+    id: string
+  ): Promise<ApiResponse<ChatConversation | null>> {
     await this.simulateDelay('simple');
 
-    const conversation = chatConversationsData.find(
-      conv => conv.id === id
-    );
+    const conversation = chatConversationsData.find(conv => conv.id === id);
 
     return this.createApiResponse(conversation || null);
   }
@@ -342,13 +372,18 @@ export class MockDataService {
   ): Promise<ApiResponse<ChatConversation>> {
     await this.simulateDelay('complex');
 
-    const conversation = chatConversationsData.find(conv => conv.id === conversationId);
+    const conversation = chatConversationsData.find(
+      conv => conv.id === conversationId
+    );
     if (!conversation) {
       return this.createApiResponse(null as any, false);
     }
 
     // Simulate AI response generation
-    const aiResponse = await this.generateMockAIResponse(message, conversation.category);
+    const aiResponse = await this.generateMockAIResponse(
+      message,
+      conversation.category
+    );
 
     // Add user message and AI response to conversation
     const userMessage = {
@@ -363,9 +398,9 @@ export class MockDataService {
         culturalContext: {
           culturalReferences: [],
           dialectTerms: [],
-          regionalRelevance: []
-        }
-      }
+          regionalRelevance: [],
+        },
+      },
     };
 
     const aiMessage = {
@@ -378,7 +413,7 @@ export class MockDataService {
       timestamp: new Date(),
       isEdited: false,
       metadata: aiResponse.metadata,
-      mascotAnimation: aiResponse.mascotAnimation
+      mascotAnimation: aiResponse.mascotAnimation,
     };
 
     conversation.messages.push(userMessage, aiMessage);
@@ -394,23 +429,33 @@ export class MockDataService {
     // Generate contextual response based on message content and category
     const responses = {
       business_law: {
-        content: "Based on current Tunisian business law, here are the key points you should consider...",
-        contentAr: "بناءً على قانون الأعمال التونسي الحالي، إليك النقاط الرئيسية التي يجب أن تأخذها في الاعتبار...",
-        contentFr: "Basé sur le droit des affaires tunisien actuel, voici les points clés que vous devriez considérer..."
+        content:
+          'Based on current Tunisian business law, here are the key points you should consider...',
+        contentAr:
+          'بناءً على قانون الأعمال التونسي الحالي، إليك النقاط الرئيسية التي يجب أن تأخذها في الاعتبار...',
+        contentFr:
+          'Basé sur le droit des affaires tunisien actuel, voici les points clés que vous devriez considérer...',
       },
       tax_law: {
-        content: "Regarding tax obligations in Tunisia, the recent updates require...",
-        contentAr: "فيما يتعلق بالالتزامات الضريبية في تونس، تتطلب التحديثات الأخيرة...",
-        contentFr: "Concernant les obligations fiscales en Tunisie, les récentes mises à jour exigent..."
+        content:
+          'Regarding tax obligations in Tunisia, the recent updates require...',
+        contentAr:
+          'فيما يتعلق بالالتزامات الضريبية في تونس، تتطلب التحديثات الأخيرة...',
+        contentFr:
+          'Concernant les obligations fiscales en Tunisie, les récentes mises à jour exigent...',
       },
       administrative_law: {
-        content: "For administrative procedures in Tunisia, you'll need to follow these steps...",
-        contentAr: "للإجراءات الإدارية في تونس، ستحتاج إلى اتباع هذه الخطوات...",
-        contentFr: "Pour les procédures administratives en Tunisie, vous devrez suivre ces étapes..."
-      }
+        content:
+          "For administrative procedures in Tunisia, you'll need to follow these steps...",
+        contentAr:
+          'للإجراءات الإدارية في تونس، ستحتاج إلى اتباع هذه الخطوات...',
+        contentFr:
+          'Pour les procédures administratives en Tunisie, vous devrez suivre ces étapes...',
+      },
     };
 
-    const response = responses[category as keyof typeof responses] || responses.business_law;
+    const response =
+      responses[category as keyof typeof responses] || responses.business_law;
 
     return {
       ...response,
@@ -424,16 +469,16 @@ export class MockDataService {
         culturalContext: {
           culturalReferences: [],
           dialectTerms: [],
-          regionalRelevance: []
-        }
+          regionalRelevance: [],
+        },
       },
       mascotAnimation: {
         type: 'explaining' as const,
         sector: 'business' as const,
         duration: 3.5,
         culturalElements: ['traditional_gesture', 'professional_attire'],
-        voiceSync: true
-      }
+        voiceSync: true,
+      },
     };
   }
 
@@ -452,10 +497,11 @@ export class MockDataService {
     // Simple keyword matching simulation
     if (query) {
       const queryLower = query.toLowerCase();
-      results = results.filter(result =>
-        result.title.toLowerCase().includes(queryLower) ||
-        result.content.toLowerCase().includes(queryLower) ||
-        result.tags.some(tag => tag.toLowerCase().includes(queryLower))
+      results = results.filter(
+        result =>
+          result.title.toLowerCase().includes(queryLower) ||
+          result.content.toLowerCase().includes(queryLower) ||
+          result.tags.some(tag => tag.toLowerCase().includes(queryLower))
       );
     }
 
@@ -468,7 +514,9 @@ export class MockDataService {
 
     if (filters?.sectors?.length) {
       results = results.filter(result =>
-        result.sectors.some((sector: string) => filters.sectors.includes(sector))
+        result.sectors.some((sector: string) =>
+          filters.sectors.includes(sector)
+        )
       );
     }
 
@@ -490,7 +538,7 @@ export class MockDataService {
       'organic certification process',
       'family law updates',
       'labor code amendments',
-      'environmental compliance'
+      'environmental compliance',
     ];
 
     // Filter suggestions based on query
@@ -508,10 +556,14 @@ export class MockDataService {
     return this.createApiResponse(mascotsData as TunisianMascot[]);
   }
 
-  async getMascotBySector(sector: string): Promise<ApiResponse<TunisianMascot | null>> {
+  async getMascotBySector(
+    sector: string
+  ): Promise<ApiResponse<TunisianMascot | null>> {
     await this.simulateDelay('simple');
 
-    const mascot = mascotsData.find(m => m.sector === sector) as TunisianMascot | undefined;
+    const mascot = mascotsData.find(m => m.sector === sector) as
+      | TunisianMascot
+      | undefined;
     return this.createApiResponse(mascot || null);
   }
 
@@ -525,7 +577,9 @@ export class MockDataService {
     // Simulate unlock logic
     const mascot = mascotsData.find(m => m.id === mascotId);
     if (mascot) {
-      const customization = mascot.customizations.find(c => c.id === customizationId);
+      const customization = mascot.customizations.find(
+        c => c.id === customizationId
+      );
       if (customization) {
         (customization as any).isUnlocked = true;
         return this.createApiResponse(true);
@@ -553,22 +607,25 @@ export class MockDataService {
           type: 'traditional_law',
           content: 'Based on Article 123 of the Commercial Code...',
           contentAr: 'بناءً على المادة 123 من المجلة التجارية...',
-          contentFr: 'Basé sur l\'Article 123 du Code Commercial...',
+          contentFr: "Basé sur l'Article 123 du Code Commercial...",
           timestamp: new Date(),
-          relevanceScore: 0.92
-        }
+          relevanceScore: 0.92,
+        },
       ],
-      traditionalLegalAnswer: 'According to Tunisian law, the following provisions apply...',
-      traditionalLegalAnswerAr: 'وفقاً للقانون التونسي، تنطبق الأحكام التالية...',
-      traditionalLegalAnswerFr: 'Selon le droit tunisien, les dispositions suivantes s\'appliquent...',
+      traditionalLegalAnswer:
+        'According to Tunisian law, the following provisions apply...',
+      traditionalLegalAnswerAr:
+        'وفقاً للقانون التونسي، تنطبق الأحكام التالية...',
+      traditionalLegalAnswerFr:
+        "Selon le droit tunisien, les dispositions suivantes s'appliquent...",
       confidenceScore: 0.88,
       lastUpdated: new Date(),
       culturalContext: {
         culturalReferences: [],
         dialectTerms: [],
-        regionalRelevance: []
+        regionalRelevance: [],
       },
-      relatedUpdates: []
+      relatedUpdates: [],
     };
 
     return this.createApiResponse(mockResponse);
@@ -590,12 +647,12 @@ export class MockDataService {
       achievementProgress: {
         total: user.statistics.totalAchievements,
         points: user.statistics.totalPoints,
-        currentStreak: user.statistics.currentStreak
+        currentStreak: user.statistics.currentStreak,
       },
       categoryPreferences: {
         favorite: user.statistics.favoriteCategory,
-        mostActive: user.statistics.mostActiveSector
-      }
+        mostActive: user.statistics.mostActiveSector,
+      },
     };
 
     return this.createApiResponse(metrics);
@@ -608,11 +665,13 @@ export class MockDataService {
   }
 
   // Health check
-  async healthCheck(): Promise<ApiResponse<{ status: string; timestamp: Date }>> {
+  async healthCheck(): Promise<
+    ApiResponse<{ status: string; timestamp: Date }>
+  > {
     await this.simulateDelay('simple');
     return this.createApiResponse({
       status: 'healthy',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 }

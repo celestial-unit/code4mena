@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, { 
+import Animated, {
   FadeInLeft,
   FadeInUp,
   useSharedValue,
@@ -46,7 +46,11 @@ interface MinistryCardProps {
   index: number;
 }
 
-const MinistryCard: React.FC<MinistryCardProps> = ({ ministry, onPress, index }) => {
+const MinistryCard: React.FC<MinistryCardProps> = ({
+  ministry,
+  onPress,
+  index,
+}) => {
   const scaleValue = useSharedValue(1);
   const pulseValue = useSharedValue(1);
 
@@ -80,37 +84,51 @@ const MinistryCard: React.FC<MinistryCardProps> = ({ ministry, onPress, index })
 
   const getSignificanceColor = (significance: string) => {
     switch (significance) {
-      case 'high': return '#E31E24';
-      case 'medium': return '#FF8C00';
-      case 'low': return '#2E8B57';
-      default: return '#666666';
+      case 'high':
+        return '#E31E24';
+      case 'medium':
+        return '#FF8C00';
+      case 'low':
+        return '#2E8B57';
+      default:
+        return '#666666';
     }
   };
 
   const getPlatformIcon = (platform: string) => {
     switch (platform) {
-      case 'facebook': return 'logo-facebook';
-      case 'twitter': return 'logo-twitter';
-      case 'instagram': return 'logo-instagram';
-      case 'linkedin': return 'logo-linkedin';
-      default: return 'globe';
+      case 'facebook':
+        return 'logo-facebook';
+      case 'twitter':
+        return 'logo-twitter';
+      case 'instagram':
+        return 'logo-instagram';
+      case 'linkedin':
+        return 'logo-linkedin';
+      default:
+        return 'globe';
     }
   };
 
   const formatTime = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    
+    const diffInMinutes = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60)
+    );
+
     if (diffInMinutes < 1) return 'الآن';
     if (diffInMinutes < 60) return `منذ ${diffInMinutes} دقيقة`;
-    if (diffInMinutes < 1440) return `منذ ${Math.floor(diffInMinutes / 60)} ساعة`;
+    if (diffInMinutes < 1440)
+      return `منذ ${Math.floor(diffInMinutes / 60)} ساعة`;
     return date.toLocaleDateString('ar-TN');
   };
 
   return (
     <Animated.View
-      entering={FadeInLeft.delay(index * 150).duration(600).springify()}
+      entering={FadeInLeft.delay(index * 150)
+        .duration(600)
+        .springify()}
       style={[cardStyle, styles.ministryCard]}
     >
       <TouchableOpacity
@@ -133,19 +151,25 @@ const MinistryCard: React.FC<MinistryCardProps> = ({ ministry, onPress, index })
               {ministry.ministryNameAr}
             </Text>
             <View style={styles.platformInfo}>
-              <Ionicons 
-                name={getPlatformIcon(ministry.platform) as any} 
-                size={14} 
-                color="#666666" 
+              <Ionicons
+                name={getPlatformIcon(ministry.platform) as any}
+                size={14}
+                color="#666666"
               />
               <Text style={styles.platformText}>{ministry.platform}</Text>
             </View>
           </View>
-          
-          <View style={[
-            styles.significanceBadge, 
-            { backgroundColor: getSignificanceColor(ministry.legalSignificance) }
-          ]}>
+
+          <View
+            style={[
+              styles.significanceBadge,
+              {
+                backgroundColor: getSignificanceColor(
+                  ministry.legalSignificance
+                ),
+              },
+            ]}
+          >
             <View style={styles.significanceDot} />
           </View>
         </View>
@@ -165,16 +189,16 @@ const MinistryCard: React.FC<MinistryCardProps> = ({ ministry, onPress, index })
             </View>
           ))}
           {ministry.detectedTopics.length > 2 && (
-            <Text style={styles.moreTopicsText}>+{ministry.detectedTopics.length - 2}</Text>
+            <Text style={styles.moreTopicsText}>
+              +{ministry.detectedTopics.length - 2}
+            </Text>
           )}
         </View>
 
         {/* Footer */}
         <View style={styles.ministryFooter}>
-          <Text style={styles.timestamp}>
-            {formatTime(ministry.timestamp)}
-          </Text>
-          
+          <Text style={styles.timestamp}>{formatTime(ministry.timestamp)}</Text>
+
           <TouchableOpacity style={styles.actionButton}>
             <Ionicons name="chevron-forward" size={16} color="#E31E24" />
           </TouchableOpacity>
@@ -199,10 +223,15 @@ export const GovernmentPulseSection: React.FC<GovernmentPulseSectionProps> = ({
         ministryName: 'Ministry of Finance',
         ministryNameAr: 'وزارة المالية',
         platform: 'facebook',
-        content: 'New digital tax regulations announced for e-commerce businesses',
+        content:
+          'New digital tax regulations announced for e-commerce businesses',
         contentAr: 'إعلان لوائح ضريبية رقمية جديدة للشركات التجارة الإلكترونية',
         legalSignificance: 'high',
-        detectedTopics: ['الضرائب الرقمية', 'التجارة الإلكترونية', 'اللوائح الجديدة'],
+        detectedTopics: [
+          'الضرائب الرقمية',
+          'التجارة الإلكترونية',
+          'اللوائح الجديدة',
+        ],
         timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // 30 minutes ago
         isLive: true,
       },
@@ -212,7 +241,8 @@ export const GovernmentPulseSection: React.FC<GovernmentPulseSectionProps> = ({
         ministryName: 'Ministry of Agriculture',
         ministryNameAr: 'وزارة الفلاحة',
         platform: 'twitter',
-        content: 'Agricultural land reform act implementation guidelines released',
+        content:
+          'Agricultural land reform act implementation guidelines released',
         contentAr: 'إصدار إرشادات تنفيذ قانون إصلاح الأراضي الزراعية',
         legalSignificance: 'high',
         detectedTopics: ['إصلاح الأراضي', 'الزراعة', 'الإرشادات'],
@@ -247,15 +277,14 @@ export const GovernmentPulseSection: React.FC<GovernmentPulseSectionProps> = ({
     setMinistryUpdates(mockUpdates);
   }, []);
 
-  const liveUpdatesCount = ministryUpdates.filter(update => update.isLive).length;
+  const liveUpdatesCount = ministryUpdates.filter(
+    update => update.isLive
+  ).length;
 
   return (
     <View style={styles.container}>
       {/* Section header */}
-      <Animated.View 
-        entering={FadeInUp.duration(600)}
-        style={styles.header}
-      >
+      <Animated.View entering={FadeInUp.duration(600)} style={styles.header}>
         <View style={styles.headerContent}>
           <View style={styles.headerText}>
             <View style={styles.titleContainer}>
@@ -263,13 +292,17 @@ export const GovernmentPulseSection: React.FC<GovernmentPulseSectionProps> = ({
               {liveUpdatesCount > 0 && (
                 <View style={styles.liveBadge}>
                   <View style={styles.liveBadgeDot} />
-                  <Text style={styles.liveBadgeText}>{liveUpdatesCount} مباشر</Text>
+                  <Text style={styles.liveBadgeText}>
+                    {liveUpdatesCount} مباشر
+                  </Text>
                 </View>
               )}
             </View>
-            <Text style={styles.sectionSubtitle}>آخر تحديثات الوزارات والمؤسسات الحكومية</Text>
+            <Text style={styles.sectionSubtitle}>
+              آخر تحديثات الوزارات والمؤسسات الحكومية
+            </Text>
           </View>
-          
+
           <TouchableOpacity
             style={styles.viewAllButton}
             onPress={onViewAllPress}
@@ -298,10 +331,12 @@ export const GovernmentPulseSection: React.FC<GovernmentPulseSectionProps> = ({
             index={index}
           />
         ))}
-        
+
         {/* View all card */}
         <Animated.View
-          entering={FadeInLeft.delay(ministryUpdates.length * 150).duration(600)}
+          entering={FadeInLeft.delay(ministryUpdates.length * 150).duration(
+            600
+          )}
           style={styles.viewAllCard}
         >
           <TouchableOpacity

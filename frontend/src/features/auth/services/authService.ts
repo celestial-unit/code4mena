@@ -75,7 +75,7 @@ class AuthService {
         expires_in?: number;
       }>('/api/v1/auth/login', {
         email: credentials.email,
-        password: credentials.password
+        password: credentials.password,
       });
 
       if (!response.success || !response.user) {
@@ -89,10 +89,13 @@ class AuthService {
         user: {
           id: response.user.id || response.user.user_id,
           email: response.user.email,
-          name: response.user.name || response.user.full_name || credentials.email.split('@')[0],
-          role: response.user.role || 'user'
+          name:
+            response.user.name ||
+            response.user.full_name ||
+            credentials.email.split('@')[0],
+          role: response.user.role || 'user',
         },
-        expiresIn: response.expires_in || 3600
+        expiresIn: response.expires_in || 3600,
       };
 
       // Store tokens and user data
@@ -101,9 +104,11 @@ class AuthService {
       // Set token in API service for future requests
       apiService.setAuthToken(loginResponse.token);
 
-      console.log('[Auth] Login successful for user:', loginResponse.user.email);
+      console.log(
+        '[Auth] Login successful for user:',
+        loginResponse.user.email
+      );
       return loginResponse;
-
     } catch (error) {
       console.error('[Auth] Login failed:', error);
 
@@ -112,7 +117,7 @@ class AuthService {
         const authError: AuthError = {
           message: (error as any).message || 'Login failed',
           code: (error as any).code || 'LOGIN_ERROR',
-          status: (error as any).status
+          status: (error as any).status,
         };
         throw authError;
       }
@@ -120,7 +125,7 @@ class AuthService {
       // Generic error
       const authError: AuthError = {
         message: 'Login failed. Please check your credentials and try again.',
-        code: 'LOGIN_ERROR'
+        code: 'LOGIN_ERROR',
       };
       throw authError;
     }
@@ -137,7 +142,10 @@ class AuthService {
       try {
         await apiService.post('/api/v1/auth/logout');
       } catch (logoutError) {
-        console.warn('[Auth] Backend logout failed, continuing with local cleanup:', logoutError);
+        console.warn(
+          '[Auth] Backend logout failed, continuing with local cleanup:',
+          logoutError
+        );
       }
 
       // Clear stored authentication data
@@ -147,7 +155,6 @@ class AuthService {
       apiService.setAuthToken(null);
 
       console.log('[Auth] Logout successful');
-
     } catch (error) {
       console.error('[Auth] Logout error:', error);
 
@@ -193,7 +200,10 @@ class AuthService {
           await storageService.setUserData(response);
           return response;
         } catch (apiError) {
-          console.warn('[Auth] Failed to get user from backend, using stored data:', apiError);
+          console.warn(
+            '[Auth] Failed to get user from backend, using stored data:',
+            apiError
+          );
 
           // If API call fails, try to use stored data
           return await storageService.getUserData<User>();
@@ -240,7 +250,7 @@ class AuthService {
         refresh_token?: string;
         expires_in?: number;
       }>('/api/v1/auth/refresh', {
-        refresh_token: refreshToken
+        refresh_token: refreshToken,
       });
 
       if (!response.success || !response.token) {
@@ -256,7 +266,6 @@ class AuthService {
 
       console.log('[Auth] Token refreshed successfully');
       return response.token;
-
     } catch (error) {
       console.error('[Auth] Token refresh failed:', error);
 
@@ -285,7 +294,6 @@ class AuthService {
       await storageService.setUserData(loginResponse.user);
 
       console.log('[Auth] Authentication data stored successfully');
-
     } catch (error) {
       console.error('[Auth] Failed to store authentication data:', error);
       throw error;
@@ -347,7 +355,6 @@ class AuthService {
         apiService.setAuthToken(null);
         console.log('[Auth] Authentication cleared due to error');
       }
-
     } catch (error) {
       console.error('[Auth] Error handling auth error:', error);
 
@@ -356,7 +363,10 @@ class AuthService {
         await this.clearAuthData();
         apiService.setAuthToken(null);
       } catch (clearError) {
-        console.error('[Auth] Failed to clear auth data in error handler:', clearError);
+        console.error(
+          '[Auth] Failed to clear auth data in error handler:',
+          clearError
+        );
       }
     }
   }

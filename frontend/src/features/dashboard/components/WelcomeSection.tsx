@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, { 
-  FadeInDown, 
+import Animated, {
+  FadeInDown,
   FadeInRight,
   useSharedValue,
   useAnimatedStyle,
@@ -72,7 +72,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
   const getGreeting = () => {
     const hour = new Date().getHours();
     const language = user?.preferences?.language || 'ar';
-    
+
     if (language === 'ar') {
       if (hour < 12) return 'صباح الخير';
       if (hour < 17) return 'مساء الخير';
@@ -91,7 +91,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
   const getUserName = () => {
     if (!user) return '';
     const language = user.preferences?.language || 'ar';
-    
+
     if (language === 'ar' && user.nameAr) {
       return user.nameAr;
     } else if (language === 'fr' && user.name) {
@@ -102,7 +102,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
 
   const getWelcomeMessage = () => {
     const language = user?.preferences?.language || 'ar';
-    
+
     if (language === 'ar') {
       return 'مرحباً بك في كنوني - مرشدك القانوني الذكي';
     } else if (language === 'fr') {
@@ -112,12 +112,14 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
   };
 
   return (
-    <Animated.View 
+    <Animated.View
       entering={FadeInDown.duration(800).springify()}
       style={styles.container}
     >
       <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800' }}
+        source={{
+          uri: 'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800',
+        }}
         style={styles.backgroundImage}
         imageStyle={styles.backgroundImageStyle}
       >
@@ -129,7 +131,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
         >
           <View style={styles.content}>
             {/* Header with profile button */}
-            <Animated.View 
+            <Animated.View
               entering={FadeInRight.delay(200).duration(600)}
               style={styles.header}
             >
@@ -137,7 +139,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
                 <Text style={styles.greeting}>{getGreeting()}</Text>
                 <Text style={styles.userName}>{getUserName()}</Text>
               </View>
-              
+
               <TouchableOpacity
                 style={styles.profileButton}
                 onPress={onProfilePress}
@@ -153,7 +155,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
             </Animated.View>
 
             {/* Welcome message */}
-            <Animated.View 
+            <Animated.View
               entering={FadeInDown.delay(400).duration(600)}
               style={styles.welcomeContainer}
             >
@@ -161,7 +163,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
             </Animated.View>
 
             {/* Action buttons */}
-            <Animated.View 
+            <Animated.View
               entering={FadeInDown.delay(600).duration(600)}
               style={styles.actionButtons}
             >
@@ -178,8 +180,11 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
                   >
                     <Ionicons name="chatbubbles" size={24} color="#E31E24" />
                     <Text style={styles.chatButtonText}>
-                      {user?.preferences?.language === 'ar' ? 'ابدأ محادثة' : 
-                       user?.preferences?.language === 'fr' ? 'Commencer chat' : 'Start Chat'}
+                      {user?.preferences?.language === 'ar'
+                        ? 'ابدأ محادثة'
+                        : user?.preferences?.language === 'fr'
+                          ? 'Commencer chat'
+                          : 'Start Chat'}
                     </Text>
                   </LinearGradient>
                 </TouchableOpacity>
@@ -193,8 +198,11 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
               >
                 <Ionicons name="search" size={20} color="#FFFFFF" />
                 <Text style={styles.searchButtonText}>
-                  {user?.preferences?.language === 'ar' ? 'بحث' : 
-                   user?.preferences?.language === 'fr' ? 'Recherche' : 'Search'}
+                  {user?.preferences?.language === 'ar'
+                    ? 'بحث'
+                    : user?.preferences?.language === 'fr'
+                      ? 'Recherche'
+                      : 'Search'}
                 </Text>
               </TouchableOpacity>
             </Animated.View>

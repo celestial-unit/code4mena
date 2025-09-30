@@ -69,7 +69,13 @@ export interface SearchResultSource {
   name: string;
   nameAr: string;
   nameFr: string;
-  type: 'government' | 'parliamentary' | 'legal_database' | 'ministry' | 'court' | 'academic';
+  type:
+    | 'government'
+    | 'parliamentary'
+    | 'legal_database'
+    | 'ministry'
+    | 'court'
+    | 'academic';
   credibilityScore: number;
   logo?: string;
   description: string;
@@ -210,7 +216,7 @@ export interface SearchTrend {
   averageRelevance: number;
 }
 
-export type ContentType = 
+export type ContentType =
   | 'legal_update'
   | 'law'
   | 'regulation'
@@ -227,7 +233,7 @@ export type ContentType =
   | 'guide'
   | 'faq';
 
-export type SortOption = 
+export type SortOption =
   | 'relevance'
   | 'date'
   | 'popularity'

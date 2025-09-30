@@ -82,7 +82,13 @@ export interface VoiceMessageData {
 }
 
 export interface ChatMascotAnimation {
-  type: 'greeting' | 'thinking' | 'explaining' | 'celebrating' | 'concerned' | 'neutral';
+  type:
+    | 'greeting'
+    | 'thinking'
+    | 'explaining'
+    | 'celebrating'
+    | 'concerned'
+    | 'neutral';
   sector: Sector;
   duration: number;
   culturalElements: string[];
@@ -105,7 +111,13 @@ export interface LegalReference {
 
 export interface SuggestedAction {
   id: string;
-  type: 'search' | 'read_update' | 'contact_expert' | 'bookmark' | 'share' | 'follow_up';
+  type:
+    | 'search'
+    | 'read_update'
+    | 'contact_expert'
+    | 'bookmark'
+    | 'share'
+    | 'follow_up';
   title: string;
   titleAr: string;
   titleFr: string;

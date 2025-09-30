@@ -96,9 +96,10 @@ export const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
             {search.queryAr || search.query}
           </Text>
           <Text style={styles.recentMeta}>
-            {search.totalResults} نتيجة • {new Intl.DateTimeFormat('ar-TN', {
+            {search.totalResults} نتيجة •{' '}
+            {new Intl.DateTimeFormat('ar-TN', {
               month: 'short',
-              day: 'numeric'
+              day: 'numeric',
             }).format(search.timestamp)}
           </Text>
         </View>
@@ -138,7 +139,7 @@ export const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
 
   const renderLoadingSkeleton = () => (
     <View style={styles.loadingContainer}>
-      {[1, 2, 3, 4, 5].map((index) => (
+      {[1, 2, 3, 4, 5].map(index => (
         <View key={index} style={styles.skeletonItem}>
           <View style={styles.skeletonIcon} />
           <View style={styles.skeletonText} />

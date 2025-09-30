@@ -16,7 +16,7 @@ import {
   SearchFilters,
   SearchSuggestion,
   SearchQuery,
-  SavedSearch
+  SavedSearch,
 } from '../types';
 import { searchService } from '../services/searchService';
 import apiService from '../services/api';
@@ -24,9 +24,14 @@ import { SearchFilters as SearchFiltersComponent } from '../components/search/Se
 import { SearchResults } from '../components/search/SearchResults';
 import { SearchSuggestions } from '../components/search/SearchSuggestions';
 import { SavedSearches } from '../components/search/SavedSearches';
-import { LoadingOverlay, ErrorDisplay, NetworkStatusIndicator } from '../components/common';
+import {
+  LoadingOverlay,
+  ErrorDisplay,
+  NetworkStatusIndicator,
+} from '../components/common';
 import { useErrorHandler } from '../hooks';
 import { useNetworkState } from '../utils/networkUtils';
+import { useTheme, createThemedStyles } from '../contexts/ThemeContext';
 
 interface SearchScreenProps {
   navigation: any;
@@ -40,9 +45,13 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
   const [recentSearches, setRecentSearches] = useState<SearchQuery[]>([]);
-  const [popularSearches, setPopularSearches] = useState<SearchSuggestion[]>([]);
+  const [popularSearches, setPopularSearches] = useState<SearchSuggestion[]>(
+    []
+  );
   const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([]);
-  const [filters, setFilters] = useState<SearchFilters>(searchService.getDefaultFilters());
+  const [filters, setFilters] = useState<SearchFilters>(
+    searchService.getDefaultFilters()
+  );
   const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -52,11 +61,17 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   const [searchTime, setSearchTime] = useState(0);
   const [isInitialized, setIsInitialized] = useState(false);
 
+  // Theme context
+  const { theme } = useTheme();
+  const styles = createThemedStyles(createStyles)(theme);
+
   // Error handling
-  const { error, isRetrying, handleError, clearError, retry } = useErrorHandler({
-    maxRetries: 3,
-    showAlert: false
-  });
+  const { error, isRetrying, handleError, clearError, retry } = useErrorHandler(
+    {
+      maxRetries: 3,
+      showAlert: false,
+    }
+  );
   const networkState = useNetworkState();
 
   // Load initial data when screen focuses or mounts
@@ -106,15 +121,21 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
             successRate: item.success_rate || 0.8,
             averageResultCount: 10,
             userSpecific: false,
-            trending: item.popularity > 80
-          }
+            trending: item.popularity > 80,
+          },
         }));
       } catch (err) {
-        console.warn('Failed to load popular searches from API, using fallback:', err);
+        console.warn(
+          'Failed to load popular searches from API, using fallback:',
+          err
+        );
         try {
           popularData = await searchService.getPopularSearches();
         } catch (fallbackErr) {
-          console.warn('Failed to load popular searches from service:', fallbackErr);
+          console.warn(
+            'Failed to load popular searches from service:',
+            fallbackErr
+          );
         }
       }
 
@@ -167,13 +188,16 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
             successRate: item.success_rate || 0.8,
             averageResultCount: 10,
             userSpecific: false,
-            trending: item.popularity > 80
-          }
+            trending: item.popularity > 80,
+          },
         }));
 
       setSuggestions(filteredSuggestions);
     } catch (err) {
-      console.error('Failed to load suggestions from API, using fallback:', err);
+      console.error(
+        'Failed to load suggestions from API, using fallback:',
+        err
+      );
 
       // Fallback to search service
       try {
@@ -186,7 +210,11 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     }
   };
 
-  const performSearch = async (query: string, page: number = 1, newFilters?: SearchFilters) => {
+  const performSearch = async (
+    query: string,
+    page: number = 1,
+    newFilters?: SearchFilters
+  ) => {
     if (!query.trim()) return;
 
     setSearchLoading(true);
@@ -194,7 +222,11 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
 
     // Check network connectivity first
     if (!networkState.isConnected || !networkState.isInternetReachable) {
-      handleError(new Error('لا يوجد اتصال بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.'));
+      handleError(
+        new Error(
+          'لا يوجد اتصال بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.'
+        )
+      );
       setSearchLoading(false);
       return;
     }
@@ -207,65 +239,69 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
         const legalResponse = await apiService.submitLegalQuery({
           query: query,
           language: 'ar',
-          user_id: 'search-user'
+          user_id: 'search-user',
         });
 
         const endTime = Date.now();
         setSearchTime(endTime - startTime);
 
         // Convert API response to search results format
-        const searchResults: SearchResult[] = legalResponse.sources.map((source: any, index: number) => ({
-          id: `result-${index}`,
-          title: source.title,
-          titleAr: source.title,
-          titleFr: source.title,
-          content: source.article,
-          contentAr: source.article,
-          contentFr: source.article,
-          excerpt: source.article.substring(0, 200) + '...',
-          excerptAr: source.article.substring(0, 200) + '...',
-          excerptFr: source.article.substring(0, 200) + '...',
-          type: 'legal_update',
-          category: 'business_law',
-          sectors: ['business'],
-          source: {
-            id: 'api-source',
-            name: source.source,
-            nameAr: source.source,
-            nameFr: source.source,
-            type: 'government',
-            credibilityScore: source.relevance_score,
-            description: 'مصدر قانوني رسمي',
-            descriptionAr: 'مصدر قانوني رسمي',
-            descriptionFr: 'Source juridique officielle'
-          },
-          relevanceScore: source.relevance_score,
-          publishedAt: new Date(),
-          lastUpdated: new Date(),
-          url: source.url || '',
-          tags: ['قانوني', 'رسمي'],
-          tagsAr: ['قانوني', 'رسمي'],
-          tagsFr: ['juridique', 'officiel'],
-          highlights: [{
-            field: 'content',
-            text: source.article.substring(0, 100),
-            startIndex: 0,
-            endIndex: 100,
-            matchType: 'semantic'
-          }],
-          relatedResults: [],
-          isBookmarked: false,
-          viewCount: Math.floor(source.relevance_score * 100),
-          metadata: {
-            confidence: source.relevance_score,
-            processingTime: 1.5,
-            sourceQuality: source.relevance_score,
-            freshness: 0.8,
-            popularity: source.relevance_score * 100,
-            userEngagement: 0.7,
-            culturalRelevance: 0.9
-          }
-        }));
+        const searchResults: SearchResult[] = legalResponse.sources.map(
+          (source: any, index: number) => ({
+            id: `result-${index}`,
+            title: source.title,
+            titleAr: source.title,
+            titleFr: source.title,
+            content: source.article,
+            contentAr: source.article,
+            contentFr: source.article,
+            excerpt: source.article.substring(0, 200) + '...',
+            excerptAr: source.article.substring(0, 200) + '...',
+            excerptFr: source.article.substring(0, 200) + '...',
+            type: 'legal_update',
+            category: 'business_law',
+            sectors: ['business'],
+            source: {
+              id: 'api-source',
+              name: source.source,
+              nameAr: source.source,
+              nameFr: source.source,
+              type: 'government',
+              credibilityScore: source.relevance_score,
+              description: 'مصدر قانوني رسمي',
+              descriptionAr: 'مصدر قانوني رسمي',
+              descriptionFr: 'Source juridique officielle',
+            },
+            relevanceScore: source.relevance_score,
+            publishedAt: new Date(),
+            lastUpdated: new Date(),
+            url: source.url || '',
+            tags: ['قانوني', 'رسمي'],
+            tagsAr: ['قانوني', 'رسمي'],
+            tagsFr: ['juridique', 'officiel'],
+            highlights: [
+              {
+                field: 'content',
+                text: source.article.substring(0, 100),
+                startIndex: 0,
+                endIndex: 100,
+                matchType: 'semantic',
+              },
+            ],
+            relatedResults: [],
+            isBookmarked: false,
+            viewCount: Math.floor(source.relevance_score * 100),
+            metadata: {
+              confidence: source.relevance_score,
+              processingTime: 1.5,
+              sourceQuality: source.relevance_score,
+              freshness: 0.8,
+              popularity: source.relevance_score * 100,
+              userEngagement: 0.7,
+              culturalRelevance: 0.9,
+            },
+          })
+        );
 
         if (page === 1) {
           setSearchResults(searchResults);
@@ -278,9 +314,11 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
         setHasMoreResults(false); // API doesn't support pagination yet
         setTotalResults(searchResults.length);
         setSearchMode('results');
-
       } catch (apiError) {
-        console.warn('API search failed, falling back to search service:', apiError);
+        console.warn(
+          'API search failed, falling back to search service:',
+          apiError
+        );
 
         // Fallback to existing search service
         const response = await searchService.searchLegalContent(
@@ -310,7 +348,6 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           throw new Error(response.error?.messageAr || 'فشل في البحث');
         }
       }
-
     } catch (err) {
       console.error('Search error:', err);
       handleError(err, 'حدث خطأ أثناء البحث');
@@ -351,7 +388,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     if (navigation && navigation.navigate) {
       navigation.navigate('LegalUpdateDetail', {
         contentId: result.id,
-        content: result
+        content: result,
       });
     } else {
       console.log('Would navigate to result:', result.id);
@@ -390,7 +427,11 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   const handleExecuteSavedSearch = (savedSearch: SavedSearch) => {
     setSearchQuery(savedSearch.queryAr || savedSearch.query);
     setFilters(savedSearch.filters);
-    performSearch(savedSearch.queryAr || savedSearch.query, 1, savedSearch.filters);
+    performSearch(
+      savedSearch.queryAr || savedSearch.query,
+      1,
+      savedSearch.filters
+    );
   };
 
   const handleDeleteSavedSearch = async (searchId: string) => {
@@ -410,7 +451,12 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     alertsEnabled: boolean
   ) => {
     try {
-      const savedSearch = await searchService.saveSearch(name, query, searchFilters, alertsEnabled);
+      const savedSearch = await searchService.saveSearch(
+        name,
+        query,
+        searchFilters,
+        alertsEnabled
+      );
       setSavedSearches(prev => [savedSearch, ...prev]);
       Alert.alert('نجح', 'تم حفظ البحث بنجاح');
     } catch (err) {
@@ -455,11 +501,13 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           returnKeyType="search"
         />
         {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => {
-            setSearchQuery('');
-            setSearchMode('suggestions');
-            setSearchResults([]);
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setSearchQuery('');
+              setSearchMode('suggestions');
+              setSearchResults([]);
+            }}
+          >
             <Ionicons name="close-circle" size={20} color="#999999" />
           </TouchableOpacity>
         )}
@@ -478,10 +526,12 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           size={20}
           color={searchMode === 'suggestions' ? '#E31E24' : '#666666'}
         />
-        <Text style={[
-          styles.tabText,
-          searchMode === 'suggestions' && styles.activeTabText
-        ]}>
+        <Text
+          style={[
+            styles.tabText,
+            searchMode === 'suggestions' && styles.activeTabText,
+          ]}
+        >
           البحث
         </Text>
       </TouchableOpacity>
@@ -496,10 +546,12 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           size={20}
           color={searchMode === 'results' ? '#E31E24' : '#666666'}
         />
-        <Text style={[
-          styles.tabText,
-          searchMode === 'results' && styles.activeTabText
-        ]}>
+        <Text
+          style={[
+            styles.tabText,
+            searchMode === 'results' && styles.activeTabText,
+          ]}
+        >
           النتائج ({totalResults})
         </Text>
       </TouchableOpacity>
@@ -513,10 +565,12 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           size={20}
           color={searchMode === 'saved' ? '#E31E24' : '#666666'}
         />
-        <Text style={[
-          styles.tabText,
-          searchMode === 'saved' && styles.activeTabText
-        ]}>
+        <Text
+          style={[
+            styles.tabText,
+            searchMode === 'saved' && styles.activeTabText,
+          ]}
+        >
           المحفوظة ({savedSearches.length})
         </Text>
       </TouchableOpacity>
@@ -562,11 +616,9 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
                   style={styles.saveSearchButton}
                   onPress={() => {
                     // Use a simple alert for now, can be enhanced with a custom modal later
-                    Alert.alert(
-                      'حفظ البحث',
-                      'هذه الميزة ستكون متاحة قريباً',
-                      [{ text: 'موافق', style: 'default' }]
-                    );
+                    Alert.alert('حفظ البحث', 'هذه الميزة ستكون متاحة قريباً', [
+                      { text: 'موافق', style: 'default' },
+                    ]);
                   }}
                 >
                   <Ionicons name="bookmark-outline" size={16} color="#E31E24" />
@@ -638,14 +690,16 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
         <TouchableOpacity
           style={[
             styles.filterButton,
-            getActiveFiltersCount() > 0 && styles.filterButtonActive
+            getActiveFiltersCount() > 0 && styles.filterButtonActive,
           ]}
           onPress={() => setShowFilters(true)}
         >
           <Ionicons name="options" size={24} color="#E31E24" />
           {getActiveFiltersCount() > 0 && (
             <View style={styles.filterBadge}>
-              <Text style={styles.filterBadgeText}>{getActiveFiltersCount()}</Text>
+              <Text style={styles.filterBadgeText}>
+                {getActiveFiltersCount()}
+              </Text>
             </View>
           )}
         </TouchableOpacity>
@@ -658,9 +712,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
       {renderTabBar()}
 
       {/* Content */}
-      <View style={styles.content}>
-        {renderContent()}
-      </View>
+      <View style={styles.content}>{renderContent()}</View>
 
       {/* Loading Overlay */}
       {searchLoading && <LoadingOverlay message="جاري البحث..." />}
@@ -676,173 +728,177 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8F9FA',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFF5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-  },
-  filterButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFF5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-  },
-  filterButtonActive: {
-    backgroundColor: '#E31E24',
-  },
-  filterBadge: {
-    position: 'absolute',
-    top: -2,
-    right: -2,
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: '#D4AF37',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  filterBadgeText: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-  },
-  searchContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: '#1A1A1A',
-    marginHorizontal: 8,
-    textAlign: 'right',
-  },
-  tabBar: {
-    flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  tab: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    gap: 6,
-  },
-  activeTab: {
-    borderBottomWidth: 2,
-    borderBottomColor: '#E31E24',
-  },
-  tabText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#666666',
-  },
-  activeTabText: {
-    color: '#E31E24',
-    fontWeight: '600',
-  },
-  content: {
-    flex: 1,
-  },
-  resultsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  resultsCount: {
-    fontSize: 14,
-    color: '#666666',
-  },
-  saveSearchButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    backgroundColor: '#FFF5F5',
-    gap: 4,
-  },
-  saveSearchText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#E31E24',
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
-  },
-  errorText: {
-    fontSize: 16,
-    color: '#FF4444',
-    textAlign: 'center',
-    marginVertical: 16,
-    lineHeight: 24,
-  },
-  retryButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-    backgroundColor: '#E31E24',
-  },
-  retryButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 16,
-    color: '#666666',
-  },
-});
+const createStyles = createThemedStyles(theme =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      backgroundColor: theme.colors.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+    },
+    backButton: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: theme.colors.primary + '15',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    headerTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: theme.colors.text,
+    },
+    filterButton: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: theme.colors.primary + '15',
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'relative',
+    },
+    filterButtonActive: {
+      backgroundColor: theme.colors.primary,
+    },
+    filterBadge: {
+      position: 'absolute',
+      top: -2,
+      right: -2,
+      width: 18,
+      height: 18,
+      borderRadius: 9,
+      backgroundColor: theme.colors.accent,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    filterBadgeText: {
+      fontSize: 10,
+      fontWeight: 'bold',
+      color: '#FFFFFF',
+    },
+    searchContainer: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      backgroundColor: theme.colors.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+    },
+    searchBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: theme.colors.card,
+      borderRadius: 12,
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+    },
+    searchInput: {
+      flex: 1,
+      fontSize: 16,
+      color: theme.colors.text,
+      marginHorizontal: 8,
+      textAlign: 'right',
+    },
+    tabBar: {
+      flexDirection: 'row',
+      backgroundColor: theme.colors.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+    },
+    tab: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 12,
+      gap: 6,
+    },
+    activeTab: {
+      borderBottomWidth: 2,
+      borderBottomColor: theme.colors.primary,
+    },
+    tabText: {
+      fontSize: 14,
+      fontWeight: '500',
+      color: theme.colors.textSecondary,
+    },
+    activeTabText: {
+      color: theme.colors.primary,
+      fontWeight: '600',
+    },
+    content: {
+      flex: 1,
+    },
+    resultsHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      backgroundColor: theme.colors.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+    },
+    resultsCount: {
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+    },
+    saveSearchButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 16,
+      backgroundColor: theme.colors.primary + '15',
+      gap: 4,
+    },
+    saveSearchText: {
+      fontSize: 14,
+      fontWeight: '500',
+      color: theme.colors.primary,
+    },
+    errorContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 32,
+      backgroundColor: theme.colors.background,
+    },
+    errorText: {
+      fontSize: 16,
+      color: theme.colors.error,
+      textAlign: 'center',
+      marginVertical: 16,
+      lineHeight: 24,
+    },
+    retryButton: {
+      paddingHorizontal: 24,
+      paddingVertical: 12,
+      borderRadius: 8,
+      backgroundColor: theme.colors.primary,
+    },
+    retryButtonText: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: '#FFFFFF',
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+    },
+    loadingText: {
+      fontSize: 16,
+      color: theme.colors.textSecondary,
+    },
+  })
+);

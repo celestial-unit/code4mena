@@ -96,7 +96,9 @@ class ApiService {
   }
 
   // Build headers for requests
-  private buildHeaders(customHeaders: Record<string, string> = {}): Record<string, string> {
+  private buildHeaders(
+    customHeaders: Record<string, string> = {}
+  ): Record<string, string> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...customHeaders,
@@ -113,7 +115,9 @@ class ApiService {
   // Build full URL
   private buildUrl(endpoint: string): string {
     // Remove leading slash if present to avoid double slashes
-    const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
+    const cleanEndpoint = endpoint.startsWith('/')
+      ? endpoint.slice(1)
+      : endpoint;
     return `${this.baseUrl}/${cleanEndpoint}`;
   }
 
@@ -139,7 +143,12 @@ class ApiService {
       };
 
       // Add body for methods that support it
-      if (data && (method === HttpMethod.POST || method === HttpMethod.PUT || method === HttpMethod.PATCH)) {
+      if (
+        data &&
+        (method === HttpMethod.POST ||
+          method === HttpMethod.PUT ||
+          method === HttpMethod.PATCH)
+      ) {
         requestOptions.body = JSON.stringify(data);
       }
 
@@ -172,7 +181,9 @@ class ApiService {
         // Handle authentication errors
         if (response.status === 401) {
           // Import authService dynamically to avoid circular dependency
-          const { default: authService } = await import('../../features/auth/services/authService');
+          const { default: authService } = await import(
+            '../../features/auth/services/authService'
+          );
           await authService.handleAuthError();
         }
 
@@ -195,7 +206,6 @@ class ApiService {
         console.error('[API] Failed to parse response as JSON:', parseError);
         throw new Error('Invalid JSON response from server');
       }
-
     } catch (error) {
       // Handle network errors and timeouts
       if (error instanceof Error) {
@@ -236,19 +246,34 @@ class ApiService {
     return this.request<T>(HttpMethod.GET, endpoint, undefined, headers);
   }
 
-  async post<T>(endpoint: string, data?: any, headers?: Record<string, string>): Promise<T> {
+  async post<T>(
+    endpoint: string,
+    data?: any,
+    headers?: Record<string, string>
+  ): Promise<T> {
     return this.request<T>(HttpMethod.POST, endpoint, data, headers);
   }
 
-  async put<T>(endpoint: string, data?: any, headers?: Record<string, string>): Promise<T> {
+  async put<T>(
+    endpoint: string,
+    data?: any,
+    headers?: Record<string, string>
+  ): Promise<T> {
     return this.request<T>(HttpMethod.PUT, endpoint, data, headers);
   }
 
-  async patch<T>(endpoint: string, data?: any, headers?: Record<string, string>): Promise<T> {
+  async patch<T>(
+    endpoint: string,
+    data?: any,
+    headers?: Record<string, string>
+  ): Promise<T> {
     return this.request<T>(HttpMethod.PATCH, endpoint, data, headers);
   }
 
-  async delete<T>(endpoint: string, headers?: Record<string, string>): Promise<T> {
+  async delete<T>(
+    endpoint: string,
+    headers?: Record<string, string>
+  ): Promise<T> {
     return this.request<T>(HttpMethod.DELETE, endpoint, undefined, headers);
   }
 
@@ -286,7 +311,9 @@ class ApiService {
 
   async getPopularQueries(language: string = 'ar'): Promise<PopularQuery[]> {
     try {
-      const response = await this.get<PopularQuery[]>(`/popular-queries?language=${language}`);
+      const response = await this.get<PopularQuery[]>(
+        `/popular-queries?language=${language}`
+      );
       return response;
     } catch (error) {
       console.error('[API] Failed to get popular queries:', error);
@@ -295,7 +322,10 @@ class ApiService {
   }
 
   // Audio methods
-  async processAudioQuery(audioFile: File, language: string = 'ar-TN'): Promise<any> {
+  async processAudioQuery(
+    audioFile: File,
+    language: string = 'ar-TN'
+  ): Promise<any> {
     try {
       const formData = new FormData();
       formData.append('audio_file', audioFile);

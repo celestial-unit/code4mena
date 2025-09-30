@@ -34,25 +34,21 @@ const AuthTestScreen: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    Alert.alert(
-      'تسجيل الخروج',
-      'هل أنت متأكد من أنك تريد تسجيل الخروج؟',
-      [
-        { text: 'إلغاء', style: 'cancel' },
-        {
-          text: 'تسجيل الخروج',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await logout();
-              Alert.alert('تم تسجيل الخروج', 'تم تسجيل الخروج بنجاح');
-            } catch (error) {
-              console.error('Logout error:', error);
-            }
-          },
+    Alert.alert('تسجيل الخروج', 'هل أنت متأكد من أنك تريد تسجيل الخروج؟', [
+      { text: 'إلغاء', style: 'cancel' },
+      {
+        text: 'تسجيل الخروج',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await logout();
+            Alert.alert('تم تسجيل الخروج', 'تم تسجيل الخروج بنجاح');
+          } catch (error) {
+            console.error('Logout error:', error);
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
 
   if (isLoading) {
@@ -75,23 +71,23 @@ const AuthTestScreen: React.FC = () => {
       {isAuthenticated && user ? (
         <View style={styles.userSection}>
           <Text style={styles.sectionTitle}>معلومات المستخدم</Text>
-          
+
           <View style={styles.userInfo}>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>الاسم:</Text>
               <Text style={styles.infoValue}>{user.name}</Text>
             </View>
-            
+
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>البريد الإلكتروني:</Text>
               <Text style={styles.infoValue}>{user.email}</Text>
             </View>
-            
+
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>المعرف:</Text>
               <Text style={styles.infoValue}>{user.id}</Text>
             </View>
-            
+
             {user.role && (
               <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>الدور:</Text>
@@ -107,7 +103,7 @@ const AuthTestScreen: React.FC = () => {
       ) : (
         <View style={styles.loginSection}>
           <Text style={styles.sectionTitle}>تسجيل الدخول مطلوب</Text>
-          
+
           {showLoginForm ? (
             <LoginForm
               onLoginSuccess={handleLoginSuccess}
@@ -118,7 +114,9 @@ const AuthTestScreen: React.FC = () => {
               style={styles.showLoginButton}
               onPress={() => setShowLoginForm(true)}
             >
-              <Text style={styles.showLoginButtonText}>عرض نموذج تسجيل الدخول</Text>
+              <Text style={styles.showLoginButtonText}>
+                عرض نموذج تسجيل الدخول
+              </Text>
             </TouchableOpacity>
           )}
         </View>
@@ -126,23 +124,23 @@ const AuthTestScreen: React.FC = () => {
 
       <View style={styles.statusSection}>
         <Text style={styles.sectionTitle}>حالة المصادقة</Text>
-        
+
         <View style={styles.statusInfo}>
           <View style={styles.statusRow}>
             <Text style={styles.statusLabel}>مصادق:</Text>
-            <Text style={[
-              styles.statusValue,
-              isAuthenticated ? styles.statusSuccess : styles.statusError
-            ]}>
+            <Text
+              style={[
+                styles.statusValue,
+                isAuthenticated ? styles.statusSuccess : styles.statusError,
+              ]}
+            >
               {isAuthenticated ? 'نعم' : 'لا'}
             </Text>
           </View>
-          
+
           <View style={styles.statusRow}>
             <Text style={styles.statusLabel}>جاري التحميل:</Text>
-            <Text style={styles.statusValue}>
-              {isLoading ? 'نعم' : 'لا'}
-            </Text>
+            <Text style={styles.statusValue}>{isLoading ? 'نعم' : 'لا'}</Text>
           </View>
         </View>
       </View>

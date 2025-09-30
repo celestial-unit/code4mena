@@ -13,7 +13,7 @@ export class NetworkUtils {
   private networkState: NetworkState = {
     isConnected: false,
     isInternetReachable: false,
-    type: 'unknown'
+    type: 'unknown',
   };
   private listeners: ((state: NetworkState) => void)[] = [];
 
@@ -33,7 +33,7 @@ export class NetworkUtils {
       const newState: NetworkState = {
         isConnected: state.isConnected ?? false,
         isInternetReachable: state.isInternetReachable ?? false,
-        type: state.type || 'unknown'
+        type: state.type || 'unknown',
       };
 
       const wasConnected = this.networkState.isConnected;
@@ -44,9 +44,15 @@ export class NetworkUtils {
 
       // Show connectivity alerts
       if (!wasConnected && newState.isConnected) {
-        this.showConnectivityAlert('تم استعادة الاتصال', 'تم استعادة الاتصال بالإنترنت بنجاح.');
+        this.showConnectivityAlert(
+          'تم استعادة الاتصال',
+          'تم استعادة الاتصال بالإنترنت بنجاح.'
+        );
       } else if (wasConnected && !newState.isConnected) {
-        this.showConnectivityAlert('انقطع الاتصال', 'تم فقدان الاتصال بالإنترنت. يرجى التحقق من اتصالك.');
+        this.showConnectivityAlert(
+          'انقطع الاتصال',
+          'تم فقدان الاتصال بالإنترنت. يرجى التحقق من اتصالك.'
+        );
       }
     });
   }
@@ -61,7 +67,7 @@ export class NetworkUtils {
       const networkState: NetworkState = {
         isConnected: state.isConnected ?? false,
         isInternetReachable: state.isInternetReachable ?? false,
-        type: state.type || 'unknown'
+        type: state.type || 'unknown',
       };
       this.networkState = networkState;
       return networkState;
@@ -73,7 +79,7 @@ export class NetworkUtils {
 
   public addListener(listener: (state: NetworkState) => void): () => void {
     this.listeners.push(listener);
-    
+
     // Return unsubscribe function
     return () => {
       const index = this.listeners.indexOf(listener);
@@ -84,7 +90,9 @@ export class NetworkUtils {
   }
 
   public isOnline(): boolean {
-    return this.networkState.isConnected && this.networkState.isInternetReachable;
+    return (
+      this.networkState.isConnected && this.networkState.isInternetReachable
+    );
   }
 
   public getConnectionType(): string {
@@ -92,28 +100,27 @@ export class NetworkUtils {
   }
 
   private showConnectivityAlert(title: string, message: string) {
-    Alert.alert(
-      title,
-      message,
-      [{ text: 'موافق', style: 'default' }],
-      { cancelable: true }
-    );
+    Alert.alert(title, message, [{ text: 'موافق', style: 'default' }], {
+      cancelable: true,
+    });
   }
 
-  public static async waitForConnection(timeout: number = 10000): Promise<boolean> {
+  public static async waitForConnection(
+    timeout: number = 10000
+  ): Promise<boolean> {
     const networkUtils = NetworkUtils.getInstance();
-    
+
     if (networkUtils.isOnline()) {
       return true;
     }
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const timeoutId = setTimeout(() => {
         unsubscribe();
         resolve(false);
       }, timeout);
 
-      const unsubscribe = networkUtils.addListener((state) => {
+      const unsubscribe = networkUtils.addListener(state => {
         if (state.isConnected && state.isInternetReachable) {
           clearTimeout(timeoutId);
           unsubscribe();
@@ -133,10 +140,10 @@ export const useNetworkState = () => {
   React.useEffect(() => {
     const networkUtils = NetworkUtils.getInstance();
     const unsubscribe = networkUtils.addListener(setNetworkState);
-    
+
     // Get initial state
     networkUtils.checkConnectivity().then(setNetworkState);
-    
+
     return unsubscribe;
   }, []);
 

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, { 
+import Animated, {
   FadeInRight,
   FadeInUp,
   useSharedValue,
@@ -50,39 +50,56 @@ const UpdateCard: React.FC<UpdateCardProps> = ({ update, onPress, index }) => {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return '#E31E24';
-      case 'medium': return '#FF8C00';
-      case 'low': return '#2E8B57';
-      default: return '#666666';
+      case 'high':
+        return '#E31E24';
+      case 'medium':
+        return '#FF8C00';
+      case 'low':
+        return '#2E8B57';
+      default:
+        return '#666666';
     }
   };
 
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
-      case 'high': return 'alert-circle';
-      case 'medium': return 'information-circle';
-      case 'low': return 'checkmark-circle';
-      default: return 'help-circle';
+      case 'high':
+        return 'alert-circle';
+      case 'medium':
+        return 'information-circle';
+      case 'low':
+        return 'checkmark-circle';
+      default:
+        return 'help-circle';
     }
   };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'business_law': return 'business';
-      case 'tax_law': return 'calculator';
-      case 'labor_law': return 'people';
-      case 'administrative_law': return 'document-text';
-      case 'family_law': return 'home';
-      case 'environmental_law': return 'leaf';
-      default: return 'document';
+      case 'business_law':
+        return 'business';
+      case 'tax_law':
+        return 'calculator';
+      case 'labor_law':
+        return 'people';
+      case 'administrative_law':
+        return 'document-text';
+      case 'family_law':
+        return 'home';
+      case 'environmental_law':
+        return 'leaf';
+      default:
+        return 'document';
     }
   };
 
   const formatDate = (date: Date | string) => {
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - dateObj.getTime()) / (1000 * 60 * 60));
-    
+    const diffInHours = Math.floor(
+      (now.getTime() - dateObj.getTime()) / (1000 * 60 * 60)
+    );
+
     if (diffInHours < 1) return 'منذ دقائق';
     if (diffInHours < 24) return `منذ ${diffInHours} ساعة`;
     if (diffInHours < 48) return 'أمس';
@@ -91,7 +108,9 @@ const UpdateCard: React.FC<UpdateCardProps> = ({ update, onPress, index }) => {
 
   return (
     <Animated.View
-      entering={FadeInRight.delay(index * 100).duration(600).springify()}
+      entering={FadeInRight.delay(index * 100)
+        .duration(600)
+        .springify()}
       style={[cardStyle, styles.updateCard]}
     >
       <TouchableOpacity
@@ -100,26 +119,36 @@ const UpdateCard: React.FC<UpdateCardProps> = ({ update, onPress, index }) => {
         style={styles.updateCardContent}
       >
         {/* Priority indicator */}
-        <View style={[styles.priorityIndicator, { backgroundColor: getPriorityColor(update.priority) }]} />
-        
+        <View
+          style={[
+            styles.priorityIndicator,
+            { backgroundColor: getPriorityColor(update.priority) },
+          ]}
+        />
+
         {/* Header */}
         <View style={styles.updateHeader}>
           <View style={styles.updateMeta}>
-            <View style={[styles.categoryIcon, { backgroundColor: getPriorityColor(update.priority) + '20' }]}>
-              <Ionicons 
-                name={getCategoryIcon(update.category) as any} 
-                size={16} 
-                color={getPriorityColor(update.priority)} 
+            <View
+              style={[
+                styles.categoryIcon,
+                { backgroundColor: getPriorityColor(update.priority) + '20' },
+              ]}
+            >
+              <Ionicons
+                name={getCategoryIcon(update.category) as any}
+                size={16}
+                color={getPriorityColor(update.priority)}
               />
             </View>
             <Text style={styles.updateSource}>{update.source.nameAr}</Text>
           </View>
-          
+
           <View style={styles.priorityBadge}>
-            <Ionicons 
-              name={getPriorityIcon(update.priority) as any} 
-              size={12} 
-              color={getPriorityColor(update.priority)} 
+            <Ionicons
+              name={getPriorityIcon(update.priority) as any}
+              size={12}
+              color={getPriorityColor(update.priority)}
             />
           </View>
         </View>
@@ -143,10 +172,12 @@ const UpdateCard: React.FC<UpdateCardProps> = ({ update, onPress, index }) => {
               </View>
             ))}
             {update.tagsAr.length > 2 && (
-              <Text style={styles.moreTagsText}>+{update.tagsAr.length - 2}</Text>
+              <Text style={styles.moreTagsText}>
+                +{update.tagsAr.length - 2}
+              </Text>
             )}
           </View>
-          
+
           <Text style={styles.updateDate}>
             {formatDate(update.publishedAt)}
           </Text>
@@ -179,16 +210,15 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
   return (
     <View style={styles.container}>
       {/* Section header */}
-      <Animated.View 
-        entering={FadeInUp.duration(600)}
-        style={styles.header}
-      >
+      <Animated.View entering={FadeInUp.duration(600)} style={styles.header}>
         <View style={styles.headerContent}>
           <View style={styles.headerText}>
             <Text style={styles.sectionTitle}>التحديثات الأخيرة</Text>
-            <Text style={styles.sectionSubtitle}>آخر التطورات القانونية المهمة</Text>
+            <Text style={styles.sectionSubtitle}>
+              آخر التطورات القانونية المهمة
+            </Text>
           </View>
-          
+
           <TouchableOpacity
             style={styles.viewAllButton}
             onPress={onViewAllPress}
@@ -217,7 +247,7 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
             index={index}
           />
         ))}
-        
+
         {/* View all card */}
         <Animated.View
           entering={FadeInRight.delay(updates.length * 100).duration(600)}

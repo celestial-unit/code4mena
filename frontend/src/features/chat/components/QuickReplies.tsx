@@ -59,7 +59,9 @@ export const QuickReplies: React.FC<QuickRepliesProps> = ({
     return icons[category] || 'help-circle-outline';
   };
 
-  const getCategoryColor = (category: LegalCategory): readonly [string, string] => {
+  const getCategoryColor = (
+    category: LegalCategory
+  ): readonly [string, string] => {
     const colors: Record<LegalCategory, readonly [string, string]> = {
       business_law: ['#E31E24', '#D4AF37'],
       civil_law: ['#2196F3', '#21CBF3'],
@@ -81,10 +83,10 @@ export const QuickReplies: React.FC<QuickRepliesProps> = ({
         colors={getCategoryColor(category)}
         style={styles.categoryGradient}
       >
-        <Ionicons 
-          name={getCategoryIcon(category) as any} 
-          size={20} 
-          color="#FFFFFF" 
+        <Ionicons
+          name={getCategoryIcon(category) as any}
+          size={20}
+          color="#FFFFFF"
         />
         <Text style={styles.categoryTitle}>
           أسئلة شائعة - {getCategoryDisplayName(category)}
@@ -173,14 +175,16 @@ export const QuickReplies: React.FC<QuickRepliesProps> = ({
       ]}
     >
       {renderCategoryHeader()}
-      
+
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
         style={styles.scrollContainer}
       >
-        {replies.slice(0, 6).map((reply, index) => renderQuickReply(reply, index))}
+        {replies
+          .slice(0, 6)
+          .map((reply, index) => renderQuickReply(reply, index))}
       </ScrollView>
 
       <View style={styles.hintContainer}>

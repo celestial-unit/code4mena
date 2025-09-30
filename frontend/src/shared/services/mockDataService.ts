@@ -1,20 +1,20 @@
-import { 
-  LegalUpdate, 
-  User, 
-  ChatConversation, 
-  TunisianMascot, 
+import {
+  LegalUpdate,
+  User,
+  ChatConversation,
+  TunisianMascot,
   SearchResult,
   SearchQuery,
   LegalIntelligenceResponse,
   ApiResponse,
-  PaginatedResponse
+  PaginatedResponse,
 } from '../types';
 
-import { 
+import {
   transformLegalUpdates,
   transformUsers,
   transformChatConversations,
-  transformSearchResults
+  transformSearchResults,
 } from '../utils/dataTransformers';
 
 // Import mock data
@@ -27,7 +27,9 @@ import searchResultsDataRaw from '../data/mock/search-results.json';
 // Transform raw JSON data to proper types
 const legalUpdatesData = transformLegalUpdates(legalUpdatesDataRaw);
 const usersData = transformUsers(usersDataRaw);
-const chatConversationsData = transformChatConversations(chatConversationsDataRaw);
+const chatConversationsData = transformChatConversations(
+  chatConversationsDataRaw
+);
 const searchResultsData = transformSearchResults(searchResultsDataRaw);
 
 /**
@@ -51,13 +53,15 @@ export class MockDataService {
   /**
    * Simulate network delay
    */
-  private async simulateDelay(complexity: 'simple' | 'medium' | 'complex' = 'medium'): Promise<void> {
+  private async simulateDelay(
+    complexity: 'simple' | 'medium' | 'complex' = 'medium'
+  ): Promise<void> {
     const delays = {
       simple: this.baseDelay,
       medium: this.baseDelay * 1.5,
-      complex: this.baseDelay * 2.5
+      complex: this.baseDelay * 2.5,
     };
-    
+
     const delay = delays[complexity] + Math.random() * 500;
     await new Promise(resolve => setTimeout(resolve, delay));
   }
@@ -65,18 +69,23 @@ export class MockDataService {
   /**
    * Simulate API response wrapper
    */
-  private createApiResponse<T>(data: T, success: boolean = true): ApiResponse<T> {
+  private createApiResponse<T>(
+    data: T,
+    success: boolean = true
+  ): ApiResponse<T> {
     return {
       success,
       data: success ? data : undefined,
-      error: success ? undefined : {
-        code: 'MOCK_ERROR',
-        message: 'Simulated error for testing',
-        messageAr: 'خطأ محاكي للاختبار',
-        messageFr: 'Erreur simulée pour les tests'
-      },
+      error: success
+        ? undefined
+        : {
+            code: 'MOCK_ERROR',
+            message: 'Simulated error for testing',
+            messageAr: 'خطأ محاكي للاختبار',
+            messageFr: 'Erreur simulée pour les tests',
+          },
       timestamp: new Date(),
-      requestId: `mock-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      requestId: `mock-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     };
   }
 
@@ -84,14 +93,14 @@ export class MockDataService {
    * Create paginated response
    */
   private createPaginatedResponse<T>(
-    items: T[], 
-    page: number = 1, 
+    items: T[],
+    page: number = 1,
     pageSize: number = 10
   ): PaginatedResponse<T> {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     const paginatedItems = items.slice(startIndex, endIndex);
-    
+
     return {
       items: paginatedItems,
       totalItems: items.length,
@@ -99,43 +108,56 @@ export class MockDataService {
       currentPage: page,
       pageSize,
       hasNextPage: endIndex < items.length,
-      hasPreviousPage: page > 1
+      hasPreviousPage: page > 1,
     };
   }
 
   // Legal Updates Services
   async getLegalUpdates(
-    page: number = 1, 
+    page: number = 1,
     pageSize: number = 10,
     category?: string,
     priority?: string
   ): Promise<ApiResponse<PaginatedResponse<LegalUpdate>>> {
     await this.simulateDelay('medium');
-    
+
     let filteredUpdates = legalUpdatesData;
-    
+
     // Apply filters
     if (category) {
-      filteredUpdates = filteredUpdates.filter(update => update.category === category);
+      filteredUpdates = filteredUpdates.filter(
+        update => update.category === category
+      );
     }
     if (priority) {
-      filteredUpdates = filteredUpdates.filter(update => update.priority === priority);
+      filteredUpdates = filteredUpdates.filter(
+        update => update.priority === priority
+      );
     }
 
-    const paginatedData = this.createPaginatedResponse(filteredUpdates, page, pageSize);
+    const paginatedData = this.createPaginatedResponse(
+      filteredUpdates,
+      page,
+      pageSize
+    );
     return this.createApiResponse(paginatedData);
   }
 
-  async getLegalUpdateById(id: string): Promise<ApiResponse<LegalUpdate | null>> {
+  async getLegalUpdateById(
+    id: string
+  ): Promise<ApiResponse<LegalUpdate | null>> {
     await this.simulateDelay('simple');
-    
+
     const update = legalUpdatesData.find(update => update.id === id);
     return this.createApiResponse(update || null);
   }
 
-  async bookmarkLegalUpdate(updateId: string, userId: string): Promise<ApiResponse<boolean>> {
+  async bookmarkLegalUpdate(
+    updateId: string,
+    userId: string
+  ): Promise<ApiResponse<boolean>> {
     await this.simulateDelay('simple');
-    
+
     // Simulate bookmark operation
     const update = legalUpdatesData.find(u => u.id === updateId);
     if (update) {
@@ -148,67 +170,79 @@ export class MockDataService {
   // User Services
   async getUserById(id: string): Promise<ApiResponse<User | null>> {
     await this.simulateDelay('simple');
-    
+
     const user = usersData.find(user => user.id === id);
     return this.createApiResponse(user || null);
   }
 
-  async updateUserProfile(userId: string, profileData: Partial<User>): Promise<ApiResponse<User>> {
+  async updateUserProfile(
+    userId: string,
+    profileData: Partial<User>
+  ): Promise<ApiResponse<User>> {
     await this.simulateDelay('medium');
-    
+
     const userIndex = usersData.findIndex(user => user.id === userId);
     if (userIndex !== -1) {
       const updatedUser = { ...usersData[userIndex], ...profileData };
       usersData[userIndex] = updatedUser;
       return this.createApiResponse(updatedUser);
     }
-    
+
     return this.createApiResponse(null as any, false);
   }
 
-  async getUserStatistics(userId: string): Promise<ApiResponse<User['statistics'] | null>> {
+  async getUserStatistics(
+    userId: string
+  ): Promise<ApiResponse<User['statistics'] | null>> {
     await this.simulateDelay('simple');
-    
+
     const user = usersData.find(user => user.id === userId);
     return this.createApiResponse(user?.statistics || null);
   }
 
   // Chat Services
-  async getChatConversations(userId: string): Promise<ApiResponse<ChatConversation[]>> {
+  async getChatConversations(
+    userId: string
+  ): Promise<ApiResponse<ChatConversation[]>> {
     await this.simulateDelay('medium');
-    
+
     const userConversations = chatConversationsData.filter(
       conv => conv.userId === userId
     );
-    
+
     return this.createApiResponse(userConversations);
   }
 
-  async getChatConversationById(id: string): Promise<ApiResponse<ChatConversation | null>> {
+  async getChatConversationById(
+    id: string
+  ): Promise<ApiResponse<ChatConversation | null>> {
     await this.simulateDelay('simple');
-    
-    const conversation = chatConversationsData.find(
-      conv => conv.id === id
-    );
-    
+
+    const conversation = chatConversationsData.find(conv => conv.id === id);
+
     return this.createApiResponse(conversation || null);
   }
 
   async sendChatMessage(
-    conversationId: string, 
-    message: string, 
+    conversationId: string,
+    message: string,
     userId: string
   ): Promise<ApiResponse<ChatConversation>> {
     await this.simulateDelay('complex');
-    
-    const conversation = chatConversationsData.find(conv => conv.id === conversationId);
+
+    const conversation = chatConversationsData.find(
+      conv => conv.id === conversationId
+    );
     if (!conversation) {
       return this.createApiResponse(null as any, false);
     }
 
     // Simulate AI response generation
-    const aiResponse = await this.generateMockAIResponse(message, conversation.category);
-    
+    const aiResponse = await this.generateMockAIResponse(
+      message,
+      conversation.category
+    );
+
     // Add user message and AI response to conversation
     const userMessage = {
       id: `msg-${Date.now()}-user`,
@@ -222,9 +256,9 @@ export class MockDataService {
         culturalContext: {
           culturalReferences: [],
           dialectTerms: [],
-          regionalRelevance: []
-        }
-      }
+          regionalRelevance: [],
+        },
+      },
     };
 
     const aiMessage = {
@@ -237,7 +271,7 @@ export class MockDataService {
       timestamp: new Date(),
       isEdited: false,
       metadata: aiResponse.metadata,
-      mascotAnimation: aiResponse.mascotAnimation
+      mascotAnimation: aiResponse.mascotAnimation,
     };
 
     conversation.messages.push(userMessage, aiMessage);
@@ -253,23 +287,33 @@ export class MockDataService {
     // Generate contextual response based on message content and category
     const responses = {
       business_law: {
-        content: "Based on current Tunisian business law, here are the key points you should consider...",
-        contentAr: "بناءً على قانون الأعمال التونسي الحالي، إليك النقاط الرئيسية التي يجب أن تأخذها في الاعتبار...",
-        contentFr: "Basé sur le droit des affaires tunisien actuel, voici les points clés que vous devriez considérer..."
+        content:
+          'Based on current Tunisian business law, here are the key points you should consider...',
+        contentAr:
+          'بناءً على قانون الأعمال التونسي الحالي، إليك النقاط الرئيسية التي يجب أن تأخذها في الاعتبار...',
+        contentFr:
+          'Basé sur le droit des affaires tunisien actuel, voici les points clés que vous devriez considérer...',
       },
       tax_law: {
-        content: "Regarding tax obligations in Tunisia, the recent updates require...",
-        contentAr: "فيما يتعلق بالالتزامات الضريبية في تونس، تتطلب التحديثات الأخيرة...",
-        contentFr: "Concernant les obligations fiscales en Tunisie, les récentes mises à jour exigent..."
+        content:
+          'Regarding tax obligations in Tunisia, the recent updates require...',
+        contentAr:
+          'فيما يتعلق بالالتزامات الضريبية في تونس، تتطلب التحديثات الأخيرة...',
+        contentFr:
+          'Concernant les obligations fiscales en Tunisie, les récentes mises à jour exigent...',
       },
       administrative_law: {
-        content: "For administrative procedures in Tunisia, you'll need to follow these steps...",
-        contentAr: "للإجراءات الإدارية في تونس، ستحتاج إلى اتباع هذه الخطوات...",
-        contentFr: "Pour les procédures administratives en Tunisie, vous devrez suivre ces étapes..."
-      }
+        content:
+          "For administrative procedures in Tunisia, you'll need to follow these steps...",
+        contentAr:
+          'للإجراءات الإدارية في تونس، ستحتاج إلى اتباع هذه الخطوات...',
+        contentFr:
+          'Pour les procédures administratives en Tunisie, vous devrez suivre ces étapes...',
+      },
     };
 
-    const response = responses[category as keyof typeof responses] || responses.business_law;
+    const response =
+      responses[category as keyof typeof responses] || responses.business_law;
 
     return {
       ...response,
@@ -283,16 +327,16 @@ export class MockDataService {
         culturalContext: {
           culturalReferences: [],
           dialectTerms: [],
-          regionalRelevance: []
-        }
+          regionalRelevance: [],
+        },
       },
       mascotAnimation: {
         type: 'explaining' as const,
         sector: 'business' as const,
         duration: 3.5,
         culturalElements: ['traditional_gesture', 'professional_attire'],
-        voiceSync: true
-      }
+        voiceSync: true,
+      },
     };
   }
 
@@ -304,30 +348,33 @@ export class MockDataService {
     pageSize: number = 10
   ): Promise<ApiResponse<PaginatedResponse<SearchResult>>> {
     await this.simulateDelay('complex');
-    
+
     // Simulate search algorithm
     let results = searchResultsData;
-    
+
     // Simple keyword matching simulation
     if (query) {
       const queryLower = query.toLowerCase();
-      results = results.filter(result => 
-        result.title.toLowerCase().includes(queryLower) ||
-        result.content.toLowerCase().includes(queryLower) ||
-        result.tags.some(tag => tag.toLowerCase().includes(queryLower))
+      results = results.filter(
+        result =>
+          result.title.toLowerCase().includes(queryLower) ||
+          result.content.toLowerCase().includes(queryLower) ||
+          result.tags.some(tag => tag.toLowerCase().includes(queryLower))
       );
     }
 
     // Apply filters
     if (filters?.categories?.length) {
-      results = results.filter(result => 
+      results = results.filter(result =>
         filters.categories.includes(result.category)
       );
     }
 
     if (filters?.sectors?.length) {
-      results = results.filter(result => 
-        result.sectors.some((sector: string) => filters.sectors.includes(sector))
+      results = results.filter(result =>
+        result.sectors.some((sector: string) =>
+          filters.sectors.includes(sector)
+        )
       );
     }
 
@@ -340,7 +387,7 @@ export class MockDataService {
 
   async getSearchSuggestions(query: string): Promise<ApiResponse<string[]>> {
     await this.simulateDelay('simple');
-    
+
     const suggestions = [
       'business registration requirements',
       'digital tax implementation',
@@ -349,7 +396,7 @@ export class MockDataService {
       'organic certification process',
       'family law updates',
       'labor code amendments',
-      'environmental compliance'
+      'environmental compliance',
     ];
 
     // Filter suggestions based on query
@@ -363,44 +410,50 @@ export class MockDataService {
   // Mascot Services
   async getMascots(): Promise<ApiResponse<TunisianMascot[]>> {
     await this.simulateDelay('medium');
-    
+
     return this.createApiResponse(mascotsData as TunisianMascot[]);
   }
 
-  async getMascotBySector(sector: string): Promise<ApiResponse<TunisianMascot | null>> {
+  async getMascotBySector(
+    sector: string
+  ): Promise<ApiResponse<TunisianMascot | null>> {
     await this.simulateDelay('simple');
-    
-    const mascot = mascotsData.find(m => m.sector === sector) as TunisianMascot | undefined;
+
+    const mascot = mascotsData.find(m => m.sector === sector) as
+      | TunisianMascot
+      | undefined;
     return this.createApiResponse(mascot || null);
   }
 
   async unlockMascotCustomization(
-    mascotId: string, 
-    customizationId: string, 
+    mascotId: string,
+    customizationId: string,
     userId: string
   ): Promise<ApiResponse<boolean>> {
     await this.simulateDelay('medium');
-    
+
     // Simulate unlock logic
     const mascot = mascotsData.find(m => m.id === mascotId);
     if (mascot) {
-      const customization = mascot.customizations.find(c => c.id === customizationId);
+      const customization = mascot.customizations.find(
+        c => c.id === customizationId
+      );
       if (customization) {
         (customization as any).isUnlocked = true;
         return this.createApiResponse(true);
       }
     }
-    
+
     return this.createApiResponse(false, false);
   }
 
   // Legal Intelligence Services
   async getLegalIntelligence(
-    query: string, 
+    query: string,
     language: string = 'ar'
   ): Promise<ApiResponse<LegalIntelligenceResponse>> {
     await this.simulateDelay('complex');
-    
+
     // Generate mock legal intelligence response
     const mockResponse: LegalIntelligenceResponse = {
       id: `intelligence-${Date.now()}`,
@@ -412,22 +465,25 @@ export class MockDataService {
           type: 'traditional_law',
           content: 'Based on Article 123 of the Commercial Code...',
           contentAr: 'بناءً على المادة 123 من المجلة التجارية...',
-          contentFr: 'Basé sur l\'Article 123 du Code Commercial...',
+          contentFr: "Basé sur l'Article 123 du Code Commercial...",
           timestamp: new Date(),
-          relevanceScore: 0.92
-        }
+          relevanceScore: 0.92,
+        },
       ],
-      traditionalLegalAnswer: 'According to Tunisian law, the following provisions apply...',
-      traditionalLegalAnswerAr: 'وفقاً للقانون التونسي، تنطبق الأحكام التالية...',
-      traditionalLegalAnswerFr: 'Selon le droit tunisien, les dispositions suivantes s\'appliquent...',
+      traditionalLegalAnswer:
+        'According to Tunisian law, the following provisions apply...',
+      traditionalLegalAnswerAr:
+        'وفقاً للقانون التونسي، تنطبق الأحكام التالية...',
+      traditionalLegalAnswerFr:
+        "Selon le droit tunisien, les dispositions suivantes s'appliquent...",
       confidenceScore: 0.88,
       lastUpdated: new Date(),
       culturalContext: {
         culturalReferences: [],
         dialectTerms: [],
-        regionalRelevance: []
+        regionalRelevance: [],
       },
-      relatedUpdates: []
+      relatedUpdates: [],
     };
 
     return this.createApiResponse(mockResponse);
@@ -436,7 +492,7 @@ export class MockDataService {
   // Analytics and Reporting
   async getUserEngagementMetrics(userId: string): Promise<ApiResponse<any>> {
     await this.simulateDelay('medium');
-    
+
     const user = usersData.find(u => u.id === userId);
     if (!user) {
       return this.createApiResponse(null, false);
@@ -449,12 +505,12 @@ export class MockDataService {
       achievementProgress: {
         total: user.statistics.totalAchievements,
         points: user.statistics.totalPoints,
-        currentStreak: user.statistics.currentStreak
+        currentStreak: user.statistics.currentStreak,
       },
       categoryPreferences: {
         favorite: user.statistics.favoriteCategory,
-        mostActive: user.statistics.mostActiveSector
-      }
+        mostActive: user.statistics.mostActiveSector,
+      },
     };
 
     return this.createApiResponse(metrics);
@@ -467,11 +523,13 @@ export class MockDataService {
   }
 
   // Health check
-  async healthCheck(): Promise<ApiResponse<{ status: string; timestamp: Date }>> {
+  async healthCheck(): Promise<
+    ApiResponse<{ status: string; timestamp: Date }>
+  > {
     await this.simulateDelay('simple');
     return this.createApiResponse({
       status: 'healthy',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 }

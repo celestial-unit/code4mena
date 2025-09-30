@@ -21,10 +21,10 @@ export default function App() {
   const initializeServices = async () => {
     try {
       console.log('[App] Initializing services...');
-      
+
       // Initialize auth service (loads stored tokens)
       await authService.initialize();
-      
+
       // Set a demo token for API calls if no token exists
       const existingToken = await authService.getAuthToken();
       if (!existingToken) {

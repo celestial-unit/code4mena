@@ -1,0 +1,266 @@
+[
+  {
+    "id": "conversation-001",
+    "userId": "user-001",
+    "title": "Starting an E-commerce Business in Tunisia",
+    "titleAr": "بدء عمل تجاري إلكتروني في تونس",
+    "titleFr": "Démarrer une entreprise de commerce électronique en Tunisie",
+    "messages": [
+      {
+        "id": "msg-001",
+        "conversationId": "conversation-001",
+        "type": "user",
+        "content": "I want to start an e-commerce business in Tunisia. What legal requirements do I need to know?",
+        "contentAr": "أريد بدء عمل تجاري إلكتروني في تونس. ما هي المتطلبات القانونية التي أحتاج لمعرفتها؟",
+        "contentFr": "Je veux démarrer une entreprise de commerce électronique en Tunisie. Quelles sont les exigences légales que je dois connaître ?",
+        "timestamp": "2024-01-15T10:00:00Z",
+        "isEdited": false,
+        "metadata": {
+          "legalReferences": [],
+          "suggestedActions": [],
+          "relatedTopics": ["business registration", "e-commerce law", "tax obligations"],
+          "culturalContext": {
+            "culturalReferences": [],
+            "dialectTerms": [],
+            "regionalRelevance": []
+          }
+        }
+      },
+      {
+        "id": "msg-002",
+        "conversationId": "conversation-001",
+        "type": "ai",
+        "content": "مرحباً أحمد! أهلاً وسهلاً بك في عالم التجارة الإلكترونية التونسية. لبدء عملك التجاري الإلكتروني، تحتاج إلى معرفة عدة متطلبات قانونية مهمة:\n\n1. **تسجيل الشركة**: يجب تسجيل شركتك لدى المركز الوحيد للمؤسسات (CFE)\n2. **الترخيص التجاري**: الحصول على رخصة تجارية مناسبة لنشاط التجارة الإلكترونية\n3. **التسجيل الضريبي**: التسجيل في النظام الضريبي الرقمي الجديد\n4. **حماية البيانات**: الامتثال لقوانين حماية البيانات الشخصية\n\nهل تريد التفاصيل حول أي من هذه النقاط؟",
+        "contentFr": "Bonjour Ahmed ! Bienvenue dans le monde du commerce électronique tunisien. Pour démarrer votre entreprise de commerce électronique, vous devez connaître plusieurs exigences légales importantes :\n\n1. **Enregistrement de l'entreprise** : Vous devez enregistrer votre entreprise auprès du Centre de Formalités des Entreprises (CFE)\n2. **Licence commerciale** : Obtenir une licence commerciale appropriée pour l'activité de commerce électronique\n3. **Enregistrement fiscal** : S'inscrire au nouveau système fiscal numérique\n4. **Protection des données** : Se conformer aux lois sur la protection des données personnelles\n\nVoulez-vous des détails sur l'un de ces points ?",
+        "timestamp": "2024-01-15T10:01:30Z",
+        "isEdited": false,
+        "metadata": {
+          "confidence": 0.92,
+          "sources": ["legal-database", "ministry-commerce"],
+          "processingTime": 1.2,
+          "legalReferences": [
+            {
+              "id": "ref-001",
+              "title": "Commercial Code - E-commerce Provisions",
+              "titleAr": "المجلة التجارية - أحكام التجارة الإلكترونية",
+              "titleFr": "Code de commerce - Dispositions sur le commerce électronique",
+              "type": "law",
+              "source": "Official Gazette",
+              "relevanceScore": 0.95,
+              "excerpt": "All e-commerce businesses must register with appropriate authorities",
+              "excerptAr": "يجب على جميع شركات التجارة الإلكترونية التسجيل لدى السلطات المختصة",
+              "excerptFr": "Toutes les entreprises de commerce électronique doivent s'enregistrer auprès des autorités compétentes"
+            }
+          ],
+          "suggestedActions": [
+            {
+              "id": "action-001",
+              "type": "search",
+              "title": "Search CFE registration process",
+              "titleAr": "البحث عن عملية التسجيل في المركز الوحيد للمؤسسات",
+              "titleFr": "Rechercher le processus d'enregistrement CFE",
+              "description": "Find detailed information about business registration",
+              "descriptionAr": "العثور على معلومات مفصلة حول تسجيل الأعمال",
+              "descriptionFr": "Trouver des informations détaillées sur l'enregistrement d'entreprise",
+              "priority": "high"
+            }
+          ],
+          "relatedTopics": ["business registration", "digital tax", "data protection"],
+          "culturalContext": {
+            "culturalReferences": [
+              {
+                "term": "مرحباً وأهلاً وسهلاً",
+                "termAr": "مرحباً وأهلاً وسهلاً",
+                "explanation": "Traditional Tunisian greeting showing warmth and hospitality",
+                "explanationAr": "تحية تونسية تقليدية تظهر الدفء والضيافة",
+                "explanationFr": "Salutation tunisienne traditionnelle montrant la chaleur et l'hospitalité",
+                "significance": "high"
+              }
+            ],
+            "dialectTerms": [],
+            "regionalRelevance": [
+              {
+                "region": "national",
+                "regionAr": "وطني",
+                "relevanceScore": 1.0,
+                "specificConsiderations": ["Applies to all regions of Tunisia"],
+                "specificConsiderationsAr": ["ينطبق على جميع مناطق تونس"]
+              }
+            ]
+          }
+        },
+        "mascotAnimation": {
+          "type": "explaining",
+          "sector": "business",
+          "duration": 3.5,
+          "culturalElements": ["traditional_greeting", "business_attire"],
+          "voiceSync": true
+        }
+      },
+      {
+        "id": "msg-003",
+        "conversationId": "conversation-001",
+        "type": "user",
+        "content": "Tell me more about the new digital tax system for e-commerce",
+        "contentAr": "أخبرني المزيد عن النظام الضريبي الرقمي الجديد للتجارة الإلكترونية",
+        "contentFr": "Parlez-moi davantage du nouveau système fiscal numérique pour le commerce électronique",
+        "timestamp": "2024-01-15T10:05:00Z",
+        "isEdited": false,
+        "metadata": {
+          "legalReferences": [],
+          "suggestedActions": [],
+          "relatedTopics": ["digital tax", "e-commerce compliance", "automated systems"]
+        }
+      },
+      {
+        "id": "msg-004",
+        "conversationId": "conversation-001",
+        "type": "ai",
+        "content": "النظام الضريبي الرقمي الجديد مهم جداً لأعمال التجارة الإلكترونية! إليك التفاصيل الأساسية:\n\n**📋 متطلبات التسجيل:**\n- التسجيل الإلزامي في منصة الضرائب الرقمية\n- تقديم معلومات مفصلة عن نشاط التجارة الإلكترونية\n- ربط النظام بمنصة البيع الإلكترونية\n\n**🔄 الحساب الآلي للضرائب:**\n- حساب تلقائي للضريبة على القيمة المضافة (TVA)\n- تطبيق الضرائب حسب نوع المنتج والخدمة\n- تحديث فوري للأسعار شاملة الضرائب\n\n**📅 المواعيد المهمة:**\n- بداية التطبيق: 1 مارس 2024\n- فترة انتقالية: 3 أشهر للتكيف\n- غرامات التأخير تبدأ من 1 يونيو 2024\n\nهل تحتاج مساعدة في فهم كيفية تطبيق هذا على نوع عملك المحدد؟",
+        "timestamp": "2024-01-15T10:06:45Z",
+        "isEdited": false,
+        "metadata": {
+          "confidence": 0.88,
+          "sources": ["ministry-finance", "tax-authority"],
+          "processingTime": 1.8,
+          "legalReferences": [
+            {
+              "id": "ref-002",
+              "title": "Digital Tax Regulation 2024",
+              "titleAr": "لائحة الضرائب الرقمية 2024",
+              "titleFr": "Règlement sur les taxes numériques 2024",
+              "type": "regulation",
+              "source": "Ministry of Finance",
+              "relevanceScore": 0.98,
+              "excerpt": "All e-commerce platforms must integrate automated tax calculation systems",
+              "excerptAr": "يجب على جميع منصات التجارة الإلكترونية دمج أنظمة حساب الضرائب الآلية",
+              "excerptFr": "Toutes les plateformes de commerce électronique doivent intégrer des systèmes de calcul automatisé des taxes"
+            }
+          ],
+          "suggestedActions": [
+            {
+              "id": "action-002",
+              "type": "bookmark",
+              "title": "Bookmark digital tax update",
+              "titleAr": "حفظ تحديث الضرائب الرقمية",
+              "titleFr": "Marquer la mise à jour des taxes numériques",
+              "description": "Save this important tax information for reference",
+              "descriptionAr": "احفظ هذه المعلومات الضريبية المهمة للمرجع",
+              "descriptionFr": "Sauvegarder ces informations fiscales importantes pour référence",
+              "priority": "high"
+            }
+          ]
+        },
+        "mascotAnimation": {
+          "type": "explaining",
+          "sector": "money",
+          "duration": 4.2,
+          "culturalElements": ["calculator", "official_documents"],
+          "voiceSync": true
+        }
+      }
+    ],
+    "category": "business_law",
+    "sector": "business",
+    "language": "ar",
+    "isBookmarked": true,
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:06:45Z",
+    "status": "active",
+    "metadata": {
+      "totalMessages": 4,
+      "averageResponseTime": 1.5,
+      "topicsDiscussed": ["e-commerce registration", "digital tax", "business compliance"],
+      "legalCategoriesCovered": ["business_law", "tax_law"],
+      "sectorsDiscussed": ["business", "money"],
+      "satisfactionRating": 5,
+      "feedbackProvided": true,
+      "complexityLevel": "intermediate"
+    }
+  },
+  {
+    "id": "conversation-002",
+    "userId": "user-002",
+    "title": "Organic Farming Certification Process",
+    "titleAr": "عملية شهادة الزراعة العضوية",
+    "titleFr": "Processus de certification de l'agriculture biologique",
+    "messages": [
+      {
+        "id": "msg-005",
+        "conversationId": "conversation-002",
+        "type": "user",
+        "content": "Bonjour, je voudrais savoir comment obtenir une certification biologique pour ma coopérative agricole à Sfax.",
+        "contentAr": "مرحباً، أريد أن أعرف كيفية الحصول على شهادة عضوية لتعاونيتي الزراعية في صفاقس.",
+        "contentFr": "Bonjour, je voudrais savoir comment obtenir une certification biologique pour ma coopérative agricole à Sfax.",
+        "timestamp": "2024-01-14T14:30:00Z",
+        "isEdited": false,
+        "metadata": {
+          "legalReferences": [],
+          "suggestedActions": [],
+          "relatedTopics": ["organic certification", "agricultural cooperatives", "Sfax region"]
+        }
+      },
+      {
+        "id": "msg-006",
+        "conversationId": "conversation-002",
+        "type": "ai",
+        "content": "Bonjour Fatma ! C'est formidable que vous souhaitiez obtenir une certification biologique pour votre coopérative à Sfax. Voici les étapes principales :\n\n**🌱 Étapes de certification :**\n1. **Préparation** : Transition de 3 ans minimum vers l'agriculture biologique\n2. **Documentation** : Tenir un registre détaillé des pratiques agricoles\n3. **Demande** : Soumettre la demande au Centre Technique de l'Agriculture Biologique (CTAB)\n4. **Inspection** : Visite d'un inspecteur certifié\n5. **Certification** : Délivrance du certificat si conforme\n\n**📋 Documents requis :**\n- Plan de conversion détaillé\n- Registres des intrants utilisés\n- Cartes des parcelles\n- Statuts de la coopérative\n\n**💰 Coûts approximatifs :**\n- Frais de dossier : 200-300 DT\n- Inspection : 500-800 DT\n- Certification annuelle : 300-500 DT\n\nPour Sfax spécifiquement, vous pouvez contacter le bureau régional du CTAB. Avez-vous déjà commencé la transition vers l'agriculture biologique ?",
+        "contentAr": "مرحباً فاطمة! من الرائع أنك تريدين الحصول على شهادة عضوية لتعاونيتك في صفاقس. إليك الخطوات الرئيسية:\n\n**🌱 خطوات الشهادة:**\n1. **التحضير**: فترة انتقال 3 سنوات كحد أدنى نحو الزراعة العضوية\n2. **التوثيق**: الاحتفاظ بسجل مفصل للممارسات الزراعية\n3. **الطلب**: تقديم الطلب للمركز الفني للزراعة العضوية\n4. **التفتيش**: زيارة مفتش معتمد\n5. **الشهادة**: إصدار الشهادة في حالة المطابقة\n\n**📋 الوثائق المطلوبة:**\n- خطة تحويل مفصلة\n- سجلات المدخلات المستخدمة\n- خرائط القطع\n- قانون التعاونية\n\n**💰 التكاليف التقريبية:**\n- رسوم الملف: 200-300 دينار\n- التفتيش: 500-800 دينار\n- الشهادة السنوية: 300-500 دينار\n\nبالنسبة لصفاقس تحديداً، يمكنك الاتصال بالمكتب الجهوي للمركز الفني للزراعة العضوية. هل بدأت بالفعل الانتقال نحو الزراعة العضوية؟",
+        "timestamp": "2024-01-14T14:32:15Z",
+        "isEdited": false,
+        "metadata": {
+          "confidence": 0.94,
+          "sources": ["ministry-agriculture", "ctab-guidelines"],
+          "processingTime": 2.1,
+          "legalReferences": [
+            {
+              "id": "ref-003",
+              "title": "Organic Agriculture Standards Tunisia",
+              "titleAr": "معايير الزراعة العضوية تونس",
+              "titleFr": "Normes d'agriculture biologique Tunisie",
+              "type": "regulation",
+              "source": "Ministry of Agriculture",
+              "relevanceScore": 0.96,
+              "excerpt": "Organic certification requires 3-year transition period and detailed documentation",
+              "excerptAr": "تتطلب الشهادة العضوية فترة انتقال 3 سنوات وتوثيق مفصل",
+              "excerptFr": "La certification biologique nécessite une période de transition de 3 ans et une documentation détaillée"
+            }
+          ],
+          "culturalContext": {
+            "regionalRelevance": [
+              {
+                "region": "sfax",
+                "regionAr": "صفاقس",
+                "relevanceScore": 1.0,
+                "specificConsiderations": ["Regional CTAB office available", "Strong agricultural cooperative tradition"],
+                "specificConsiderationsAr": ["مكتب جهوي للمركز الفني متوفر", "تقليد قوي للتعاونيات الزراعية"]
+              }
+            ]
+          }
+        },
+        "mascotAnimation": {
+          "type": "explaining",
+          "sector": "agriculture",
+          "duration": 4.8,
+          "culturalElements": ["olive_branch", "traditional_farming_tools"],
+          "voiceSync": false
+        }
+      }
+    ],
+    "category": "administrative_law",
+    "sector": "agriculture",
+    "language": "fr",
+    "isBookmarked": false,
+    "createdAt": "2024-01-14T14:30:00Z",
+    "updatedAt": "2024-01-14T14:32:15Z",
+    "status": "active",
+    "metadata": {
+      "totalMessages": 2,
+      "averageResponseTime": 2.1,
+      "topicsDiscussed": ["organic certification", "agricultural cooperatives", "CTAB procedures"],
+      "legalCategoriesCovered": ["administrative_law", "environmental_law"],
+      "sectorsDiscussed": ["agriculture", "food"],
+      "complexityLevel": "intermediate"
+    }
+  }
+]

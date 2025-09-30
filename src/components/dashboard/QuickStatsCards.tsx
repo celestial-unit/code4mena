@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, { 
+import Animated, {
   FadeInUp,
   useSharedValue,
   useAnimatedStyle,
@@ -90,8 +90,8 @@ const StatCard: React.FC<StatCardProps> = ({
   };
 
   // Animate counter
-  const displayValue = animated 
-    ? Math.round(value * animatedValue.value) 
+  const displayValue = animated
+    ? Math.round(value * animatedValue.value)
     : value;
 
   return (
@@ -120,10 +120,11 @@ const StatCard: React.FC<StatCardProps> = ({
             <Animated.Text style={[styles.cardTitle, animatedTextStyle]}>
               {title}
             </Animated.Text>
-            
+
             <Animated.View style={[styles.valueContainer, animatedNumberStyle]}>
               <Text style={styles.cardValue}>
-                {displayValue.toLocaleString()}{suffix}
+                {displayValue.toLocaleString()}
+                {suffix}
               </Text>
             </Animated.View>
           </View>
@@ -148,15 +149,22 @@ export const QuickStatsCards: React.FC<QuickStatsCardsProps> = ({
 
   const getLocalizedText = (ar: string, fr: string, en: string) => {
     switch (language) {
-      case 'ar': return ar;
-      case 'fr': return fr;
-      default: return en;
+      case 'ar':
+        return ar;
+      case 'fr':
+        return fr;
+      default:
+        return en;
     }
   };
 
   const statsData = [
     {
-      title: getLocalizedText('التحديثات المقروءة', 'Mises à jour lues', 'Updates Read'),
+      title: getLocalizedText(
+        'التحديثات المقروءة',
+        'Mises à jour lues',
+        'Updates Read'
+      ),
       value: stats.totalLegalUpdatesRead,
       icon: 'document-text',
       color: '#E31E24',
@@ -192,15 +200,20 @@ export const QuickStatsCards: React.FC<QuickStatsCardsProps> = ({
   return (
     <View style={styles.container}>
       {/* Section header */}
-      <Animated.View 
-        entering={FadeInUp.duration(600)}
-        style={styles.header}
-      >
+      <Animated.View entering={FadeInUp.duration(600)} style={styles.header}>
         <Text style={styles.sectionTitle}>
-          {getLocalizedText('إحصائياتك السريعة', 'Vos statistiques rapides', 'Your Quick Stats')}
+          {getLocalizedText(
+            'إحصائياتك السريعة',
+            'Vos statistiques rapides',
+            'Your Quick Stats'
+          )}
         </Text>
         <Text style={styles.sectionSubtitle}>
-          {getLocalizedText('نشاطك هذا الشهر', 'Votre activité ce mois', 'Your activity this month')}
+          {getLocalizedText(
+            'نشاطك هذا الشهر',
+            'Votre activité ce mois',
+            'Your activity this month'
+          )}
         </Text>
       </Animated.View>
 
@@ -221,7 +234,7 @@ export const QuickStatsCards: React.FC<QuickStatsCardsProps> = ({
       </View>
 
       {/* Activity streak */}
-      <Animated.View 
+      <Animated.View
         entering={FadeInUp.delay(600).duration(600)}
         style={styles.streakContainer}
       >
@@ -237,10 +250,15 @@ export const QuickStatsCards: React.FC<QuickStatsCardsProps> = ({
             </View>
             <View style={styles.streakText}>
               <Text style={styles.streakTitle}>
-                {getLocalizedText('سلسلة النشاط', 'Série d\'activité', 'Activity Streak')}
+                {getLocalizedText(
+                  'سلسلة النشاط',
+                  "Série d'activité",
+                  'Activity Streak'
+                )}
               </Text>
               <Text style={styles.streakValue}>
-                {stats.currentStreak} {getLocalizedText('أيام', 'jours', 'days')}
+                {stats.currentStreak}{' '}
+                {getLocalizedText('أيام', 'jours', 'days')}
               </Text>
             </View>
             <View style={styles.streakBadge}>

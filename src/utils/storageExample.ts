@@ -23,7 +23,11 @@ interface UserPreferences {
 /**
  * Example: Login flow with token storage
  */
-export async function handleLogin(token: string, refreshToken: string, userData: UserData): Promise<void> {
+export async function handleLogin(
+  token: string,
+  refreshToken: string,
+  userData: UserData
+): Promise<void> {
   try {
     // Store authentication tokens
     await storageService.setAuthToken(token);
@@ -66,7 +70,9 @@ export async function getCurrentUser(): Promise<UserData | null> {
 /**
  * Example: Update user preferences
  */
-export async function updateUserPreferences(preferences: UserPreferences): Promise<void> {
+export async function updateUserPreferences(
+  preferences: UserPreferences
+): Promise<void> {
   try {
     await storageService.setUserPreferences(preferences);
     console.log('User preferences updated successfully');
@@ -81,7 +87,8 @@ export async function updateUserPreferences(preferences: UserPreferences): Promi
  */
 export async function getUserPreferences(): Promise<UserPreferences> {
   try {
-    const preferences = await storageService.getUserPreferences<UserPreferences>();
+    const preferences =
+      await storageService.getUserPreferences<UserPreferences>();
 
     // Return defaults if no preferences are stored
     if (!preferences) {

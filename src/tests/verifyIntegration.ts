@@ -31,13 +31,13 @@ export async function quickVerification(): Promise<boolean> {
       await apiService.get('/non-existent-endpoint');
     } catch (error) {
       // Expected to fail, but should be handled gracefully
-      const errorHandled = error && typeof error === 'object' && 'message' in error;
+      const errorHandled =
+        error && typeof error === 'object' && 'message' in error;
       console.log(`✅ Error handling working: ${errorHandled}`);
     }
 
     console.log('🎉 Quick verification completed successfully!');
     return true;
-
   } catch (error) {
     console.error('❌ Verification failed:', error);
     return false;

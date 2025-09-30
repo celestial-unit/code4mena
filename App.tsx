@@ -6,6 +6,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 // Import the real navigation system
 import { AppNavigator } from './src/navigation/AppNavigator';
 
+// Import context providers
+import { ThemeProvider, useTheme } from './src/contexts/ThemeContext';
+import { MascotProvider } from './src/contexts/MascotContext';
+import { RTLProvider } from './src/contexts/RTLContext';
+
 // Import all services
 import apiService from './src/services/api';
 import storageService from './src/services/storage';
@@ -14,9 +19,11 @@ import { chatService } from './src/services/chatService';
 import { searchService } from './src/services/searchService';
 import { legalService } from './src/services/legalService';
 
-export default function App() {
+// App content component that uses theme context
+function AppContent() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
+  const { theme, isDark } = useTheme();
 
   useEffect(() => {
     initializeBasicServices();
@@ -59,12 +66,32 @@ export default function App() {
     }
   };
 
+  // Create themed styles
+  const themedStyles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    centered: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    loadingText: {
+      fontSize: 16,
+      color: theme.colors.textSecondary,
+      textAlign: 'center',
+    },
+  });
+
   if (!isInitialized) {
     return (
       <SafeAreaProvider>
-        <View style={[styles.container, styles.centered]}>
-          <StatusBar style="dark" backgroundColor="#FFFFFF" />
-          <Text style={styles.loadingText}>
+        <View style={[themedStyles.container, themedStyles.centered]}>
+          <StatusBar
+            style={isDark ? 'light' : 'dark'}
+            backgroundColor={theme.colors.background}
+          />
+          <Text style={themedStyles.loadingText}>
             {initError || 'جاري تحميل الخدمات...'}
           </Text>
         </View>
@@ -74,26 +101,26 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <View style={styles.container}>
-        <StatusBar style="dark" backgroundColor="#FFFFFF" />
+      <View style={themedStyles.container}>
+        <StatusBar
+          style={isDark ? 'light' : 'dark'}
+          backgroundColor={theme.colors.background}
+        />
         <AppNavigator />
       </View>
     </SafeAreaProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8F9FA',
-  },
-  centered: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 16,
-    color: '#666666',
-    textAlign: 'center',
-  },
-});
+// Main App component with context providers
+export default function App() {
+  return (
+    <RTLProvider>
+      <ThemeProvider>
+        <MascotProvider>
+          <AppContent />
+        </MascotProvider>
+      </ThemeProvider>
+    </RTLProvider>
+  );
+}

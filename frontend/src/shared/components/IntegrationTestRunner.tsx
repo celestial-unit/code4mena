@@ -34,7 +34,7 @@ export const IntegrationTestRunner: React.FC = () => {
 
       const passed = testResults.filter(r => r.passed).length;
       const total = testResults.length;
-      
+
       Alert.alert(
         'اكتملت الاختبارات',
         `نجح ${passed} من ${total} اختبار\nمعدل النجاح: ${Math.round((passed / total) * 100)}%`,
@@ -43,7 +43,8 @@ export const IntegrationTestRunner: React.FC = () => {
     } catch (error) {
       Alert.alert(
         'خطأ في الاختبار',
-        'فشل في تشغيل الاختبارات: ' + (error instanceof Error ? error.message : 'خطأ غير معروف'),
+        'فشل في تشغيل الاختبارات: ' +
+          (error instanceof Error ? error.message : 'خطأ غير معروف'),
         [{ text: 'موافق' }]
       );
     } finally {
@@ -74,7 +75,7 @@ export const IntegrationTestRunner: React.FC = () => {
         disabled={isRunning}
       >
         <Ionicons
-          name={isRunning ? "hourglass-outline" : "play-circle-outline"}
+          name={isRunning ? 'hourglass-outline' : 'play-circle-outline'}
           size={24}
           color="#FFFFFF"
         />
@@ -88,7 +89,9 @@ export const IntegrationTestRunner: React.FC = () => {
           <Text style={styles.summaryTitle}>ملخص النتائج</Text>
           <View style={styles.summaryStats}>
             <View style={styles.stat}>
-              <Text style={styles.statNumber}>{results.filter(r => r.passed).length}</Text>
+              <Text style={styles.statNumber}>
+                {results.filter(r => r.passed).length}
+              </Text>
               <Text style={styles.statLabel}>نجح</Text>
             </View>
             <View style={styles.stat}>
@@ -118,11 +121,11 @@ export const IntegrationTestRunner: React.FC = () => {
                 />
                 <Text style={styles.resultName}>{result.name}</Text>
               </View>
-              
+
               {result.error && (
                 <Text style={styles.resultError}>{result.error}</Text>
               )}
-              
+
               {result.details && (
                 <View style={styles.resultDetails}>
                   <Text style={styles.detailsTitle}>التفاصيل:</Text>

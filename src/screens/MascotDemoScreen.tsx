@@ -19,6 +19,8 @@ import {
   MascotAchievementCelebration
 } from '../components/mascot';
 import { Enhanced3DMascot } from '../components/mascot/Enhanced3DMascot';
+import { TunisianLegalMascot } from '../components/mascot/TunisianLegalMascot';
+import { Simple3DMascot } from '../components/mascot/Simple3DMascot';
 import { MascotSector, MascotEmotion } from '../types/mascot';
 
 interface MascotDemoScreenProps {
@@ -45,6 +47,7 @@ export const MascotDemoScreen: React.FC<MascotDemoScreenProps> = ({ navigation }
 
   const [showCustomization, setShowCustomization] = useState(false);
   const [showAchievement, setShowAchievement] = useState(false);
+  const [use3DModel, setUse3DModel] = useState(false);
 
   const demoAchievement = {
     id: 'first_legal_query',
@@ -115,13 +118,28 @@ export const MascotDemoScreen: React.FC<MascotDemoScreenProps> = ({ navigation }
           </Text>
           
           <View style={styles.mascotContainer}>
-            <Enhanced3DMascot size={250} interactive={true} />
+            {use3DModel ? (
+              <Simple3DMascot size={280} interactive={true} />
+            ) : (
+              <TunisianLegalMascot size={280} interactive={true} />
+            )}
             <View style={styles.interactionHint}>
               <Ionicons name="hand-left" size={16} color={theme.colors.textSecondary} />
               <Text style={[styles.hintText, { color: theme.colors.textSecondary }]}>
-                اسحب للتفاعل مع الشخصية
+                اسحب للتفاعل مع الشخصية التونسية
               </Text>
             </View>
+            
+            {/* Toggle Button */}
+            <TouchableOpacity
+              style={[styles.toggleButton, { backgroundColor: theme.colors.primary }]}
+              onPress={() => setUse3DModel(!use3DModel)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.toggleButtonText}>
+                {use3DModel ? 'استخدام النموذج المرسوم' : 'استخدام النموذج ثلاثي الأبعاد'}
+              </Text>
+            </TouchableOpacity>
           </View>
           
           <View style={styles.statusContainer}>
@@ -448,5 +466,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFFFFF',
     marginLeft: 12,
+  },
+  toggleButton: {
+    marginTop: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 25,
+  },
+  toggleButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

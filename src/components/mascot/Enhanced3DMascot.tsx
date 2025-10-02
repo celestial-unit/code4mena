@@ -13,13 +13,13 @@ interface Enhanced3DMascotProps {
 
 const { width: screenWidth } = Dimensions.get('window');
 
-export const Enhanced3DMascot: React.FC<Enhanced3DMascotProps> = ({ 
-  size = 200, 
-  interactive = true 
+export const Enhanced3DMascot: React.FC<Enhanced3DMascotProps> = ({
+  size = 200,
+  interactive = true
 }) => {
   const { theme } = useTheme();
   const { mascotState, triggerInteraction } = useMascot();
-  
+
   // Animation values
   const rotateX = useRef(new Animated.Value(0)).current;
   const rotateY = useRef(new Animated.Value(0)).current;
@@ -27,19 +27,19 @@ export const Enhanced3DMascot: React.FC<Enhanced3DMascotProps> = ({
   const bounceY = useRef(new Animated.Value(0)).current;
   const shadowOpacity = useRef(new Animated.Value(0.3)).current;
   const eyeScale = useRef(new Animated.Value(1)).current;
-  
+
   // Gesture handling
   const lastGesture = useRef({ x: 0, y: 0 });
 
   const handleGesture = (event: any) => {
     if (!interactive) return;
-    
+
     const { translationX, translationY, state } = event.nativeEvent;
-    
+
     if (state === State.ACTIVE) {
       const rotateXValue = (translationY / size) * 30;
       const rotateYValue = (translationX / size) * 30;
-      
+
       Animated.parallel([
         Animated.timing(rotateX, {
           toValue: rotateXValue,
@@ -73,7 +73,7 @@ export const Enhanced3DMascot: React.FC<Enhanced3DMascotProps> = ({
           useNativeDriver: true,
         }),
       ]).start();
-      
+
       // Trigger interaction
       triggerInteraction({
         trigger: 'help',
@@ -121,7 +121,7 @@ export const Enhanced3DMascot: React.FC<Enhanced3DMascotProps> = ({
             useNativeDriver: true,
           }),
         ]).start();
-        
+
         // Random blink interval
         setTimeout(blink, Math.random() * 3000 + 2000);
       };
@@ -159,7 +159,7 @@ export const Enhanced3DMascot: React.FC<Enhanced3DMascotProps> = ({
           ]).start();
         });
         break;
-      
+
       case MascotEmotion.EXCITED:
         Animated.loop(
           Animated.sequence([
@@ -187,7 +187,7 @@ export const Enhanced3DMascot: React.FC<Enhanced3DMascotProps> = ({
 
   const getCulturalColors = () => {
     const { culturalVariation } = mascotState.customization;
-    
+
     switch (culturalVariation) {
       case MascotCulturalVariation.TRADITIONAL:
         return {
@@ -318,16 +318,30 @@ export const Enhanced3DMascot: React.FC<Enhanced3DMascotProps> = ({
             ]}
           />
 
+          {/* Face Area (white inner part) */}
+          <View
+            style={[
+              styles.faceArea,
+              {
+                width: size * 0.35,
+                height: size * 0.35,
+                borderRadius: size * 0.175,
+                top: -size * 0.15,
+                backgroundColor: '#FFFFFF',
+              },
+            ]}
+          />
+
           {/* Eyes */}
           <Animated.View
             style={[
               styles.leftEye,
               {
-                width: size * 0.08,
-                height: size * 0.08,
-                borderRadius: size * 0.04,
-                left: size * 0.3,
-                top: size * 0.05,
+                width: size * 0.06,
+                height: size * 0.06,
+                borderRadius: size * 0.03,
+                left: size * 0.42,
+                top: -size * 0.18,
                 transform: [{ scaleY: eyeScale }],
               },
             ]}
@@ -336,11 +350,11 @@ export const Enhanced3DMascot: React.FC<Enhanced3DMascotProps> = ({
             style={[
               styles.rightEye,
               {
-                width: size * 0.08,
-                height: size * 0.08,
-                borderRadius: size * 0.04,
-                right: size * 0.3,
-                top: size * 0.05,
+                width: size * 0.06,
+                height: size * 0.06,
+                borderRadius: size * 0.03,
+                right: size * 0.42,
+                top: -size * 0.18,
                 transform: [{ scaleY: eyeScale }],
               },
             ]}
@@ -354,7 +368,7 @@ export const Enhanced3DMascot: React.FC<Enhanced3DMascotProps> = ({
                 width: size * 0.03,
                 height: size * 0.03,
                 borderRadius: size * 0.015,
-                top: size * 0.12,
+                top: -size * 0.15,
               },
             ]}
           />
@@ -367,7 +381,7 @@ export const Enhanced3DMascot: React.FC<Enhanced3DMascotProps> = ({
                 width: size * 0.2,
                 height: size * 0.1,
                 borderRadius: size * 0.1,
-                top: size * 0.18,
+                top: -size * 0.08,
                 borderWidth: size * 0.01,
               },
             ]}
@@ -433,6 +447,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   head: {
+    position: 'absolute',
+  },
+  faceArea: {
     position: 'absolute',
   },
   leftEye: {

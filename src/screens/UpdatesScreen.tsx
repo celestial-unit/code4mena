@@ -15,6 +15,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, createThemedStyles } from '../contexts/ThemeContext';
+import { useTranslation } from '../i18n';
+import { VotingSystem, VoteData } from '../components/voting';
 
 interface UpdatesScreenProps {
   navigation: any;
@@ -24,18 +26,27 @@ interface LegalUpdateItem {
   id: string;
   title: string;
   titleAr: string;
+  titleFr: string;
+  titleEn: string;
   summary: string;
   summaryAr: string;
+  summaryFr: string;
+  summaryEn: string;
   category: string;
   priority: 'high' | 'medium' | 'low';
   source: string;
   sourceAr: string;
+  sourceFr: string;
+  sourceEn: string;
   publishedAt: string;
   timeAgo: string;
   isBookmarked: boolean;
   isRead: boolean;
   tags: string[];
   tagsAr: string[];
+  tagsFr: string[];
+  tagsEn: string[];
+  votes: VoteData;
 }
 
 const mockUpdates: LegalUpdateItem[] = [
@@ -43,69 +54,105 @@ const mockUpdates: LegalUpdateItem[] = [
     id: '1',
     title: 'New Digital Tax Regulations for E-commerce',
     titleAr: 'لوائح ضريبية رقمية جديدة للتجارة الإلكترونية',
+    titleFr: 'Nouvelles réglementations fiscales numériques pour le e-commerce',
+    titleEn: 'New Digital Tax Regulations for E-commerce',
     summary: 'Ministry of Finance announces new digital tax requirements for online businesses',
     summaryAr: 'وزارة المالية تعلن متطلبات ضريبية رقمية جديدة للشركات الإلكترونية',
+    summaryFr: 'Le ministère des Finances annonce de nouvelles exigences fiscales numériques pour les entreprises en ligne',
+    summaryEn: 'Ministry of Finance announces new digital tax requirements for online businesses',
     category: 'tax_law',
     priority: 'high',
     source: 'Ministry of Finance',
     sourceAr: 'وزارة المالية',
+    sourceFr: 'Ministère des Finances',
+    sourceEn: 'Ministry of Finance',
     publishedAt: '2024-01-15T10:30:00Z',
     timeAgo: 'منذ ساعتين',
     isBookmarked: false,
     isRead: false,
     tags: ['digital tax', 'e-commerce'],
     tagsAr: ['الضرائب الرقمية', 'التجارة الإلكترونية'],
+    tagsFr: ['taxe numérique', 'e-commerce'],
+    tagsEn: ['digital tax', 'e-commerce'],
+    votes: { upvotes: 24, downvotes: 3, userVote: null },
   },
   {
     id: '2',
     title: 'Agricultural Land Reform Act Updates',
     titleAr: 'تحديثات قانون إصلاح الأراضي الزراعية',
+    titleFr: 'Mises à jour de la loi de réforme foncière agricole',
+    titleEn: 'Agricultural Land Reform Act Updates',
     summary: 'Parliament approves amendments to agricultural land ownership regulations',
     summaryAr: 'البرلمان يوافق على تعديلات لوائح ملكية الأراضي الزراعية',
+    summaryFr: 'Le Parlement approuve les amendements aux réglementations de propriété foncière agricole',
+    summaryEn: 'Parliament approves amendments to agricultural land ownership regulations',
     category: 'administrative_law',
     priority: 'high',
     source: 'Tunisian Parliament',
     sourceAr: 'البرلمان التونسي',
+    sourceFr: 'Parlement tunisien',
+    sourceEn: 'Tunisian Parliament',
     publishedAt: '2024-01-14T16:45:00Z',
     timeAgo: 'أمس',
     isBookmarked: true,
     isRead: true,
     tags: ['agriculture', 'land reform'],
     tagsAr: ['الزراعة', 'إصلاح الأراضي'],
+    tagsFr: ['agriculture', 'réforme foncière'],
+    tagsEn: ['agriculture', 'land reform'],
+    votes: { upvotes: 18, downvotes: 2, userVote: 'up' },
   },
   {
     id: '3',
     title: 'Remote Work Labor Code Amendments',
     titleAr: 'تعديلات قانون العمل للعمل عن بُعد',
+    titleFr: 'Amendements du code du travail pour le télétravail',
+    titleEn: 'Remote Work Labor Code Amendments',
     summary: 'New regulations establish rights for remote workers and employers',
     summaryAr: 'لوائح جديدة تحدد حقوق العاملين عن بُعد وأصحاب العمل',
+    summaryFr: 'De nouvelles réglementations établissent les droits des télétravailleurs et des employeurs',
+    summaryEn: 'New regulations establish rights for remote workers and employers',
     category: 'labor_law',
     priority: 'medium',
     source: 'Ministry of Social Affairs',
     sourceAr: 'وزارة الشؤون الاجتماعية',
+    sourceFr: 'Ministère des Affaires sociales',
+    sourceEn: 'Ministry of Social Affairs',
     publishedAt: '2024-01-12T11:15:00Z',
     timeAgo: 'منذ 3 أيام',
     isBookmarked: false,
     isRead: false,
     tags: ['remote work', 'labor rights'],
     tagsAr: ['العمل عن بُعد', 'حقوق العمال'],
+    tagsFr: ['télétravail', 'droits du travail'],
+    tagsEn: ['remote work', 'labor rights'],
+    votes: { upvotes: 12, downvotes: 1, userVote: null },
   },
   {
     id: '4',
     title: 'Tourism Recovery Incentives Package',
     titleAr: 'حزمة حوافز انتعاش السياحة',
+    titleFr: 'Package d\'incitations à la relance touristique',
+    titleEn: 'Tourism Recovery Incentives Package',
     summary: 'Government launches comprehensive support package for tourism sector',
     summaryAr: 'الحكومة تطلق حزمة دعم شاملة لقطاع السياحة',
+    summaryFr: 'Le gouvernement lance un package de soutien complet pour le secteur touristique',
+    summaryEn: 'Government launches comprehensive support package for tourism sector',
     category: 'business_law',
     priority: 'medium',
     source: 'Ministry of Tourism',
     sourceAr: 'وزارة السياحة',
+    sourceFr: 'Ministère du Tourisme',
+    sourceEn: 'Ministry of Tourism',
     publishedAt: '2024-01-10T14:20:00Z',
     timeAgo: 'منذ 5 أيام',
     isBookmarked: true,
     isRead: true,
     tags: ['tourism', 'incentives'],
     tagsAr: ['السياحة', 'الحوافز'],
+    tagsFr: ['tourisme', 'incitations'],
+    tagsEn: ['tourism', 'incentives'],
+    votes: { upvotes: 31, downvotes: 4, userVote: null },
   },
 ];
 
@@ -113,10 +160,12 @@ const { width: screenWidth } = Dimensions.get('window');
 
 export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
   const { theme } = useTheme();
+  const { t, language } = useTranslation();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [bookmarkedItems, setBookmarkedItems] = useState<Set<string>>(new Set());
+  const [updateVotes, setUpdateVotes] = useState<Record<string, VoteData>>({});
 
   // Create styles early
   const styles = getStyles(theme);
@@ -199,6 +248,48 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
     ]).start();
   };
 
+  const handleVote = (itemId: string, voteType: 'up' | 'down', newVotes: VoteData) => {
+    setUpdateVotes(prev => ({
+      ...prev,
+      [itemId]: newVotes,
+    }));
+
+    // Here you would typically make an API call to save the vote
+    console.log(`Vote submitted for ${itemId}: ${voteType}`, newVotes);
+  };
+
+  const getLocalizedText = (update: LegalUpdateItem, field: 'title' | 'summary' | 'source'): string => {
+    let result: string;
+    switch (language) {
+      case 'fr':
+        result = (update[`${field}Fr` as keyof LegalUpdateItem] as string) || (update[`${field}Ar` as keyof LegalUpdateItem] as string) || '';
+        break;
+      case 'en':
+        result = (update[`${field}En` as keyof LegalUpdateItem] as string) || (update[`${field}Ar` as keyof LegalUpdateItem] as string) || '';
+        break;
+      default:
+        result = (update[`${field}Ar` as keyof LegalUpdateItem] as string) || (update[field as keyof LegalUpdateItem] as string) || '';
+        break;
+    }
+    return result;
+  };
+
+  const getLocalizedTags = (update: LegalUpdateItem): string[] => {
+    let result: string[];
+    switch (language) {
+      case 'fr':
+        result = update.tagsFr || update.tagsAr || [];
+        break;
+      case 'en':
+        result = update.tagsEn || update.tagsAr || [];
+        break;
+      default:
+        result = update.tagsAr || update.tags || [];
+        break;
+    }
+    return result;
+  };
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high': return '#E31E24';
@@ -265,28 +356,28 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
   const filters = [
     {
       key: 'all',
-      label: 'الكل',
+      label: t('updates.filters.all'),
       icon: 'list',
       count: mockUpdates.length,
       gradient: ['#E31E24', '#D4AF37'] as [string, string]
     },
     {
       key: 'unread',
-      label: 'غير مقروءة',
+      label: t('updates.filters.unread'),
       icon: 'mail-unread',
       count: mockUpdates.filter(u => !u.isRead).length,
       gradient: ['#FF6B6B', '#FF8E8E'] as [string, string]
     },
     {
       key: 'high',
-      label: 'عاجل',
+      label: t('updates.filters.high'),
       icon: 'alert-circle',
       count: mockUpdates.filter(u => u.priority === 'high').length,
       gradient: ['#E31E24', '#FF4757'] as [string, string]
     },
     {
       key: 'bookmarked',
-      label: 'محفوظة',
+      label: t('updates.filters.bookmarked'),
       icon: 'bookmark',
       count: mockUpdates.filter(u => u.isBookmarked || bookmarkedItems.has(u.id)).length,
       gradient: ['#D4AF37', '#F1C40F'] as [string, string]
@@ -322,6 +413,7 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
 
   const renderUpdateItem = ({ item: update, index }: { item: LegalUpdateItem; index: number }) => {
     const isBookmarked = update.isBookmarked || bookmarkedItems.has(update.id);
+    const currentVotes = updateVotes[update.id] || update.votes;
 
     return (
       <Animated.View
@@ -374,13 +466,13 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
               </LinearGradient>
 
               <View style={styles.sourceInfo}>
-                <Text style={styles.updateSource}>{update.sourceAr}</Text>
+                <Text style={styles.updateSource}>{getLocalizedText(update, 'source')}</Text>
                 <Text style={styles.updateTime}>{update.timeAgo}</Text>
 
                 {/* Enhanced Category Badge */}
                 <View style={styles.categoryBadge}>
                   <Text style={styles.categoryBadgeText}>
-                    {getCategoryLabel(update.category)}
+                    {t(`updates.categories.${update.category}`)}
                   </Text>
                 </View>
               </View>
@@ -395,7 +487,7 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
                   style={styles.priorityBadge}
                 >
                   <Ionicons name="flash" size={10} color="#FFFFFF" />
-                  <Text style={styles.priorityBadgeText}>عاجل</Text>
+                  <Text style={styles.priorityBadgeText}>{t('updates.priority.high')}</Text>
                 </LinearGradient>
               )}
 
@@ -434,16 +526,16 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
           {/* Enhanced Content */}
           <View style={styles.updateContent}>
             <Text style={styles.updateTitle} numberOfLines={2}>
-              {update.titleAr}
+              {getLocalizedText(update, 'title')}
             </Text>
             <Text style={styles.updateSummary} numberOfLines={3}>
-              {update.summaryAr}
+              {getLocalizedText(update, 'summary')}
             </Text>
           </View>
 
           {/* Enhanced Tags */}
           <View style={styles.updateTags}>
-            {update.tagsAr.slice(0, 3).map((tag, tagIndex) => (
+            {getLocalizedTags(update).slice(0, 3).map((tag, tagIndex) => (
               <LinearGradient
                 key={tagIndex}
                 colors={['#F8F9FA', '#E9ECEF']}
@@ -452,11 +544,22 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
                 <Text style={styles.tagText}>{tag}</Text>
               </LinearGradient>
             ))}
-            {update.tagsAr.length > 3 && (
+            {getLocalizedTags(update).length > 3 && (
               <View style={styles.moreTagsBadge}>
-                <Text style={styles.moreTagsText}>+{update.tagsAr.length - 3}</Text>
+                <Text style={styles.moreTagsText}>+{getLocalizedTags(update).length - 3}</Text>
               </View>
             )}
+          </View>
+
+          {/* Voting System */}
+          <View style={styles.votingContainer}>
+            <VotingSystem
+              itemId={update.id}
+              initialVotes={currentVotes}
+              onVote={handleVote}
+              size="medium"
+              showCounts={true}
+            />
           </View>
         </TouchableOpacity>
       </Animated.View>
@@ -471,7 +574,7 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
         style={styles.header}
       >
         <View style={styles.headerTitle}>
-          <Text style={styles.titleText}>التحديثات القانونية</Text>
+          <Text style={styles.titleText}>{t('updates.title')}</Text>
           <LinearGradient
             colors={['#E31E24', '#FF4757']}
             style={styles.updatesBadge}
@@ -589,7 +692,7 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
             {isLoadingMore && (
               <View style={styles.loadingMore}>
                 <ActivityIndicator size="small" color="#E31E24" />
-                <Text style={styles.loadingMoreText}>جاري التحميل...</Text>
+                <Text style={styles.loadingMoreText}>{t('common.loading')}</Text>
               </View>
             )}
             <View style={styles.bottomSpacing} />
@@ -611,9 +714,9 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
             >
               <Ionicons name="newspaper-outline" size={48} color="#FFFFFF" />
             </LinearGradient>
-            <Text style={styles.emptyTitle}>لا توجد تحديثات</Text>
+            <Text style={styles.emptyTitle}>{t('updates.empty.title')}</Text>
             <Text style={styles.emptyMessage}>
-              لا توجد تحديثات تطابق الفلتر المحدد
+              {t('updates.empty.message')}
             </Text>
             <TouchableOpacity
               style={styles.refreshButton}
@@ -625,7 +728,7 @@ export const UpdatesScreen: React.FC<UpdatesScreenProps> = ({ navigation }) => {
                 style={styles.refreshButtonGradient}
               >
                 <Ionicons name="refresh" size={20} color="#FFFFFF" />
-                <Text style={styles.refreshButtonText}>تحديث</Text>
+                <Text style={styles.refreshButtonText}>{t('updates.empty.refresh')}</Text>
               </LinearGradient>
             </TouchableOpacity>
           </Animated.View>
@@ -1043,6 +1146,13 @@ const getStyles = createThemedStyles((theme) => StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '600',
     marginLeft: 8,
+  },
+  votingContainer: {
+    marginLeft: 20, // Account for unread dot
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
   },
   bottomSpacing: {
     height: 100,

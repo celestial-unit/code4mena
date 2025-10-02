@@ -1,0 +1,168 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجح",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "search": "بحث",
+    "filter": "تصفية",
+    "refresh": "تحديث",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "close": "إغلاق",
+    "open": "فتح",
+    "share": "مشاركة",
+    "copy": "نسخ",
+    "paste": "لصق",
+    "select": "اختيار",
+    "all": "الكل",
+    "none": "لا شيء",
+    "yes": "نعم",
+    "no": "لا",
+    "ok": "موافق",
+    "done": "تم",
+    "retry": "إعادة المحاولة",
+    "skip": "تخطي"
+  },
+  "navigation": {
+    "home": "الرئيسية",
+    "chat": "المحادثة",
+    "search": "البحث",
+    "updates": "التحديثات",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "preferences": "التفضيلات",
+    "achievements": "الإنجازات",
+    "bookmarks": "المحفوظات",
+    "history": "السجل"
+  },
+  "updates": {
+    "title": "التحديثات القانونية",
+    "subtitle": "آخر التطورات في القانون التونسي",
+    "filters": {
+      "all": "الكل",
+      "unread": "غير مقروءة",
+      "high": "عاجل",
+      "bookmarked": "محفوظة"
+    },
+    "priority": {
+      "high": "عاجل",
+      "medium": "متوسط",
+      "low": "عادي"
+    },
+    "categories": {
+      "business_law": "قانون الأعمال",
+      "tax_law": "القانون الضريبي",
+      "labor_law": "قانون العمل",
+      "administrative_law": "القانون الإداري",
+      "family_law": "قانون الأسرة",
+      "environmental_law": "القانون البيئي"
+    },
+    "sources": {
+      "ministry_finance": "وزارة المالية",
+      "parliament": "البرلمان التونسي",
+      "ministry_social": "وزارة الشؤون الاجتماعية",
+      "ministry_tourism": "وزارة السياحة"
+    },
+    "timeAgo": {
+      "now": "الآن",
+      "minutes": "منذ {{count}} دقيقة",
+      "hours": "منذ {{count}} ساعة",
+      "days": "منذ {{count}} يوم",
+      "weeks": "منذ {{count}} أسبوع",
+      "months": "منذ {{count}} شهر"
+    },
+    "voting": {
+      "upvote": "مفيد",
+      "downvote": "غير مفيد",
+      "votes": "{{count}} صوت",
+      "helpful": "مفيد ({{count}})",
+      "notHelpful": "غير مفيد ({{count}})",
+      "thankYou": "شكراً لتقييمك!",
+      "alreadyVoted": "لقد قمت بالتصويت مسبقاً"
+    },
+    "empty": {
+      "title": "لا توجد تحديثات",
+      "message": "لا توجد تحديثات تطابق الفلتر المحدد",
+      "refresh": "تحديث"
+    }
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "personalInfo": "المعلومات الشخصية",
+    "preferences": "التفضيلات",
+    "achievements": "الإنجازات والنقاط",
+    "bookmarks": "المحفوظات",
+    "history": "سجل النشاط",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج",
+    "stats": {
+      "points": "النقاط",
+      "achievements": "الإنجازات",
+      "streak": "أيام متتالية"
+    }
+  },
+  "language": {
+    "title": "اختر اللغة",
+    "subtitle": "Choose Language",
+    "current": "اللغة الحالية",
+    "arabic": "العربية",
+    "french": "Français",
+    "english": "English",
+    "restartRequired": "سيتم إعادة تشغيل التطبيق لتطبيق التغييرات",
+    "madeInTunisia": "صُنع في تونس 🇹🇳"
+  },
+  "preferences": {
+    "title": "التفضيلات",
+    "notifications": {
+      "title": "الإشعارات",
+      "subtitle": "إدارة التنبيهات والإشعارات",
+      "push": "الإشعارات الفورية",
+      "email": "إشعارات البريد الإلكتروني",
+      "legal": "التحديثات القانونية",
+      "achievements": "الإنجازات",
+      "reminders": "التذكيرات",
+      "government": "تنبيهات حكومية",
+      "quiet": "الساعات الهادئة"
+    },
+    "display": {
+      "title": "العرض والمظهر",
+      "subtitle": "تخصيص شكل ومظهر التطبيق",
+      "darkMode": "الوضع الليلي",
+      "fontSize": "حجم الخط",
+      "animations": "الحركات والانتقالات",
+      "reducedMotion": "تقليل الحركة",
+      "highContrast": "التباين العالي"
+    },
+    "privacy": {
+      "title": "الخصوصية والأمان",
+      "subtitle": "إدارة خصوصية البيانات والأمان",
+      "dataSharing": "مشاركة البيانات",
+      "analytics": "التحليلات",
+      "personalization": "التخصيص الشخصي",
+      "location": "تتبع الموقع",
+      "voice": "تسجيل الصوت"
+    },
+    "voice": {
+      "title": "إعدادات الصوت",
+      "subtitle": "تخصيص المساعد الصوتي والتفاعل الصوتي",
+      "enabled": "المساعد الصوتي",
+      "speed": "سرعة الصوت",
+      "noise": "تقليل الضوضاء",
+      "transcription": "النسخ التلقائي"
+    },
+    "advanced": {
+      "title": "إعدادات متقدمة",
+      "subtitle": "خيارات متقدمة للمستخدمين المتمرسين",
+      "export": "تصدير البيانات",
+      "backup": "النسخ الاحتياطي",
+      "reset": "إعادة تعيين",
+      "delete": "حذف الحساب"
+    }
+  }
+}

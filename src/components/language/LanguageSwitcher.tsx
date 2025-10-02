@@ -3,15 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated, Modal } from 'react
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
-import { useTheme } from '../../contexts/ThemeContext';
-
-interface Language {
-  code: string;
-  name: string;
-  nativeName: string;
-  flag: string;
-  rtl: boolean;
-}
+import { useTranslation } from '../../i18n';
+import { useRTL } from '../../contexts/RTLContext';
 
 interface LanguageSwitcherProps {
   currentLanguage: string;
@@ -19,36 +12,13 @@ interface LanguageSwitcherProps {
   style?: any;
 }
 
-const SUPPORTED_LANGUAGES: Language[] = [
-  {
-    code: 'ar',
-    name: 'Arabic',
-    nativeName: 'العربية',
-    flag: '🇹🇳',
-    rtl: true,
-  },
-  {
-    code: 'fr',
-    name: 'French',
-    nativeName: 'Français',
-    flag: '🇫🇷',
-    rtl: false,
-  },
-  {
-    code: 'en',
-    name: 'English',
-    nativeName: 'English',
-    flag: '🇺🇸',
-    rtl: false,
-  },
-];
-
 export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   currentLanguage,
   onLanguageChange,
   style,
 }) => {
-  const { theme } = useTheme();
+  const { t, setLanguage, getSupportedLanguages } = useTranslation();
+  const { setLanguage: setRTLLanguage } = useRTL();
   const [isModalVisible, setIsModalVisible] = useState(false);
   
   // Animation values
@@ -56,7 +26,8 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   const modalAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
 
-  const currentLang = SUPPORTED_LANGUAGES.find(lang => lang.code === currentLanguage) || SUPPORTED_LANGUAGES[0];
+  const supportedLanguages = getSupportedLanguages();
+  const currentLang = supportedLanguages.find(lang => lang.code === currentLanguage) || supportedLanguages[0];
 
   useEffect(() => {
     if (isModalVisible) {
@@ -106,9 +77,20 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     setIsModalVisible(true);
   };
 
-  const handleLanguageSelect = (languageCode: string) => {
+  const handleLanguageSelect = async (languageCode: string) => {
     if (languageCode !== currentLanguage) {
-      onLanguageChange(languageCode);
+      try {
+        // Update i18n language
+        await setLanguage(languageCode as any);
+        // Update RTL context
+        await setRTLLanguage(languageCode as any);
+        // Call parent callback if provided
+        if (onLanguageChange) {
+          onLanguageChange(languageCode);
+        }
+      } catch (error) {
+        console.error('Error changing language:', error);
+      }
     }
     setIsModalVisible(false);
   };
@@ -184,7 +166,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                 >
                   {/* Modal Header */}
                   <View style={styles.modalHeader}>
-                    <Text style={styles.modalTitle}>اختر اللغة / Choose Language</Text>
+                    <Text style={styles.modalTitle}>{t('language.title')}</Text>
                     <TouchableOpacity
                       style={styles.closeButton}
                       onPress={closeModal}
@@ -195,7 +177,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
                   {/* Language Options */}
                   <View style={styles.languageList}>
-                    {SUPPORTED_LANGUAGES.map((language, index) => {
+                    {supportedLanguages.map((language) => {
                       const isSelected = language.code === currentLanguage;
                       
                       return (
@@ -236,7 +218,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                             </Text>
                             
                             {/* RTL Indicator */}
-                            {language.rtl && (
+                            {language.code === 'ar' && (
                               <View style={styles.rtlIndicator}>
                                 <Ionicons
                                   name="arrow-back"
@@ -278,13 +260,13 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                     <View style={styles.footerInfo}>
                       <Ionicons name="information-circle" size={16} color="#666666" />
                       <Text style={styles.footerText}>
-                        سيتم إعادة تشغيل التطبيق لتطبيق التغييرات
+                        {t('language.restartRequired')}
                       </Text>
                     </View>
                     
                     <View style={styles.tunisianBranding}>
                       <Ionicons name="flag" size={14} color="#E31E24" />
-                      <Text style={styles.brandingText}>صُنع في تونس 🇹🇳</Text>
+                      <Text style={styles.brandingText}>{t('language.madeInTunisia')}</Text>
                     </View>
                   </View>
                 </LinearGradient>

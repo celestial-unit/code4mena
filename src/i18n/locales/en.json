@@ -1,0 +1,168 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "refresh": "Refresh",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "open": "Open",
+    "share": "Share",
+    "copy": "Copy",
+    "paste": "Paste",
+    "select": "Select",
+    "all": "All",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "done": "Done",
+    "retry": "Retry",
+    "skip": "Skip"
+  },
+  "navigation": {
+    "home": "Home",
+    "chat": "Chat",
+    "search": "Search",
+    "updates": "Updates",
+    "profile": "Profile",
+    "settings": "Settings",
+    "preferences": "Preferences",
+    "achievements": "Achievements",
+    "bookmarks": "Bookmarks",
+    "history": "History"
+  },
+  "updates": {
+    "title": "Legal Updates",
+    "subtitle": "Latest developments in Tunisian law",
+    "filters": {
+      "all": "All",
+      "unread": "Unread",
+      "high": "Urgent",
+      "bookmarked": "Bookmarked"
+    },
+    "priority": {
+      "high": "Urgent",
+      "medium": "Medium",
+      "low": "Normal"
+    },
+    "categories": {
+      "business_law": "Business Law",
+      "tax_law": "Tax Law",
+      "labor_law": "Labor Law",
+      "administrative_law": "Administrative Law",
+      "family_law": "Family Law",
+      "environmental_law": "Environmental Law"
+    },
+    "sources": {
+      "ministry_finance": "Ministry of Finance",
+      "parliament": "Tunisian Parliament",
+      "ministry_social": "Ministry of Social Affairs",
+      "ministry_tourism": "Ministry of Tourism"
+    },
+    "timeAgo": {
+      "now": "Now",
+      "minutes": "{{count}} minute(s) ago",
+      "hours": "{{count}} hour(s) ago",
+      "days": "{{count}} day(s) ago",
+      "weeks": "{{count}} week(s) ago",
+      "months": "{{count}} month(s) ago"
+    },
+    "voting": {
+      "upvote": "Helpful",
+      "downvote": "Not helpful",
+      "votes": "{{count}} vote(s)",
+      "helpful": "Helpful ({{count}})",
+      "notHelpful": "Not helpful ({{count}})",
+      "thankYou": "Thank you for your feedback!",
+      "alreadyVoted": "You have already voted"
+    },
+    "empty": {
+      "title": "No updates",
+      "message": "No updates match the selected filter",
+      "refresh": "Refresh"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "personalInfo": "Personal Information",
+    "preferences": "Preferences",
+    "achievements": "Achievements and Points",
+    "bookmarks": "Bookmarks",
+    "history": "Activity History",
+    "settings": "Settings",
+    "logout": "Logout",
+    "stats": {
+      "points": "Points",
+      "achievements": "Achievements",
+      "streak": "Consecutive Days"
+    }
+  },
+  "language": {
+    "title": "Choose Language",
+    "subtitle": "اختر اللغة / Choisir la langue",
+    "current": "Current Language",
+    "arabic": "العربية",
+    "french": "Français",
+    "english": "English",
+    "restartRequired": "App will restart to apply changes",
+    "madeInTunisia": "Made in Tunisia 🇹🇳"
+  },
+  "preferences": {
+    "title": "Preferences",
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Manage alerts and notifications",
+      "push": "Push notifications",
+      "email": "Email notifications",
+      "legal": "Legal updates",
+      "achievements": "Achievements",
+      "reminders": "Reminders",
+      "government": "Government alerts",
+      "quiet": "Quiet hours"
+    },
+    "display": {
+      "title": "Display & Appearance",
+      "subtitle": "Customize app appearance",
+      "darkMode": "Dark mode",
+      "fontSize": "Font size",
+      "animations": "Animations and transitions",
+      "reducedMotion": "Reduce motion",
+      "highContrast": "High contrast"
+    },
+    "privacy": {
+      "title": "Privacy & Security",
+      "subtitle": "Manage data privacy and security",
+      "dataSharing": "Data sharing",
+      "analytics": "Analytics",
+      "personalization": "Personalization",
+      "location": "Location tracking",
+      "voice": "Voice recording"
+    },
+    "voice": {
+      "title": "Voice Settings",
+      "subtitle": "Customize voice assistant and voice interaction",
+      "enabled": "Voice assistant",
+      "speed": "Voice speed",
+      "noise": "Noise reduction",
+      "transcription": "Auto transcription"
+    },
+    "advanced": {
+      "title": "Advanced Settings",
+      "subtitle": "Advanced options for experienced users",
+      "export": "Export data",
+      "backup": "Backup",
+      "reset": "Reset",
+      "delete": "Delete account"
+    }
+  }
+}

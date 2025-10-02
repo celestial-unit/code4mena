@@ -1,0 +1,168 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "refresh": "Actualiser",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "open": "Ouvrir",
+    "share": "Partager",
+    "copy": "Copier",
+    "paste": "Coller",
+    "select": "Sélectionner",
+    "all": "Tout",
+    "none": "Aucun",
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK",
+    "done": "Terminé",
+    "retry": "Réessayer",
+    "skip": "Ignorer"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "chat": "Chat",
+    "search": "Recherche",
+    "updates": "Mises à jour",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "preferences": "Préférences",
+    "achievements": "Réalisations",
+    "bookmarks": "Favoris",
+    "history": "Historique"
+  },
+  "updates": {
+    "title": "Mises à jour juridiques",
+    "subtitle": "Derniers développements du droit tunisien",
+    "filters": {
+      "all": "Tout",
+      "unread": "Non lues",
+      "high": "Urgent",
+      "bookmarked": "Favoris"
+    },
+    "priority": {
+      "high": "Urgent",
+      "medium": "Moyen",
+      "low": "Normal"
+    },
+    "categories": {
+      "business_law": "Droit des affaires",
+      "tax_law": "Droit fiscal",
+      "labor_law": "Droit du travail",
+      "administrative_law": "Droit administratif",
+      "family_law": "Droit de la famille",
+      "environmental_law": "Droit environnemental"
+    },
+    "sources": {
+      "ministry_finance": "Ministère des Finances",
+      "parliament": "Parlement tunisien",
+      "ministry_social": "Ministère des Affaires sociales",
+      "ministry_tourism": "Ministère du Tourisme"
+    },
+    "timeAgo": {
+      "now": "Maintenant",
+      "minutes": "Il y a {{count}} minute(s)",
+      "hours": "Il y a {{count}} heure(s)",
+      "days": "Il y a {{count}} jour(s)",
+      "weeks": "Il y a {{count}} semaine(s)",
+      "months": "Il y a {{count}} mois"
+    },
+    "voting": {
+      "upvote": "Utile",
+      "downvote": "Pas utile",
+      "votes": "{{count}} vote(s)",
+      "helpful": "Utile ({{count}})",
+      "notHelpful": "Pas utile ({{count}})",
+      "thankYou": "Merci pour votre évaluation !",
+      "alreadyVoted": "Vous avez déjà voté"
+    },
+    "empty": {
+      "title": "Aucune mise à jour",
+      "message": "Aucune mise à jour ne correspond au filtre sélectionné",
+      "refresh": "Actualiser"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "personalInfo": "Informations personnelles",
+    "preferences": "Préférences",
+    "achievements": "Réalisations et points",
+    "bookmarks": "Favoris",
+    "history": "Historique d'activité",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "stats": {
+      "points": "Points",
+      "achievements": "Réalisations",
+      "streak": "Jours consécutifs"
+    }
+  },
+  "language": {
+    "title": "Choisir la langue",
+    "subtitle": "اختر اللغة",
+    "current": "Langue actuelle",
+    "arabic": "العربية",
+    "french": "Français",
+    "english": "English",
+    "restartRequired": "L'application sera redémarrée pour appliquer les changements",
+    "madeInTunisia": "Fabriqué en Tunisie 🇹🇳"
+  },
+  "preferences": {
+    "title": "Préférences",
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Gérer les alertes et notifications",
+      "push": "Notifications push",
+      "email": "Notifications par email",
+      "legal": "Mises à jour juridiques",
+      "achievements": "Réalisations",
+      "reminders": "Rappels",
+      "government": "Alertes gouvernementales",
+      "quiet": "Heures silencieuses"
+    },
+    "display": {
+      "title": "Affichage et apparence",
+      "subtitle": "Personnaliser l'apparence de l'application",
+      "darkMode": "Mode sombre",
+      "fontSize": "Taille de police",
+      "animations": "Animations et transitions",
+      "reducedMotion": "Réduire les mouvements",
+      "highContrast": "Contraste élevé"
+    },
+    "privacy": {
+      "title": "Confidentialité et sécurité",
+      "subtitle": "Gérer la confidentialité des données et la sécurité",
+      "dataSharing": "Partage de données",
+      "analytics": "Analyses",
+      "personalization": "Personnalisation",
+      "location": "Suivi de localisation",
+      "voice": "Enregistrement vocal"
+    },
+    "voice": {
+      "title": "Paramètres vocaux",
+      "subtitle": "Personnaliser l'assistant vocal et l'interaction vocale",
+      "enabled": "Assistant vocal",
+      "speed": "Vitesse de la voix",
+      "noise": "Réduction du bruit",
+      "transcription": "Transcription automatique"
+    },
+    "advanced": {
+      "title": "Paramètres avancés",
+      "subtitle": "Options avancées pour utilisateurs expérimentés",
+      "export": "Exporter les données",
+      "backup": "Sauvegarde",
+      "reset": "Réinitialiser",
+      "delete": "Supprimer le compte"
+    }
+  }
+}

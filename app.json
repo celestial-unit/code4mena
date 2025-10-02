@@ -39,7 +39,8 @@
       "logLevel": "info"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "expo-asset"
     ]
   }
 }

@@ -8,12 +8,13 @@ import {
   Switch,
   Animated,
   Alert,
-  Slider,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, createThemedStyles } from '../contexts/ThemeContext';
+import { useTranslation } from '../i18n';
+import { LanguageSwitcher } from '../components/language/LanguageSwitcher';
 
 interface PreferencesScreenProps {
   navigation: any;
@@ -21,6 +22,7 @@ interface PreferencesScreenProps {
 
 export const PreferencesScreen: React.FC<PreferencesScreenProps> = ({ navigation }) => {
   const { theme, isDark, toggleTheme } = useTheme();
+  const { t, language } = useTranslation();
   
   // Notification preferences
   const [pushNotifications, setPushNotifications] = useState(true);
@@ -104,7 +106,7 @@ export const PreferencesScreen: React.FC<PreferencesScreenProps> = ({ navigation
     </View>
   );
 
-  const renderSliderSetting = (
+  const renderStepperSetting = (
     title: string,
     subtitle: string,
     value: number,
@@ -129,21 +131,36 @@ export const PreferencesScreen: React.FC<PreferencesScreenProps> = ({ navigation
           <Text style={styles.settingSubtitle}>{subtitle}</Text>
         </View>
       </View>
-      <View style={styles.sliderContainer}>
-        <Text style={styles.sliderValue}>
-          {formatValue ? formatValue(value) : value.toString()}
-        </Text>
-        <Slider
-          style={styles.slider}
-          value={value}
-          onValueChange={onValueChange}
-          minimumValue={minimumValue}
-          maximumValue={maximumValue}
-          step={step}
-          minimumTrackTintColor={color}
-          maximumTrackTintColor="#E0E0E0"
-          thumbStyle={{ backgroundColor: color }}
-        />
+      <View style={styles.stepperContainer}>
+        <TouchableOpacity
+          style={[styles.stepperButton, { opacity: value <= minimumValue ? 0.5 : 1 }]}
+          onPress={() => {
+            const newValue = Math.max(minimumValue, value - step);
+            onValueChange(newValue);
+          }}
+          disabled={value <= minimumValue}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="remove" size={16} color={color} />
+        </TouchableOpacity>
+        
+        <View style={styles.stepperValue}>
+          <Text style={styles.stepperValueText}>
+            {formatValue ? formatValue(value) : value.toString()}
+          </Text>
+        </View>
+        
+        <TouchableOpacity
+          style={[styles.stepperButton, { opacity: value >= maximumValue ? 0.5 : 1 }]}
+          onPress={() => {
+            const newValue = Math.min(maximumValue, value + step);
+            onValueChange(newValue);
+          }}
+          disabled={value >= maximumValue}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="add" size={16} color={color} />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -202,7 +219,7 @@ export const PreferencesScreen: React.FC<PreferencesScreenProps> = ({ navigation
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
         
-        <Text style={styles.headerTitle}>التفضيلات</Text>
+        <Text style={styles.headerTitle}>{t('preferences.title')}</Text>
         
         <TouchableOpacity style={styles.resetButton}>
           <Ionicons name="refresh" size={20} color="#FFFFFF" />
@@ -210,10 +227,31 @@ export const PreferencesScreen: React.FC<PreferencesScreenProps> = ({ navigation
       </LinearGradient>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Language Settings */}
+        {renderSection(
+          t('language.title'),
+          t('language.subtitle'),
+          'language',
+          '#E31E24',
+          <>
+            <View style={styles.languageSection}>
+              <View style={styles.languageSwitcherContainer}>
+                <Text style={styles.languageSwitcherLabel}>{t('language.current')}</Text>
+                <LanguageSwitcher
+                  currentLanguage={language}
+                  onLanguageChange={() => {}}
+                  style={styles.languageSwitcher}
+                />
+              </View>
+            </View>
+          </>,
+          0
+        )}
+
         {/* Notification Settings */}
         {renderSection(
-          'الإشعارات',
-          'إدارة التنبيهات والإشعارات',
+          t('preferences.notifications.title'),
+          t('preferences.notifications.subtitle'),
           'notifications',
           '#FF6B6B',
           <>
@@ -292,8 +330,8 @@ export const PreferencesScreen: React.FC<PreferencesScreenProps> = ({ navigation
               'moon',
               '#4ECDC4'
             )}
-            {renderSliderSetting(
-              'حجم الخط',
+            {renderStepperSetting(
+              t('preferences.display.fontSize'),
               'تكبير أو تصغير حجم النصوص',
               fontSize,
               setFontSize,
@@ -398,8 +436,8 @@ export const PreferencesScreen: React.FC<PreferencesScreenProps> = ({ navigation
               'mic-circle',
               '#FF8C00'
             )}
-            {renderSliderSetting(
-              'سرعة الصوت',
+            {renderStepperSetting(
+              t('preferences.voice.speed'),
               'تحديد سرعة قراءة النصوص',
               voiceSpeed,
               setVoiceSpeed,
@@ -623,19 +661,34 @@ const getStyles = createThemedStyles((theme) => StyleSheet.create({
     color: theme.colors.textSecondary,
     lineHeight: 18,
   },
-  sliderContainer: {
+  stepperContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
     minWidth: 120,
+    gap: 8,
   },
-  sliderValue: {
+  stepperButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  stepperValue: {
+    minWidth: 60,
+    alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+  stepperValueText: {
     fontSize: 14,
     fontWeight: '600',
     color: theme.colors.text,
-    marginBottom: 8,
-  },
-  slider: {
-    width: 100,
-    height: 20,
   },
   advancedOption: {
     flexDirection: 'row',
@@ -656,6 +709,23 @@ const getStyles = createThemedStyles((theme) => StyleSheet.create({
   },
   dangerText: {
     color: '#FF4444',
+  },
+  languageSection: {
+    paddingVertical: 8,
+  },
+  languageSwitcherContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+  },
+  languageSwitcherLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: theme.colors.text,
+  },
+  languageSwitcher: {
+    minWidth: 120,
   },
   bottomSpacing: {
     height: 50,
